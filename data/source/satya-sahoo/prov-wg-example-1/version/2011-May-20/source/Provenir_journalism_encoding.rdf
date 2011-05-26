@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:ro="http://obofoundry.org/ro/ro.owl#"
+    xmlns:provenir="http://knoesis.wright.edu/provenir/provenir.owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:journalism="http://www.journalism.owl/journalism#" > 
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#f1">
+    <journalism:converted_by rdf:resource="http://www.journalism.owl/journalism#gov"/>
+    <journalism:generated_from rdf:resource="http://www.journalism.owl/journalism#d1"/>
+    <provenir:has_temporal_value rdf:resource="http://www.journalism.owl/journalism#t1"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#r1">
+    <journalism:published_by rdf:resource="http://www.journalism.owl/journalism#gov"/>
+    <journalism:has_license rdf:resource="http://www.journalism.owl/journalism#li1"/>
+    <journalism:derived_from rdf:resource="http://www.journalism.owl/journalism#f1"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#lcp1">
+    <journalism:serialization_format rdf:resource="http://www.journalism.owl/journalism#turtle"/>
+    <journalism:serialization_of rdf:resource="http://www.journalism.owl/journalism#r1"/>
+    <journalism:downloaded_by>
+      <rdf:Description  rdf:about="http://www.journalism.owl/journalism#alice">
+      <rdf:type rdf:resource="http://www.journalism.owl/journalism#analyst"/>
+    </rdf:Description>
+    </journalism:downloaded_by>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#c1">     
+    <journalism:generated_by rdf:resource="http://www.journalism.owl/journalism#alice"/>
+    <journalism:generated_from rdf:resource="http://www.journalism.owl/journalism#lcp1"/>
+    <journalism:generated_using>
+      <rdf:Description rdf:about="http://www.journalism.owl/journalism#tools1">
+        <journalism:has_statistical_assumption rdf:resource="http://www.journalism.owl/journalism#stats1"/>
+      </rdf:Description>
+    </journalism:generated_using>
+    <journalism:part_of rdf:resource="http://www.journalism.owl/journalism#art1"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#art1">
+    <journalism:published_by rdf:resource="http://www.journalism.owl/journalism#news"/>
+    <journalism:has_license rdf:resource="http://www.journalism.owl/journalism#li2"/>
+    <journalism:written_by rdf:resource="http://www.journalism.owl/journalism#joe"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#f2">
+    <journalism:converted_by rdf:resource="http://www.journalism.owl/journalism#gov"/>   
+    <journalism:generated_from>
+     <rdf:Description rdf:about="http://www.journalism.owl/journalism#d2">
+      <journalism:updated_version_of rdf:resource="http://www.journalism.owl/journalism#d1"/>
+     </rdf:Description>
+    </journalism:generated_from>
+    <provenir:has_temporal_value rdf:resource="http://www.journalism.owl/journalism#t2"/>
+   </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#r2">
+    <journalism:published_by rdf:resource="http://www.journalism.owl/journalism#gov"/>
+    <journalism:has_license rdf:resource="http://www.journalism.owl/journalism#li4"/>
+    <journalism:derived_from rdf:resource="http://www.journalism.owl/journalism#f2"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#lcp2">
+    <journalism:serialization_format rdf:resource="http://www.journalism.owl/journalism#turtle"/>
+    <journalism:serialization_of rdf:resource="http://www.journalism.owl/journalism#r2"/>
+    <journalism:downloaded_by>
+      <rdf:Description  rdf:about="http://www.journalism.owl/journalism#bob">
+      <rdf:type rdf:resource="http://www.journalism.owl/journalism#blogger"/>
+    </rdf:Description>
+    </journalism:downloaded_by>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://www.journalism.owl/journalism#c2">     
+    <journalism:generated_by rdf:resource="http://www.journalism.owl/journalism#bob"/>
+    <journalism:generated_from rdf:resource="http://www.journalism.owl/journalism#lcp2"/>
+    <journalism:generated_using>
+      <rdf:Description rdf:about="http://www.journalism.owl/journalism#tools2">
+        <journalism:has_statistical_assumption rdf:resource="http://www.journalism.owl/journalism#stats2"/>
+      </rdf:Description>
+    </journalism:generated_using>
+    <journalism:has_license rdf:resource="http://www.journalism.owl/journalism#li3"/>
+    <journalism:published_by rdf:resource="http://www.journalism.owl/journalism#bob"/>
+  </rdf:Description>
+</rdf:RDF>
