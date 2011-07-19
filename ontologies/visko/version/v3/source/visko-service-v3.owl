@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY pml-provenance "http://inference-web.org/2.0/pml-provenance.owl#" >
+    <!ENTITY Service "http://www.daml.org/services/owl-s/1.2/Service.owl#" >
+    <!ENTITY Process "http://www.daml.org/services/owl-s/1.2/Process.owl#" >
+    <!ENTITY visko-operator-v3 "http://trust.utep.edu/visko/ontology/visko-operator-v3.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#"
+     xml:base="http://trust.utep.edu/visko/ontology/visko-service-v3.owl"
+     xmlns:pml-provenance="http://inference-web.org/2.0/pml-provenance.owl#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:Service="http://www.daml.org/services/owl-s/1.2/Service.owl#"
+     xmlns:Process="http://www.daml.org/services/owl-s/1.2/Process.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:visko-operator-v3="http://trust.utep.edu/visko/ontology/visko-operator-v3.owl#">
+    <owl:Ontology rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl">
+        <owl:imports rdf:resource="http://inference-web.org/2.0/pml-provenance.owl"/>
+        <owl:imports rdf:resource="http://trust.utep.edu/visko/ontology/visko-operator-v3.owl"/>
+        <owl:imports rdf:resource="http://www.daml.org/services/owl-s/1.2/Process.owl"/>
+        <owl:imports rdf:resource="http://www.daml.org/services/owl-s/1.2/Service.owl"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#basedOn -->
+
+    <owl:ObjectProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#basedOn">
+        <rdfs:range rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Toolkit"/>
+        <rdfs:domain rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#ToolkitProfile"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#declaresBindings -->
+
+    <owl:ObjectProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#declaresBindings">
+        <rdfs:domain rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#ToolkitProfile"/>
+        <rdfs:range rdf:resource="&Process;InputBinding"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#extractsFromFormat -->
+
+    <owl:ObjectProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#extractsFromFormat">
+        <rdfs:range rdf:resource="&pml-provenance;Format"/>
+        <rdfs:domain rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Extractor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#implementsExtractor -->
+
+    <owl:ObjectProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#implementsExtractor">
+        <rdfs:range rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Extractor"/>
+        <rdfs:domain rdf:resource="&Service;Service"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#implementsOperator -->
+
+    <owl:ObjectProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#implementsOperator">
+        <rdfs:range rdf:resource="&visko-operator-v3;Operator"/>
+        <rdfs:domain rdf:resource="&Service;Service"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#supportedBy -->
+
+    <owl:ObjectProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#supportedBy">
+        <rdfs:range rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Toolkit"/>
+        <rdfs:domain rdf:resource="&Service;Service"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#createsProfile -->
+
+    <owl:DatatypeProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#createsProfile">
+        <rdfs:domain rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Extractor"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#extractsFromDataOfType -->
+
+    <owl:DatatypeProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#extractsFromDataOfType">
+        <rdfs:domain rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Extractor"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#profiles -->
+
+    <owl:DatatypeProperty rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#profiles">
+        <rdfs:domain rdf:resource="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#ToolkitProfile"/>
+        <rdfs:range rdf:resource="&xsd;anyURI"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Extractor -->
+
+    <owl:Class rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Extractor"/>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Toolkit -->
+
+    <owl:Class rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#Toolkit"/>
+    
+
+
+    <!-- http://trust.utep.edu/visko/ontology/visko-service-v3.owl#ToolkitProfile -->
+
+    <owl:Class rdf:about="http://trust.utep.edu/visko/ontology/visko-service-v3.owl#ToolkitProfile"/>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.2.3.1799) http://owlapi.sourceforge.net -->
+
