@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>VisKo Query Examples</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" type="text/css" href="http://trust.utep.edu/visko/visko.css" />
+</head>
+
+<body>
+<table border="0" width=1000" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td align="left" valign="top">
+
+<div id="logo">
+<img src="http://trust.utep.edu/visko/visko-logo.png" align="left" border=0>
+</div>
+
+</td>
+</tr>
+<tr>
+<td>
+<div id="navbar2">
+<ul>
+<li><a href="http://trust.utep.edu/visko/">Home</a></li>
+<li><a href="http://trust.utep.edu/visko/vkdl">VisKo-DL</a></li>
+<li><a href="http://trust.utep.edu/visko/vkql">VisKo-QL</a></li>
+<li><a href="http://trust.utep.edu/visko/vkms/">VisKo-MS</a></li>
+<li><a href="http://trust.utep.edu/visko/vkkb/">VisKo-KB</a></li>
+<li><a href="http://trust.utep.edu/visko/vkql-examples">Query Examples</li>
+<li><a href="http://trust.utep.edu/visko/download/">Get VisKo</a></li>
+<li><a href="http://trust.utep.edu/visko/pub/">Documentation</a></li>
+<li><a href="http://trust.utep.edu/visko/people/">About</a></li>
+<li><a href="http://manaus.cs.utep.edu/visko-wiki/">Wiki</a></li>
+</ul>
+</div>
+
+
+<h3>Visko > Query Examples</h3>
+
+<ul>
+<li>This page includes some predefined queries that you can input into the <a href="http://iw.cs.utep.edu:8080/ViskoWeb3.0/VKQLQuerySubmit.jsp">Query Submission Page On Port 8080</a>.
+<li>You can also click on the visualizations on this page to view the pipeline responsible for generated them.</a>
+</ul>
+
+<h3>Visualization Query Examples</h4>
+
+<p>Visualization Queries Associated with:</p>
+<ul>
+<li><a href="#gravity">Gravity Data</a>
+<li><a href="#holes">Seismic Tomography</a>
+<li><a href="#brightness">Brightness Temperature</a>
+<li><a href="#aerosol">Aerosol Time Series</a>
+</ul>
+
+<hr>
+<a name="gravity"/>
+<h4>Queries Associated with Gravity Data</h4>
+<h5>Visualizing gravity data as contour map</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/TABDELIMITEDDATASET.owl#TABDELIMITEDDATASET)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/CrustalModeling/CrustalModeling.owl#d19)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/contour-lines1.owl#contour-lines1)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/GravityMapProvenance/gravityDataset.txt)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-gmt-gravity-contourmap.htm"><img src="visualizations/contour-map.png"></a>
+<h5>Visualizing gravity data as raster map</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/TABDELIMITEDDATASET.owl#TABDELIMITEDDATASET)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/CrustalModeling/CrustalModeling.owl#d19)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/raster.owl#raster)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/GravityMapProvenance/gravityDataset.txt)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-gmt-gravity-rastermap.htm"><img src="visualizations/gravity-raster.png"></a><a href="pipelines/pipeline-ncl-gravity-rastermap.htm"><img src="visualizations/gravity-raster1.png"></a>
+<h5>Visualizing gravity data as raster map with copper tones</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/TABDELIMITEDDATASET.owl#TABDELIMITEDDATASET)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/CrustalModeling/CrustalModeling.owl#d19)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/raster.owl#raster)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/GravityMapProvenance/gravityDataset.txt)
+	(hasValue http://trust.utep.edu/visko/services/ESRIGriddedToColoredImagePS1.owl#C copper)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-gmt-gravity-rastermap-copper.htm"><img src="visualizations/color-map-copper.png"></a>
+<h5>Visualizing gravity data as 2D plot</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/TABDELIMITEDDATASET.owl#TABDELIMITEDDATASET)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/CrustalModeling/CrustalModeling.owl#d19)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/plot-2D1.owl#plot-2D1)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/GravityMapProvenance/gravityDataset.txt)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-gmt-gravity-points.htm"><img src="visualizations/2d-plot.png"></a>
+<h5>Visualizing gravity data all ways possible (<b>hasView</b> clause unspecified)</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/TABDELIMITEDDATASET.owl#TABDELIMITEDDATASET)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/CrustalModeling/CrustalModeling.owl#d19)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/GravityMapProvenance/gravityDataset.txt)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-gmt-gravity-contourmap.htm"><img src="visualizations/contour-map.png"></a>
+<a href="pipelines/pipeline-ncl-gravity-rastermap.htm"><img src="visualizations/gravity-raster1.png"></a>
+<a href="pipelines/pipeline-gmt-gravity-points.htm"><img src="visualizations/2d-plot.png"></a>
+<hr>
+<a name="holes"/>
+<h4>Queries Associated with Seismic Tomography</h4>
+<h5>Visualizing velocity model as isosurfaces</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/BINARYFLOATARRAY.owl#BINARYFLOATARRAY)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCode/HolesCodeWDO.owl#d2)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/iso-surfaces1.owl#iso-surfaces1)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCodeFullPML/02029349145023569_vel.3d)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-vtk-velocity-isosurfaces.htm"><img src="visualizations/velocityContours.jpg"></a>
+<h5>Visualizing velocity model as isosurfaces with black background</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/BINARYFLOATARRAY.owl#BINARYFLOATARRAY)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCode/HolesCodeWDO.owl#d2)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/iso-surfaces1.owl#iso-surfaces1)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCodeFullPML/02029349145023569_vel.3d)
+	(hasValue http://trust.utep.edu/visko/services/vtkPolyDataMapperService.owl#backgroundColor 0/0/0)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-vtk-velocity-isosurfaces-black.htm"><img src="visualizations/velocityContours-black.jpg"></a>
+<h5>Visualizing velocity slowness perturbation as isosurfaces</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/BINARYFLOATARRAY.owl#BINARYFLOATARRAY)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCode/HolesCodeWDO.owl#d8)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/iso-surfaces1.owl#iso-surfaces1)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCodeFullPML/032289675474805557_dusum.3d)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-vtk-dusum-isosurfaces.htm"><img src="visualizations/dusumContours.jpg"></a>
+<h5>Visualizing Gridded Time Field as Isosurfaces</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/BINARYFLOATARRAY.owl#BINARYFLOATARRAY)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCode/HolesCodeWDO.owl#d4)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/iso-surfaces1.owl#iso-surfaces1)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCodeFullPML/05729227976475819_time.3d)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-vtk-time-isosurfaces.htm"><img src="visualizations/timeContours.jpg"></a>
+<h5>Visualizing Gridded Time Field as Isosurfaces with Rotation</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/formats/BINARYFLOATARRAY.owl#BINARYFLOATARRAY)
+	(hasType ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCode/HolesCodeWDO.owl#d4)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/iso-surfaces1.owl#iso-surfaces1)
+	(hasContent ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/HolesCodeFullPML/05729227976475819_time.3d)\
+        (hasValue http://trust.utep.edu/visko/services/vtkPolyDataMapperService.owl#xRotation 90)
+        (hasValue http://trust.utep.edu/visko/services/vtkPolyDataMapperService.owl#yRotation 0)
+        (hasValue http://trust.utep.edu/visko/services/vtkPolyDataMapperService.owl#zRotation -45)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-vtk-time-isosurfaces-rotated.htm"><img src="visualizations/time-rotation.png"></a>
+<hr>
+<a name="brightness"/>
+<h4>Queries Associated with Brightness/Temperature Data</h4>
+<h5>Visualizing brightness temperature as contour map with: lines, colors, vertical color bar, interval of 10, and rainbow color table</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/pmlp/NETCDF.owl#NETCDF)
+	(hasType ?DATA http://giovanni.gsfc.nasa.gov/data/brightness.owl#brightness)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/contour-lines1.owl#contour-lines1)
+	(hasContent ?DATA http://disc2.nascom.nasa.gov/daac-bin/OTF/HTTP_services.cgi?SERVICE=SUBSET_YOTC_LATS4D&BBOX=-65.390625,7.734375,-10.546875,42.890625&SHORTNAME=mergedIR&VARIABLES=ch4&TIME=2008-05-31T00:00:00)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridContour.owl#cnFillOn True)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridContour.owl#cnLinesOn True)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridContour.owl#cnLevelSpacingF 20)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridContour.owl#font helvetica)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridContour.owl#lbOrientation vertical)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridContour.owl#colorTable rainbow)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-ncl-brightness-contourmap.htm"><img src="visualizations/brightness-contour.png"></a>
+<h5>Visualizing Brightness Temperature as Raster Image with: Annotations in Helvetica, Horizontal Color Bar, and Rainbow Color Table</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/pmlp/NETCDF.owl#NETCDF)
+	(hasType ?DATA http://giovanni.gsfc.nasa.gov/data/brightness.owl#brightness)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/raster.owl#raster)
+	(hasContent ?DATA http://disc2.nascom.nasa.gov/daac-bin/OTF/HTTP_services.cgi?SERVICE=SUBSET_YOTC_LATS4D&BBOX=-65.390625,7.734375,-10.546875,42.890625&SHORTNAME=mergedIR&VARIABLES=ch4&TIME=2008-05-31T00:00:00)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridRaster.owl#font helvetica)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridRaster.owl#colorTable rainbow)
+	(hasValue http://trust.utep.edu/visko/services/netCDFGridRaster.owl#lbOrientation horizontal)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-ncl-brightness-rastermap.htm"><img src="visualizations/brightness-raster.png"></a>
+<hr>
+
+
+<a name="aerosol">
+<h4>Queries Associated with Aersol Data</h4>
+<h5>Visualizing Aersol Data as Time Series Plot</h5>
+<pre>
+(AND	(hasFormat ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/pmlp/NETCDF.owl#NETCDF)
+	(hasContent ?DATA http://giovanni.gsfc.nasa.gov/session//4FD77C10-9D9F-11E0-8032-A256126F70C8/A838B4D2-9F84-11E0-9248-C3EBB5374347/A83C6D98-9F84-11E0-B803-A51811396DEC///NULL-AERONET_AOD_L2.2-MYD04_L2.051-MIL2ASAE.0022-20112506234225.nc)
+	(hasView ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/XYPlot.owl#XYPlot)
+	(hasType ?DATA http://giovanni.gsfc.nasa.gov/data/aerosol/timeseries.owl#timeseries)
+	(viewedBy ?DATA http://rio.cs.utep.edu/ciserver/ciprojects/visko/mozilla-firefox1.owl#mozilla-firefox1))
+</pre>
+<a href="pipelines/pipeline-ncl-aerosol-timeseries.htm"><img src="visualizations/aerosol-timeseries.png"></a>
+
+<hr align="center" noshade="noshade">
+<i>Copyright @2011 The University of Texas at El Paso</i>
+</td>
+</tr>
+</table>
+</body>
+</html>
