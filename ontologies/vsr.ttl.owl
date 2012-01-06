@@ -5,8 +5,9 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
    xmlns:rss="http://purl.org/rss/1.0/"
-   xmlns="http://purl.org/twc/vocab/vsr#">
-  <owl:Class rdf:about="http://purl.org/twc/vocab/vsr#PDF">
+   xmlns:vsr="http://purl.org/twc/vocab/vsr#"
+   xmlns="https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#">
+  <owl:Class rdf:about="https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#PDF">
     <rdfs:label>PDF</rdfs:label>
     <owl:equivalentClass>
       <owl:Restriction>
@@ -21,7 +22,7 @@
       </owl:Restriction>
     </owl:equivalentClass>
   </owl:Class>
-  <owl:Class rdf:about="http://purl.org/twc/vocab/vsr#Postscript">
+  <owl:Class rdf:about="https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#Postscript">
     <rdfs:label>Postscript</rdfs:label>
     <owl:equivalentClass>
       <owl:Restriction>

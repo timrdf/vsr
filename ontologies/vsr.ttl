@@ -3,7 +3,8 @@
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rss:     <http://purl.org/rss/1.0/> .
-@prefix :        <http://purl.org/twc/vocab/vsr#> .
+@prefix vsr:        <http://purl.org/twc/vocab/vsr#> .
+@prefix : <https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#> . # Hack for Jena.
 
 :Postscript
    a owl:Class;
