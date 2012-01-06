@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF
+   xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:owl="http://www.w3.org/2002/07/owl#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns="http://purl.org/twc/vocab/accountable-visualization#"/>
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+   xmlns:rss="http://purl.org/rss/1.0/"
+   xmlns="http://purl.org/twc/vocab/accountable-visualization#">
+  <owl:Class rdf:about="http://purl.org/twc/vocab/accountable-visualization#PDF">
+    <rdfs:label>PDF</rdfs:label>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</owl:minCardinality>
+        <owl:onProperty rdf:resource="http://purl.org/rss/1.0/link"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:hasValue>application/pdf</owl:hasValue>
+        <owl:onProperty rdf:resource="http://purl.org/dc/terms/format"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="http://purl.org/twc/vocab/accountable-visualization#Postscript">
+    <rdfs:label>Postscript</rdfs:label>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</owl:minCardinality>
+        <owl:onProperty rdf:resource="http://purl.org/rss/1.0/link"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+    <owl:equivalentClass>
+      <owl:Restriction>
+        <owl:hasValue>application/postscript</owl:hasValue>
+        <owl:onProperty rdf:resource="http://purl.org/dc/terms/format"/>
+      </owl:Restriction>
+    </owl:equivalentClass>
+  </owl:Class>
+</rdf:RDF>
