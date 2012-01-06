@@ -5,8 +5,8 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
    xmlns:rss="http://purl.org/rss/1.0/"
-   xmlns="http://purl.org/twc/vocab/accountable-visualization#">
-  <owl:Class rdf:about="http://purl.org/twc/vocab/accountable-visualization#PDF">
+   xmlns="http://purl.org/twc/vocab/vsr#">
+  <owl:Class rdf:about="http://purl.org/twc/vocab/vsr#PDF">
     <rdfs:label>PDF</rdfs:label>
     <owl:equivalentClass>
       <owl:Restriction>
@@ -21,7 +21,7 @@
       </owl:Restriction>
     </owl:equivalentClass>
   </owl:Class>
-  <owl:Class rdf:about="http://purl.org/twc/vocab/accountable-visualization#Postscript">
+  <owl:Class rdf:about="http://purl.org/twc/vocab/vsr#Postscript">
     <rdfs:label>Postscript</rdfs:label>
     <owl:equivalentClass>
       <owl:Restriction>

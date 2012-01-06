@@ -3,7 +3,7 @@
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix rss:     <http://purl.org/rss/1.0/> .
-@prefix :        <http://purl.org/twc/vocab/accountable-visualization#> .
+@prefix :        <http://purl.org/twc/vocab/vsr#> .
 
 :Postscript
    a owl:Class;
