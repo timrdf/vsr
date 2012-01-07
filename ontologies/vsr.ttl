@@ -2,36 +2,47 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix nie:     <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#> .
 @prefix rss:     <http://purl.org/rss/1.0/> .
-@prefix vsr:        <http://purl.org/twc/vocab/vsr#> .
-@prefix : <https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#> . # Hack for Jena.
+@prefix vsr:     <http://purl.org/twc/vocab/vsr#> .
+@prefix :        <https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#> . # Hack for Jena.
 
 :Postscript
    a owl:Class;
    rdfs:label "Postscript";
    owl:equivalentClass [
-      a owl:Restriction;
-      owl:onProperty rss:link;
-      owl:minCardinality 1;
-   ];
-   owl:equivalentClass [
      a owl:Restriction ;
-     owl:hasValue "application/postscript" ;
-     owl:onProperty dcterms:format;
+     owl:onProperty nie:mimeType;
+     owl:hasValue   "application/postscript" ;
    ];
+#   owl:equivalentClass [
+#      a owl:Restriction;
+#      owl:onProperty rss:link;
+#      owl:minCardinality 1;
+#   ];
+#   owl:equivalentClass [
+#     a owl:Restriction ;
+#     owl:onProperty dcterms:format;
+#     owl:hasValue "application/postscript" ;
+#   ];
 .
 
 :PDF
    a owl:Class;
    rdfs:label "PDF";
    owl:equivalentClass [
-      a owl:Restriction;
-      owl:onProperty rss:link;
-      owl:minCardinality 1;
-   ];
-   owl:equivalentClass [
      a owl:Restriction ;
-     owl:hasValue "application/pdf" ;
-     owl:onProperty dcterms:format;
+     owl:onProperty nie:mimeType;
+     owl:hasValue   "application/pdf" ;
    ];
+#   owl:equivalentClass [
+#      a owl:Restriction;
+#      owl:onProperty rss:link;
+#      owl:minCardinality 1;
+#   ];
+#   owl:equivalentClass [
+#     a owl:Restriction ;
+#     owl:hasValue "application/pdf" ;
+#     owl:onProperty dcterms:format;
+#   ];
 .
