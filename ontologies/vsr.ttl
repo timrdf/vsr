@@ -1,6 +1,7 @@
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix frbr:    <http://purl.org/vocab/frbr/core#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix nie:     <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#> .
 @prefix rss:     <http://purl.org/rss/1.0/> .
@@ -13,7 +14,7 @@
    owl:equivalentClass [
      a owl:Restriction ;
      owl:onProperty nie:mimeType;
-     owl:hasValue   "application/postscript" ;
+     owl:hasValue   "application/postscript";
    ];
 #   owl:equivalentClass [
 #      a owl:Restriction;
@@ -25,6 +26,18 @@
 #     owl:onProperty dcterms:format;
 #     owl:hasValue "application/postscript" ;
 #   ];
+.
+
+:ConvertedPostscript
+   a owl:Class;
+   rdfs:label "ConvertedPostcript";
+   rdfs:subClassOf :Postscript;
+   rdfs:subClassOf [
+      a owl:Restriction;
+      owl:onProperty frbr:alternateOf;
+      owl:minCardinality 1;
+      rdfs:comment "but this isn't directional...";
+   ];
 .
 
 :PDF

@@ -2,5 +2,36 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vsr:  <http://purl.org/twc/vsr/ontology#> .
+@prefix :     <http://purl.org/twc/vsr/ontology#> .
 
+:Environment
+   a owl:Class;
+   rdfs:label "Environment";
+.
 
+:Task
+   a owl:Class;
+   rdfs:label "Task";
+.
+
+:Protagonist
+   a owl:Class;
+   rdfs:label "Environment";
+.
+
+:VisualForm
+   a owl:Class;
+   rdfs:label "VisualForm";
+.
+
+:Rendering
+   a owl:Class;
+   rdfs:label "Rendering";
+   rdfs:comment "";
+.
+
+:Transmission
+   a owl:Class;
+   rdfs:label "Transmission";
+.
