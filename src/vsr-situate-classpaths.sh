@@ -10,7 +10,7 @@ for jar in \
    $VSR_HOME/lib/csv2rdf4lod.jar
 do
    if [[ $CLASSPATH != *`basename $jar`* ]]; then
-      echo "`basename $jar` not in classpath; adding $CSV2RDF4LOD_HOME/$jar" >&2
+      echo "`basename $jar` not in classpath; adding $jar" >&2
       missing=$missing:$jar
    fi
 done
