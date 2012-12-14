@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/bin/vsr-situate-classpath.sh>;
+#3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/src/vsr-situate-classpaths.sh>;
 #3>    rdfs:seeAlso <https://github.com/timrdf/csv2rdf4lod-automation/wiki/situate-shell-paths-pattern> .
 
 VSR_HOME=$(cd ${0%/*} && echo ${PWD%/*})
