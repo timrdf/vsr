@@ -21,7 +21,7 @@ for jar in \
    $VSR_HOME/lib/*.jar
 do
    if [[ $CLASSPATH != *`basename $jar`* ]]; then
-      echo "`basename $jar` not in classpath; adding $jar" >&2
+      #echo "`basename $jar` not in classpath; adding $jar" >&2
       missing=$missing:$jar
    fi
 done
