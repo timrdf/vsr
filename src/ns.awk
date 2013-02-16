@@ -50,7 +50,11 @@ BEGIN {
    }
    if( length(term) ) {
       terms[term]=term
-      print "<xsl:variable name=\""prefix":"term"\"    select=\"concat($"prefix",'"term"')\"/>"
+      if( length(namespace) ) {
+         print "<xsl:variable name=\""prefix":"term"\"    select=\"concat($"prefix",'"term"')\"/>"
+      }else {
+         print "<xsl:variable name=\""prefix":"term"\"    select=\"'"$0"'\"/>"
+      }
       ts++
    }
 }
