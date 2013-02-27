@@ -8,7 +8,7 @@
 #   export PATH=$PATH`$DATAFAQS_HOME/src/vsr-situate-paths.sh`
 #   (can be repeated indefinitely, once paths are in PATH, nothing is returned.)
 
-HOME=$(cd ${0%/*} && echo ${PWD})
+HOME=$(cd ${0%/*/*} && echo ${PWD%/*})
 me=$(cd ${0%/*} && echo ${PWD})/`basename $0`
 
 if [ "$1" == "--help" ]; then
@@ -26,7 +26,7 @@ missing=""
 
 if [ ! `which vsr2grf.sh` ]; then
    missing=":"
-   missing=$missing$HOME/bin
+   missing=$missing$HOME/src
 fi
 
 echo $missing
