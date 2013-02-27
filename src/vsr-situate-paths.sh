@@ -28,3 +28,5 @@ if [ ! `which vsr2grf.sh` ]; then
    missing=":"
    missing=$missing$HOME/bin
 fi
+
+echo $missing
