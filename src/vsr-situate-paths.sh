@@ -8,13 +8,13 @@
 #   export PATH=$PATH`$DATAFAQS_HOME/src/vsr-situate-paths.sh`
 #   (can be repeated indefinitely, once paths are in PATH, nothing is returned.)
 
-HOME=$(cd ${0%/*/*} && echo ${PWD%/*})
+HOME=$(cd ${0%/*} && echo ${PWD})
 me=$(cd ${0%/*} && echo ${PWD})/`basename $0`
 
 if [ "$1" == "--help" ]; then
    echo "`basename $0` [--help]"
    echo
-   echo "$HOME `which vsr2grf.sh`"
+   #echo "$HOME `which vsr2grf.sh`"
    echo "Return the shell paths needed for Prizms scripts to run."
    echo "Set them by executing:"
    echo
@@ -26,7 +26,7 @@ missing=""
 
 if [ ! `which vsr2grf.sh` ]; then
    missing=":"
-   missing=$missing$HOME/src
+   missing=$missing$HOME
 fi
 
 echo $missing
