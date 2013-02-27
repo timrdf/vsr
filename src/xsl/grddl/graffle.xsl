@@ -1,3 +1,9 @@
+<!--
+#3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/src/xsl/grddl/graffle.xsl>;
+#3>    prov:has_provenance   <https://raw.github.com/timrdf/vsr/master/src/xsl/grddl/graffle.xsl.prov.ttl>;
+#3>    prov:wasAttributedTo  <http://purl.org/twc/id/person/TimLebo>;
+#3> .
+-->
 <xsl:transform version="2.0" 
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -26,9 +32,15 @@
 </xsl:function>
 
 <xsl:template match="/">
-   <rdf:RDF>
+   <!-- TODO: use the modification date to create altenrates of those that were minted during the visualization process.
+      the latest alternate can be found, and the series of alternates can be clustered into "no change" -->
+   <!--rdf:RDF-->
+   <xsl:value-of select="concat(
+            '@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .',$NL
+         )"/>
+
       <xsl:apply-templates select="//key[.='GraphicsList']/following-sibling::array[1]/dict" mode="turtle"/>
-   </rdf:RDF>
+   <!--/rdf:RDF-->
 </xsl:template>
 
 <xsl:template match="dict" mode="turtle">

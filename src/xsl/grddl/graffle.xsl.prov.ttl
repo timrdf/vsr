@@ -25,5 +25,6 @@
 
 <>
     prov:has_provenance <https://raw.github.com/timrdf/vsr/master/src/xsl/grddl/graffle.xsl.prov.ttl> ;
-    prov:specializationOf <https://github.com/timrdf/vsr/blob/master/src/xsl/grddl/graffle.xsl> .
+    prov:specializationOf <https://github.com/timrdf/vsr/blob/master/src/xsl/grddl/graffle.xsl> ;
+    prov:wasAttributedTo <http://purl.org/twc/id/person/TimLebo> .
 
