@@ -6,6 +6,7 @@
 -->
 <xsl:transform version="2.0" 
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:xd="http://www.pnp-software.com/XSLTdoc"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
    xmlns:g="https://raw.github.com/timrdf/vsr/master/src/xsl/grddl/graffle.xsl#"
