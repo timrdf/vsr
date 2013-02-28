@@ -43,7 +43,7 @@
 </xsl:function>
 
 <xsl:template match="/">
-   <!-- TODO: use the modification date to create altenrates of those that were minted during the visualization process.
+   <!-- TODO: use the modification date to create alternates of those that were minted during the visualization process.
       the latest alternate can be found, and the series of alternates can be clustered into "no change" -->
    <!--rdf:RDF-->
    <xsl:value-of select="concat(
@@ -62,7 +62,7 @@
          then concat('   a &lt;',g:value-of('Shape',.),'&gt;;',$NL) 
          else '',
       if (g:value-of('Text',.))
-         then concat('   rdfs:label ',$DQ,xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.))),$DQ,';',$NL) 
+         then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.))),'\\','\\\\'),$DQ,';',$NL) 
          else ''
    )"/>
    <xsl:for-each select="g:value-of('UserInfo',.)/key">
