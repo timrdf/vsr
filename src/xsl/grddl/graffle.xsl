@@ -15,7 +15,17 @@
 <!--xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/-->
 <xsl:output method="text"/>
 
-<xsl:include href="../util/rtf-function.xsl"/>
+<!--xsl:include href="../util/rtf-function.xsl"/-->
+<xd:doc>
+   <xd:short>Strip RTF to get the textual message.</xd:short>
+   <xd:detail>
+   </xd:detail>
+   <xd:param name="rtf">An Rich Text Formatted string from which to extract the string message.</xd:param>
+</xd:doc>
+<xsl:function name="xfm:rtf2txt">
+   <xsl:param name="rtf"/>
+   <xsl:value-of select="replace(replace(replace($rtf,'^.* ','','s'),'.$',''),$NL,'')"/>
+</xsl:function>
 
 <xsl:key name="vnode" match="dict" use="dict[key[.='ID']]/following-sibling::integer[1]"/>
 
