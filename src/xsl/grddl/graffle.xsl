@@ -104,5 +104,6 @@
 </xsl:template>
 
 <xsl:variable name="NL" select="'&#xa;'"/>
+<xsl:variable name="DQ">"</xsl:variable>
 
 </xsl:transform>
