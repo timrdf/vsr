@@ -190,12 +190,11 @@ while [ $# -gt 0 ]; do
    $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
 
    # Convert file at 'artifact' into file 'outfile', depending on how many files are being processed.
-   jar=${CLASSPATH}
 	if [ $multiple_files = "true" ]; then
 		if [ ! -e $outfile -o $overwrite = "yes" ]; then
          # EXECUTE CONVERSION ($artifact to $outfile via $intermediate_file)
          echo "Transforming $base to $outfile"
-         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh -cp $CLASSPATH:jar $XSL $input_extension $output_extension $rdf > $outfile 2> $errorfile
+         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $rdf > $outfile 2> $errorfile
       else 
          echo "$base    WARNING: $outfile already exists. Did not overwrite." $overwrite
 		fi
@@ -204,14 +203,14 @@ while [ $# -gt 0 ]; do
 		if [ $overwrite = "yes" ]; then
          # EXECUTE CONVERSION ($artifact to $outfile via $intermediate_file)
          echo "Transforming $base to $outfile"
-         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh -cp $CLASSPATH:jar $XSL $input_extension $output_extension $rdf > $outfile 2> $errorfile
+         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $rdf > $outfile 2> $errorfile
 		else
          # EXECUTE CONVERSION ($artifact to stdout via $intermediate_file)
          #for path in `echo $CLASSPATH | sed 's/:/ /g'`; do 
          #   echo $path
          #   tar -tf $path | grep NameFactory
          #done 
-         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh -cp $CLASSPATH:jar $XSL $input_extension $output_extension $rdf 
+         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $rdf 
          # Convert the file, but print to stdout (and NOT a file, since we shouldn't overwrite it)
 	  fi
 	fi
