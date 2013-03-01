@@ -58,7 +58,7 @@
 <xsl:template match="dict" mode="turtle">
    <xsl:value-of select="concat($NL,
       '&lt;',g:value-of('ID',.),'&gt;',$NL,
-      '   a &lt;',g:value-of('Class',.),'&gt;;',$NL,
+      '   a graffle:',g:value-of('Class',.),';',$NL,
       if (string-length(g:value-of('Shape',.))) 
          then concat('   a graffle:',g:value-of('Shape',.),';',$NL) 
          else '',
