@@ -47,7 +47,8 @@
       the latest alternate can be found, and the series of alternates can be clustered into "no change" -->
    <!--rdf:RDF-->
    <xsl:value-of select="concat(
-            '@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .',$NL
+            '@prefix rdfs:    &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .',$NL,
+            '@prefix graffle: &lt;http://purl.org/twc/vocab/vsr/graffle#&gt; .',$NL
          )"/>
 
       <xsl:apply-templates select="//key[.='GraphicsList']/following-sibling::array[1]/dict" mode="turtle"/>
@@ -59,7 +60,7 @@
       '&lt;',g:value-of('ID',.),'&gt;',$NL,
       '   a &lt;',g:value-of('Class',.),'&gt;;',$NL,
       if (string-length(g:value-of('Shape',.))) 
-         then concat('   a &lt;',g:value-of('Shape',.),'&gt;;',$NL) 
+         then concat('   a graffle:',g:value-of('Shape',.),';',$NL) 
          else '',
       if (g:value-of('Text',.))
          then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.))),'\\','\\\\'),$DQ,';',$NL) 
