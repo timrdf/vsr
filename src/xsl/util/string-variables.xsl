@@ -16,6 +16,7 @@
 <xsl:variable name="DQ">"</xsl:variable>
 <xsl:variable name="DAPOS">"</xsl:variable>
 <xsl:variable name="LT">&lt;</xsl:variable>
+<xsl:variable name="GT">&gt;</xsl:variable>
 
 <xsl:variable name="IN">
    <xsl:value-of select="'   '"/>
