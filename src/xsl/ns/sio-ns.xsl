@@ -15,6 +15,13 @@
 <xsl:variable name="sio"                select="'http://semanticscience.org/resource/'"/>
 
 <!-- Terms within the namespace -->
+<xsl:variable name="sio:count"         select="concat($sio,'count')"/>
+<xsl:variable name="sio:has-member"    select="concat($sio,'has-member')"/>
+
+<xsl:variable name="sio:has-attribute" select="concat($sio,'has-attribute')"/>
+<xsl:variable name="sio:Attribute"     select="concat($sio,'Attribute')"/>
+<xsl:variable name="sio:refers-to"     select="concat($sio,'refers-to')"/>
+
 <xsl:variable name="sio:SIO_000000"    select="concat($sio,'SIO_000000')"/>
 <xsl:variable name="sio:SIO_000001"    select="concat($sio,'SIO_000001')"/>
 <xsl:variable name="sio:SIO_000004"    select="concat($sio,'SIO_000004')"/>
