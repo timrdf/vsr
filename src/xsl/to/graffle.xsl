@@ -1,11 +1,9 @@
-<!-- Timothy Lebo -->
 <xsl:transform version="2.0" 
-               xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-               xmlns:xd="http://www.pnp-software.com/XSLTdoc"
-					xmlns:xs="http://www.w3.org/2001/XMLSchema"
-					xmlns:xfm="transform namespace"
-
-					exclude-result-prefixes="xs xfm xd">
+   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:xd="http://www.pnp-software.com/XSLTdoc"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns:xfm="transform namespace"
+   exclude-result-prefixes="xs xfm xd">
 
 <xd:doc type="stylesheet">
    <xd:short>Commons for all OmniGraffle versions (i.e. 4 and 5)</xd:short>
@@ -29,7 +27,7 @@
    <xsl:param name="id"/>
 	<!-- xsl:value-of select="if (false()) then xfm:atoid($id) else $id"/-->
 	<xsl:variable name="value" select="1000 + xfm:atoid-smaller($id)"/>
-   <xsl:message select="concat('             GRAFFLE to-graffle-id ',$value,' from ',$id)"/>
+   <xsl:message select="concat('#             GRAFFLE to-graffle-id ',$value,' from ',$id)"/>
    <xsl:value-of select="$value"/>
 </xsl:function>
 
@@ -180,7 +178,7 @@
 	<xsl:param name="notes"/>
 	<xsl:param name="ignore"/>
 
-   <xsl:message select="concat('             GRAFFLE node given vid ',$id)"/>
+   <xsl:message select="concat('#             GRAFFLE node given vid ',$id)"/>
 
 	<xsl:variable name="new_width"  select="if ($width)  then $width  else xfm:graffle-width-of-text( $label,$shape)"/>
 	<xsl:variable name="new_height" select="if ($height) then $height else xfm:graffle-height-of-text($label,$shape)"/>
@@ -517,9 +515,9 @@
 	<xsl:param name="line-style"/>
 	<xsl:param name="stroke-color">0.701961</xsl:param>
 
-   <xsl:message select="concat('             GRAFFLE edge given id       ',$id)"/>
-   <xsl:message select="concat('             GRAFFLE edge given from vid ',$from)"/>
-   <xsl:message select="concat('             GRAFFLE edge given to   vid ',$to)"/>
+   <xsl:message select="concat('#             GRAFFLE edge given id       ',$id)"/>
+   <xsl:message select="concat('#             GRAFFLE edge given from vid ',$from)"/>
+   <xsl:message select="concat('#             GRAFFLE edge given to   vid ',$to)"/>
 
 	<dict>
 		<key>ID</key>
