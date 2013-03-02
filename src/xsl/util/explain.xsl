@@ -51,16 +51,16 @@
    <xsl:param name="actor"/>
    <xsl:param name="resource" as="xs:string"/>
 
-   <!--xsl:variable name="decisionURI">
+   <xsl:variable name="decisionURI">
       <xsl:choose>
          <xsl:when test="$log-visual-decisions">
-            <xsl:value-of select="log:explain($log,$subject,$predicate,$object,$actor,$action,$justification)"/>
+            <xsl:value-of select="log:arriveResource($log,$actor,$resource)"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="'[]'"/>
          </xsl:otherwise>
       </xsl:choose>
-   </xsl:variable-->
+   </xsl:variable>
 
    <xsl:value-of select="acv:arriveResource($actor,$resource,'')"/>
 </xsl:function>
@@ -87,7 +87,7 @@
    <xsl:param name="resource" as="xs:string"/>
    <xsl:param name="indent"/>
 
-   <xsl:value-of select="concat($indent,pmm:tryQName($resource),' ( ® ',pmm:bestLocalName($actor),' )')"/>
+   <xsl:value-of select="concat('# ',$indent,pmm:tryQName($resource),' ( ® ',pmm:bestLocalName($actor),' )')"/>
 </xsl:function>
 
 
@@ -117,19 +117,19 @@
    <xsl:param name="predicate" as="xs:string"/>
    <xsl:param name="object"    as="xs:string"/>
 
-   <!--xsl:variable name="decisionURI">
+   <xsl:variable name="decisionURI">
       <xsl:choose>
          <xsl:when test="$log-visual-decisions">
-            <xsl:value-of select="log:explain($log,$subject,$predicate,$object,$actor,$action,$justification)"/>
+            <xsl:value-of select="log:arriveTriple($log,$actor,$subject,$predicate,$object)"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="'[]'"/>
          </xsl:otherwise>
       </xsl:choose>
-   </xsl:variable-->
+   </xsl:variable>
    <xsl:variable name="space" select="concat($in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in)"/>
 
-   <xsl:value-of select="concat($in, pmm:tryQName($predicate), $in,pmm:tryQName($object),' . ',
+   <xsl:value-of select="concat('# ',$in, pmm:tryQName($predicate), $in,pmm:tryQName($object),' . ',
                                 '( ®~o ',pmm:bestLocalName($actor),')')"/>
 </xsl:function>
 
@@ -157,19 +157,19 @@
    <xsl:param name="subject"   as="xs:string"/>
    <xsl:param name="predicate" as="xs:string"/>
 
-   <!--xsl:variable name="decisionURI">
+   <xsl:variable name="decisionURI">
       <xsl:choose>
          <xsl:when test="$log-visual-decisions">
-            <xsl:value-of select="log:explain($log,$subject,$predicate,$object,$actor,$action,$justification)"/>
+            <xsl:value-of select="log:arriveTriple($log,$actor,$subject,$predicate)"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="'[]'"/>
          </xsl:otherwise>
       </xsl:choose>
-   </xsl:variable-->
+   </xsl:variable>
    <xsl:variable name="space" select="concat($in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in)"/>
 
-   <xsl:value-of select="concat($in,pmm:tryQName($predicate),$in,$DQ,$DQ,' . ',
+   <xsl:value-of select="concat('# ',$in,pmm:tryQName($predicate),$in,$DQ,$DQ,' . ',
                                 '( ®~ ',pmm:bestLocalName($actor),')')"/>
 </xsl:function>
 
@@ -224,7 +224,7 @@
       </xsl:choose>
    </xsl:variable>
 
-   <xsl:value-of select="concat($description,' (decision # ',pmm:tryQName($decisionURI),')')"/>
+   <xsl:value-of select="concat('# ',$description,' (decision # ',pmm:tryQName($decisionURI),')')"/>
 </xsl:function>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 100 -->
@@ -290,7 +290,8 @@
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
-   <xsl:value-of select="concat($indent,$description,' (decision # ',pmm:tryQName($decisionURI),')')"/>
+   <!--xsl:value-of select="concat($indent,$description,' (decision # ',pmm:tryQName($decisionURI),')')"/-->
+   <xsl:value-of select="concat('# ',$indent,$description,' (decision # ',$decisionURI,')')"/>
 </xsl:function>
 
 <xsl:function name="acv:explainResource">
@@ -357,7 +358,7 @@
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
-   <xsl:value-of select="concat($description,', decision # ',pmm:tryQName($decisionURI))"/>
+   <xsl:value-of select="concat('# ',$description,', decision # ',pmm:tryQName($decisionURI))"/>
 </xsl:function>
 
 <!-- 
@@ -416,7 +417,7 @@
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
-   <xsl:value-of select="concat($description,', decision # ',pmm:tryQName($decisionURI))"/>
+   <xsl:value-of select="concat('# ',$description,', decision # ',pmm:tryQName($decisionURI))"/>
 </xsl:function>
 
 </xsl:transform>
