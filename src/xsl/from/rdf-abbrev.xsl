@@ -1223,7 +1223,7 @@ $rdf:type
 
    <xsl:if test="$should-depict = 'true'">
       <!-- Make the edge from the resource to the object-vnode -->
-      <xsl:message select="'          ( = Drawing edge = = = = = = = )'"/>
+      <xsl:message select="'#          ( = Drawing edge = = = = = = = )'"/>
       <xsl:call-template name="edge">
          <xsl:with-param name="id"           select="nmf:getUUIDName('gedge')"/>
          <xsl:with-param name="from"         select="$from"/> <!-- Encodes *force* directionality; not necessarily _visual_ directionality. -->
@@ -1242,7 +1242,7 @@ $rdf:type
       </xsl:call-template>
 
       <xsl:if test="not(idm:hasIdentified($visual-element-hash,$subject-vnode))">
-         <xsl:message select="'          ( = = Drawing subject by reusing template = = = = = = = = = = = = = = = = = = = = )'"/>
+         <xsl:message select="'#          ( = = Drawing subject by reusing template = = = = = = = = = = = = = = = = = = = = )'"/>
          <!-- A bit of a hack to provide a context node for the template's key -->
          <!--xsl:for-each-group select="key('descriptions-by-subject',$subject)
                                       /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)" group-by="."-->
@@ -1257,7 +1257,7 @@ $rdf:type
       <xsl:if test="not(idm:hasIdentified($visual-element-hash,$object-vnode))">
          <xsl:choose>
             <xsl:when test="$object-is-resource">
-               <xsl:message select="'          ( = = Drawing object by reusing template = = = = = = = = = = = = = = = = = = = = )'"/>
+               <xsl:message select="'#          ( = = Drawing object by reusing template = = = = = = = = = = = = = = = = = = = = )'"/>
                <!-- A bit of a hack to provide a context node for the template's key -->
                <xsl:for-each-group select="key('descriptions-by-subject',if ($q-object) then $q-object else $object)
                                             /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)" group-by=".">
@@ -1268,7 +1268,7 @@ $rdf:type
                </xsl:for-each-group>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:message select="'          ( = = Drawing object with old, bad way = = = = = = = = = = = = = = = = = = = = = )'"/>
+               <xsl:message select="'#          ( = = Drawing object with old, bad way = = = = = = = = = = = = = = = = = = = = = )'"/>
                <!-- Mint the object-vnode for the literal -->
                <!-- This should be done by calling the original visual-element template, 
                     given a new context (as is done above). -->

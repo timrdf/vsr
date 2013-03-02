@@ -189,12 +189,28 @@ while [ $# -gt 0 ]; do
    rdf="_"`basename $0``date +%s`_$$.tmp
    $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
 
+   params=""
+   if [[ `which cr-dataset-uri.sh` && `cr-dataset-uri.sh --uri` == http* ]]; then
+      # visual-artifact-uri
+      # [-v a=1 b=2 ... -in]
+      params="visual-artifact-uri=`cr-dataset-uri.sh --uri`"
+   fi
+   if [[ "$VSR_PROVENANCE" == "true" ]]; then
+      params="$params log-visual-decisions=true"
+      params="$params log-serverURL=."
+   fi
+   if [[ -n "$params" ]]; then
+      params="-v $params -in"
+      echo $params
+   fi
+
    # Convert file at 'artifact' into file 'outfile', depending on how many files are being processed.
 	if [ $multiple_files = "true" ]; then
 		if [ ! -e $outfile -o $overwrite = "yes" ]; then
          # EXECUTE CONVERSION ($artifact to $outfile via $intermediate_file)
          echo "Transforming $base to $outfile"
-         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $rdf > $outfile 2> $errorfile
+         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $params $rdf > $outfile 2> $errorfile
+         perl -pi -e 's/SLF4J:.*//' $errorfile
       else 
          echo "$base    WARNING: $outfile already exists. Did not overwrite." $overwrite
 		fi
@@ -203,14 +219,15 @@ while [ $# -gt 0 ]; do
 		if [ $overwrite = "yes" ]; then
          # EXECUTE CONVERSION ($artifact to $outfile via $intermediate_file)
          echo "Transforming $base to $outfile"
-         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $rdf > $outfile 2> $errorfile
+         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $params $rdf > $outfile 2> $errorfile
+         perl -pi -e 's/SLF4J:.*//' $errorfile
 		else
          # EXECUTE CONVERSION ($artifact to stdout via $intermediate_file)
          #for path in `echo $CLASSPATH | sed 's/:/ /g'`; do 
          #   echo $path
          #   tar -tf $path | grep NameFactory
          #done 
-         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $rdf 
+         $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $params $rdf 
          # Convert the file, but print to stdout (and NOT a file, since we shouldn't overwrite it)
 	  fi
 	fi
@@ -219,11 +236,9 @@ while [ $# -gt 0 ]; do
 done
 
 if [ -e "$intermediate_file" ]; then
-   echo " "
    rm $intermediate_file 
 fi
 if [ -e "$XSL" ]; then
-   echo " "
    rm $XSL
 fi
 if [ -e "$rdf" ]; then

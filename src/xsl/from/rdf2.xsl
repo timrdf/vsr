@@ -39,24 +39,25 @@
 
 <!-- Actual params -->
 
-<xd:doc>Refrain from ALL visual abbreviations (except QNames for URIs and gray edges)</xd:doc>
-<xsl:param    name="draw-literal-rdf"          select="false()"/> <!-- TODO MOVE -->
-
-<xd:doc>URL of sesame server to log visualization artifact</xd:doc>
-<xsl:param    name="log-serverURL"             select="'http://localhost:8080/openrdf-sesame'"/>
-
-<xd:doc>repository at sesame server to log visualization artifact</xd:doc>
-<xsl:param    name="log-repositoryID"          select="'visual'"/>
-
 <xd:doc>named graph of visualization artifact</xd:doc>
-<xsl:param    name="visual-artifact-uri"       select="concat('http://logd.tw.rpi.edu/source/lebot-rpi-edu/dataset/visualizations/version/',nmf:getMillisecondToMinuteName(''))"/>
-
-<xd:doc>horizontal and vertical separation between node columns: 1) sinks 2) resources 3) bnodes 4) literals</xd:doc>
-<xsl:param    name="separation"                select="300,50"/>
+<xsl:param name="visual-artifact-uri"  select="concat('http://logd.tw.rpi.edu/source/lebot-rpi-edu/dataset/visualizations/version/',nmf:getMillisecondToMinuteName(''))"/>
 
 <xd:doc>conferred in rdf:RDF and acv:explain()</xd:doc>
-<xsl:variable name="log-visual-decisions"                 select="false()"/>
+<xsl:param name="log-visual-decisions" select="false()"/>
 
+<xd:doc>URL of sesame server to log visualization artifact</xd:doc>
+<xsl:param name="log-serverURL"        select="'http://localhost:8080/openrdf-sesame'"/>
+
+<xd:doc>repository at sesame server to log visualization artifact</xd:doc>
+<xsl:param name="log-repositoryID"     select="'visual'"/>
+
+
+
+<!-- Should be moved to implementing visual strategy template -->
+<xd:doc>horizontal and vertical separation between node columns: 1) sinks 2) resources 3) bnodes 4) literals</xd:doc>
+<xsl:param    name="separation"                select="300,50"/>
+<xd:doc>Refrain from ALL visual abbreviations (except QNames for URIs and gray edges)</xd:doc>
+<xsl:param    name="draw-literal-rdf"          select="false()"/> <!-- TODO MOVE -->
 <!-- Relaxation parameters that should be tweaked -->
 <xd:doc>Include the rdf:type into the label of the instance? was conferred in DEFAULT, now NOT conferred at all.</xd:doc>
 <xsl:variable name="relax-classes-into-instances"         select="false()"/>
@@ -109,7 +110,9 @@
    <xd:short>Logger</xd:short>
    <xd:detail>An instance of a Java object. Commits RDF triples to a Sesame repository.</xd:detail>
 </xd:doc>
-<xsl:variable name="log"                       select="log:new($log-serverURL,$log-repositoryID,$visual-artifact-uri)"/>
+<xsl:variable name="log"                       select="if ($log-serverURL = '.') 
+                                                       then log:new($visual-artifact-uri) 
+                                                       else log:new($log-serverURL, $log-repositoryID, $visual-artifact-uri)"/>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 100 -->
 <xd:doc></xd:doc>
@@ -132,15 +135,16 @@
 </xd:doc>
 <xsl:template match="rdf:RDF">
 
+   <xsl:message select="concat('# log ',$log-visual-decisions,' url ',$log-serverURL)"/>
    <xsl:variable name="owl:sameAs" select="concat($rl,'RDF_2y_entry_134')"/>
 
    <!-- Summary of input -->
-   <xsl:message select="' ',count(//rdf:Description[@rdf:about]) ,' subject uris of ',  count(//@rdf:resource),' uri references'"/>
-   <xsl:message select="' ',count(//rdf:Description[@rdf:nodeID]),' subject bnodes of ',count(//@rdf:nodeID),  ' bnode references'"/>
-   <xsl:message select="' ',count(//rdf:Description),' descriptions, with ',(  count(//rdf:Description[@rdf:about]) 
+   <xsl:message select="'# ',count(//rdf:Description[@rdf:about]) ,' subject uris of ',  count(//@rdf:resource),' uri references'"/>
+   <xsl:message select="'# ',count(//rdf:Description[@rdf:nodeID]),' subject bnodes of ',count(//@rdf:nodeID),  ' bnode references'"/>
+   <xsl:message select="'# ',count(//rdf:Description),' descriptions, with ',(  count(//rdf:Description[@rdf:about]) 
                                                                              + count(//rdf:Description[@rdf:nodeID])) 
                                                                              - count(//rdf:Description),
-                           ' having something other than rdf:about or @rdf:nodeID'"/> <!-- ^^ numNodesWithoutAboutOrID -->
+                        '# having something other than rdf:about or @rdf:nodeID'"/> <!-- ^^ numNodesWithoutAboutOrID -->
 
    <!-- Walk through all namespaces, get their best prefix, and print abbreviations into a single node -->
    <xsl:variable name="prefix-mappings">
@@ -231,7 +235,7 @@
       <!--xsl:sort select="current-grouping-key()"/-->                                                               <!-- sort by name (r2) -->
 
       <!-- Print the subject once, and let each triple handler print the PO -->
-      <xsl:message select="pmm:tryQName(current-grouping-key())"/> 
+      <xsl:message select="concat('# ',pmm:tryQName(current-grouping-key()))"/> 
 
       <!--xsl:choose>
          <xsl:when test="$draw-literal-rdf"> <- - - - draw literal logic should be done by the visual strategy, not in the core.
@@ -250,8 +254,8 @@
    </xsl:for-each-group>
 
    <xsl:if test="$log-visual-decisions">
-      <xsl:variable name="numTriples" select="log:finish($log)"/>
-      <xsl:message select="concat($in,$numTriples,' in vislog')"/>
+      <xsl:variable name="numTriples" select="log:export($log)"/>
+      <xsl:message select="concat('#',$in,$numTriples,' in vislog')"/>
    </xsl:if>
 
 </xsl:template>
@@ -545,7 +549,6 @@
       <!--xsl:message select="concat('CC: ',$rdf-types-as-string,' ',$class-fill)"/-->
 
 
-      <!--xsl:variable name="visualFormURI" select="concat('http://todo.org/visualformURI',idm:getIdentifier($visual-element-hash,$resource))"/-->
 
       <!-- 
           Determine the visual properties based on descriptions gathered.
@@ -557,15 +560,18 @@
          <xsl:choose>
             <xsl:when test="string-length($view-context) and string-length($resource)">
                <xsl:variable name="value" select="concat($view-context,' ',$resource)"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'vnode id',string($value),'$visualFormURI','view-context given',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'vnode id',string($value),concat('http://todo.org/visualformURI',$value),'view-context given',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:otherwise> 
-               <xsl:value-of select="$resource"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'vnode id',$resource,'$visualFormURI','otherwise',$defin)"/>
+               <xsl:variable name="value" select="$resource"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'vnode id',$resource,concat('http://todo.org/visualformURI',$value),'otherwise',$defin)"/>
+               <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
+
+      <xsl:variable name="visualFormURI" select="concat('http://todo.org/visualformURI',$id)"/>
 
       <!-- Sub-surfacing variables -->
 
@@ -573,19 +579,19 @@
          <xsl:choose>
             <xsl:when test="$rdf-types = $blacklisted-subject-classes">
                <xsl:copy-of select="'false'"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'should-depict','false','$visualFormURI','instance of blacklisted class',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'should-depict','false',$visualFormURI,'instance of blacklisted class',$defin)"/>
             </xsl:when>
             <xsl:when test="idm:hasIdentified($visual-element-hash,$id)">
                <xsl:copy-of select="'false'"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'should-depict','false','$visualFormURI','already created',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'should-depict','false',$visualFormURI,concat('already created ',''),$defin)"/>
             </xsl:when>
             <!--xsl:when test="$already-created">
                <xsl:copy-of select="'false'"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'should-depict','false','$visualFormURI','already created',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'should-depict','false',$visualFormURI,'already created',$defin)"/>
             </xsl:when-->
             <xsl:otherwise> 
                <xsl:copy-of select="'true'"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'should-depict','true','$visualFormURI','not already-created)',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'should-depict','true',$visualFormURI,'not already-created)',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -596,7 +602,7 @@
          <xsl:choose>
             <xsl:when test="$sink">
                <xsl:variable name="value" select="$separation[1]"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'x',string($value),'$visualFormURI','$sink',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'x',string($value),$visualFormURI,'$sink',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="$draw-literal-rdf">
@@ -609,7 +615,7 @@
          <xsl:choose>
             <xsl:when test="$sink">
                <xsl:variable name="value" select="$separation[2] * (1 + position())"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'y',string($value),'$visualFormURI','$sink',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'y',string($value),$visualFormURI,'$sink',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:otherwise>
@@ -625,23 +631,23 @@
          <xsl:choose>
             <xsl:when test="string-length($fill-color)">
                <xsl:value-of select="$fill-color"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$fill-color,'$visualFormURI',$vsr:determined_by_deferrer,$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$fill-color,$visualFormURI,$vsr:determined_by_deferrer,$defin)"/>
             </xsl:when>
             <xsl:when test="$draw-literal-rdf">
                <xsl:value-of select="'1 1 1'"/> <!-- white        --> 
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = 1 1 1',''),'$visualFormURI','$draw-lieral-rdf',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = 1 1 1',''),$visualFormURI,'$draw-lieral-rdf',$defin)"/>
             </xsl:when>      
             <xsl:when test="$class-fill">
                <xsl:value-of select="$class-fill[1]"/> 
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fill-color',$class-fill[1],'$visualFormURI','$class-fill',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fill-color',$class-fill[1],$visualFormURI,'$class-fill',$defin)"/>
             </xsl:when>      
             <xsl:when test="$namespace-fill">
                <xsl:value-of select="$namespace-fill"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = ',$namespace-fill),'$visualFormURI','$namespace-strategy',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = ',$namespace-fill),$visualFormURI,'$namespace-strategy',$defin)"/>
             </xsl:when>    
             <xsl:otherwise>
                <xsl:value-of select="'1 1 1'"/> <!-- white        --> 
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = ',''),'$visualFormURI','xsl:otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = ',''),$visualFormURI,'xsl:otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -649,11 +655,11 @@
          <xsl:choose>
             <xsl:when test="$shape">
                <xsl:value-of select="$shape"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape',$shape,'$visualFormURI',$vsr:determined_by_deferrer,$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape',$shape,$visualFormURI,$vsr:determined_by_deferrer,$defin)"/>
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="''"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape','','$visualFormURI','xsl:otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape','',$visualFormURI,'xsl:otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -669,11 +675,11 @@
          <xsl:choose>
             <xsl:when test="string-length($draw-stroke)">
                <xsl:value-of select="'YES'"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('draw-stroke = YES',''),'$visualFormURI',$vsr:determined_by_deferrer,$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('draw-stroke = YES',''),$visualFormURI,$vsr:determined_by_deferrer,$defin)"/>
             </xsl:when>
             <xsl:when test="$is-bnode and $rdf-types">
                <xsl:value-of select="'YES'"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('draw-stroke = YES',''),'$visualFormURI','$is-bnode and $rdf-types',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('draw-stroke = YES',''),$visualFormURI,'$is-bnode and $rdf-types',$defin)"/>
             </xsl:when>
             <xsl:when test="$draw-literal-rdf">NO</xsl:when> 
             <xsl:otherwise>NO</xsl:otherwise>
@@ -683,11 +689,11 @@
          <xsl:choose>
             <xsl:when test="string-length($stroke-color2)">
                <xsl:value-of select="$stroke-color2"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('stroke-color = ',$stroke-color2),'$visualFormURI',$vsr:determined_by_deferrer,$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('stroke-color = ',$stroke-color2),$visualFormURI,$vsr:determined_by_deferrer,$defin)"/>
             </xsl:when>
             <xsl:when test="$is-bnode and $rdf-types">
                <xsl:value-of select="'.7 .7 .7'"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('stroke-color = .7 .7 .7',''),'$visualFormURI','$is-bnode and $rdf-types',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('stroke-color = .7 .7 .7',''),$visualFormURI,'$is-bnode and $rdf-types',$defin)"/>
             </xsl:when>
          <xsl:when test="$draw-literal-rdf"></xsl:when>          <!-- white                 -->
          <xsl:otherwise></xsl:otherwise>                         <!-- white                 --> 
@@ -712,57 +718,57 @@
          <xsl:choose>
             <!--xsl:when test="true()"> 
                <xsl:value-of select="$resource"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$resource,'$visualFormURI','debug',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$resource,$visualFormURI,'debug',$defin)"/>
             </xsl:when-->
             <xsl:when test="$sink">
                <xsl:variable name="value" select="pmm:tryQName($resource)"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','sink',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'sink',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="count($label) gt 1">
                <xsl:value-of select="$label[1]"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$label[1],'$visualFormURI',$vsr:determined_by_deferrer,$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$label[1],$visualFormURI,$vsr:determined_by_deferrer,$defin)"/>
             </xsl:when>
             <xsl:when test="string-length($label)">
                <xsl:value-of select="$label"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$label,'$visualFormURI',$vsr:determined_by_deferrer,$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$label,$visualFormURI,$vsr:determined_by_deferrer,$defin)"/>
             </xsl:when>
             <xsl:when test="$anonymous-instance-classes = $rdf-types">
                <xsl:variable name="value" select="concat('a ',pmm:tryQName($rdf-types[1]),
                                                          if (string-length($in-label-predicates-label)) then concat($NL,'with') else '',$in-label-predicates-label)"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','instance should be anonymous.',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'instance should be anonymous.',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="$priority-label-descriptions/*">
                <xsl:variable name="value" select="$priority-label-descriptions/*[1]/text()"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','$priority-label-descriptions',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'$priority-label-descriptions',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="$rdf-types[.=$rdf:Statement]">
                <xsl:variable name="value" select="concat('a',$NL,pmm:tryQName($s/rdf:predicate/@rdf:resource),$NL,'rdf:Statement')"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','rdf:Statement = $rdf-types',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'rdf:Statement = $rdf-types',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="$is-bnode and $rdf-types">
                <xsl:variable name="value" select="concat('a ',pmm:tryQName($rdf-types[1]))"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','$is-bnode and $rdf-types',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'$is-bnode and $rdf-types',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="$is-bnode and $show-bnode-IDs">
                <xsl:value-of select="$resource"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$resource,'$visualFormURI','$is-bnode and $show-bnode-IDs',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$resource,$visualFormURI,'$is-bnode and $show-bnode-IDs',$defin)"/>
             </xsl:when>
             <xsl:when test="$is-bnode">
                <xsl:value-of select="'[  ]'"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label','[  ]','$visualFormURI','$is-bnode',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label','[  ]',$visualFormURI,'$is-bnode',$defin)"/>
             </xsl:when>
             <xsl:when test="$is-resource">
                <xsl:value-of select="pmm:tryQName($resource)"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',pmm:tryQName($resource),'$visualFormURI','$is-resource',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',pmm:tryQName($resource),$visualFormURI,'$is-resource',$defin)"/>
             </xsl:when>
             <xsl:otherwise> 
                <xsl:value-of select="$resource"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$resource,'$visualFormURI','xsl:otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$resource,$visualFormURI,'xsl:otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -770,11 +776,11 @@
          <xsl:choose>
             <xsl:when test="$fit-text">
                <xsl:value-of select="$fit-text"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text',$fit-text,'$visualFormURI',$vsr:determined_by_deferrer,$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text',$fit-text,$visualFormURI,$vsr:determined_by_deferrer,$defin)"/>
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="''"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text','','$visualFormURI','xsl:otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text','',$visualFormURI,'xsl:otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -782,11 +788,11 @@
          <xsl:choose>
             <xsl:when test="$is-bnode">
                <xsl:value-of select="'5'"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad = 5','$visualFormURI','$is-bnode',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad = 5',$visualFormURI,'$is-bnode',$defin)"/>
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="'5'"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad = 5','$visualFormURI','xsl:otherwise',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad = 5',$visualFormURI,'xsl:otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -813,16 +819,16 @@
                      <xsl:if test="true or position != last()"><xsl:value-of select="$NL"/></xsl:if>
                   </xsl:for-each>
                </xsl:variable>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'notes',$value,'$visualFormURI','$notes-predicates',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'notes',$value,$visualFormURI,'$notes-predicates',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="count($rdfs-comments) gt 1"> 
                <xsl:value-of select="'TODO:func($rdfs-comments)'"/> 
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('notes = ',''),'$visualFormURI','more than one comment',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('notes = ',''),$visualFormURI,'more than one comment',$defin)"/>
             </xsl:when>
             <xsl:otherwise>                              
                <xsl:value-of select="$rdfs-comments"/>              
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('notes = ',$rdfs-comments),'$visualFormURI','xsl:otherwise',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('notes = ',$rdfs-comments),$visualFormURI,'xsl:otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -1443,22 +1449,22 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
    <!--xsl:message select="concat('CC: ',$rdf-types-as-string,' ',$class-fill)"/-->
 
 
-   <!--xsl:variable name="visualFormURI" select="concat('http://todo.org/visualformURI',idm:getIdentifier($visual-element-hash,$resource))"/-->
+   <xsl:variable name="visualFormURI" select="concat('http://todo.org/visualformURI',idm:getIdentifier($visual-element-hash,$resource))"/>
 
    <!-- determine the visual properties based on descriptions gathered -->
    <xsl:variable name="should-depict">
       <xsl:choose>
          <xsl:when test="$rdf-types = $blacklisted-subject-classes">
             <xsl:copy-of select="'false'"/>
-            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('should-depict = false',''),'$visualFormURI','instance of blacklisted class')"/>
+            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('should-depict = false',''),$visualFormURI,'instance of blacklisted class')"/>
          </xsl:when>
          <xsl:when test="not($already-created)">
             <xsl:copy-of select="'true'"/>
-            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('should-depict = true',''),'$visualFormURI','not($already-created)')"/>
+            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('should-depict = true',''),$visualFormURI,'not($already-created)')"/>
          </xsl:when>
          <xsl:otherwise> 
             <xsl:copy-of select="'false'"/>
-            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('should-depict = false',''),'$visualFormURI','xsl:otherwise')"/>
+            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('should-depict = false',''),$visualFormURI,'xsl:otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -1466,11 +1472,11 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
       <xsl:choose>
          <xsl:when test="$shape">
             <xsl:value-of select="$shape"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape',$shape,'$visualFormURI',$vsr:determined_by_deferrer)"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape',$shape,$visualFormURI,$vsr:determined_by_deferrer)"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="''"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape','','$visualFormURI','xsl:otherwise')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape','',$visualFormURI,'xsl:otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -1492,48 +1498,48 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
       <xsl:choose>
          <xsl:when test="count($label) gt 1">
             <xsl:value-of select="$label[1]"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$label[1],'$visualFormURI',$vsr:determined_by_deferrer)"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$label[1],$visualFormURI,$vsr:determined_by_deferrer)"/>
          </xsl:when>
          <xsl:when test="string-length($label)">
             <xsl:value-of select="$label"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$label,'$visualFormURI',$vsr:determined_by_deferrer)"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$label,$visualFormURI,$vsr:determined_by_deferrer)"/>
          </xsl:when>
          <xsl:when test="$anonymous-instance-classes = $rdf-types">
             <xsl:variable name="value" select="concat('a ',pmm:tryQName($rdf-types[1]),
                                                       if (string-length($in-label-predicates-label)) then concat($NL,'with') else '',$in-label-predicates-label)"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','instance should be anonymous.')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'instance should be anonymous.')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$priority-label-descriptions/*">
             <xsl:variable name="value" select="$priority-label-descriptions/*[1]/text()"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','$priority-label-descriptions')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'$priority-label-descriptions')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$rdf-types[.=$rdf:Statement]">
             <xsl:variable name="value" select="concat('a',$NL,pmm:tryQName($s/rdf:predicate/@rdf:resource),$NL,'rdf:Statement')"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','rdf:Statement = $rdf-types')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'rdf:Statement = $rdf-types')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$is-bnode and $rdf-types">
             <xsl:variable name="value" select="concat('a ',pmm:tryQName($rdf-types[1]))"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,'$visualFormURI','$is-bnode and $rdf-types')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$value,$visualFormURI,'$is-bnode and $rdf-types')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$is-bnode and $show-bnode-IDs">
             <xsl:value-of select="@rdf:nodeID"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',@rdf:nodeID,'$visualFormURI','$is-bnode and $show-bnode-IDs')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',@rdf:nodeID,$visualFormURI,'$is-bnode and $show-bnode-IDs')"/>
          </xsl:when>
          <xsl:when test="$is-bnode">
             <xsl:value-of select="'[  ]'"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label','[  ]','$visualFormURI','$is-bnode')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label','[  ]',$visualFormURI,'$is-bnode')"/>
          </xsl:when>
          <xsl:when test="$is-resource">
             <xsl:value-of select="pmm:tryQName($resource)"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',pmm:tryQName($resource),'$visualFormURI','$is-resource')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',pmm:tryQName($resource),$visualFormURI,'$is-resource')"/>
          </xsl:when>
          <xsl:otherwise> 
             <xsl:value-of select="$resource"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$resource,'$visualFormURI','xsl:otherwise')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$resource,$visualFormURI,'xsl:otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -1541,11 +1547,11 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
       <xsl:choose>
          <xsl:when test="$fit-text">
             <xsl:value-of select="$fit-text"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text',$fit-text,'$visualFormURI',$vsr:determined_by_deferrer)"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text',$fit-text,$visualFormURI,$vsr:determined_by_deferrer)"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="''"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text','','$visualFormURI','xsl:otherwise')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text','',$visualFormURI,'xsl:otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -1555,23 +1561,23 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
       <xsl:choose>
          <xsl:when test="string-length($fill-color)">
             <xsl:value-of select="$fill-color"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$fill-color,'$visualFormURI',$vsr:determined_by_deferrer)"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'label',$fill-color,$visualFormURI,$vsr:determined_by_deferrer)"/>
          </xsl:when>
          <xsl:when test="$draw-literal-rdf">
             <xsl:value-of select="'1 1 1'"/> <!-- white        --> 
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = 1 1 1',''),'$visualFormURI','$draw-lieral-rdf')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = 1 1 1',''),$visualFormURI,'$draw-lieral-rdf')"/>
          </xsl:when>      
          <xsl:when test="$class-fill">
             <xsl:value-of select="$class-fill[1]"/> 
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fill-color',$class-fill[1],'$visualFormURI','$class-fill')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fill-color',$class-fill[1],$visualFormURI,'$class-fill')"/>
          </xsl:when>      
          <xsl:when test="$namespace-fill">
             <xsl:value-of select="$namespace-fill"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = ',$namespace-fill),'$visualFormURI','$namespace-strategy')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = ',$namespace-fill),$visualFormURI,'$namespace-strategy')"/>
          </xsl:when>    
          <xsl:otherwise>
             <xsl:value-of select="'1 1 1'"/> <!-- white        --> 
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = ',''),'$visualFormURI','xsl:otherwise')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('fill-color = ',''),$visualFormURI,'xsl:otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -1579,11 +1585,11 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
       <xsl:choose>
          <xsl:when test="string-length($draw-stroke)">
             <xsl:value-of select="'YES'"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('draw-stroke = YES',''),'$visualFormURI',$vsr:determined_by_deferrer)"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('draw-stroke = YES',''),$visualFormURI,$vsr:determined_by_deferrer)"/>
          </xsl:when>
          <xsl:when test="$is-bnode and $rdf-types">
             <xsl:value-of select="'YES'"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('draw-stroke = YES',''),'$visualFormURI','$is-bnode and $rdf-types')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('draw-stroke = YES',''),$visualFormURI,'$is-bnode and $rdf-types')"/>
          </xsl:when>
          <xsl:when test="$draw-literal-rdf">NO</xsl:when> 
          <xsl:otherwise>NO</xsl:otherwise>
@@ -1593,11 +1599,11 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
       <xsl:choose>
          <xsl:when test="string-length($stroke-color2)">
             <xsl:value-of select="$stroke-color2"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('stroke-color = ',$stroke-color2),'$visualFormURI',$vsr:determined_by_deferrer)"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('stroke-color = ',$stroke-color2),$visualFormURI,$vsr:determined_by_deferrer)"/>
          </xsl:when>
          <xsl:when test="$is-bnode and $rdf-types">
             <xsl:value-of select="'.7 .7 .7'"/>
-            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('stroke-color = .7 .7 .7',''),'$visualFormURI','$is-bnode and $rdf-types')"/>
+            <xsl:message  select="acv:explainResource($resource,$owl:sameAs,concat('stroke-color = .7 .7 .7',''),$visualFormURI,'$is-bnode and $rdf-types')"/>
          </xsl:when>
       <xsl:when test="$draw-literal-rdf"></xsl:when>          <!-- white                 -->
       <xsl:otherwise></xsl:otherwise>                         <!-- white                 --> 
@@ -1607,11 +1613,11 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
       <xsl:choose>
          <xsl:when test="$is-bnode">
             <xsl:value-of select="'5'"/>
-            <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad = 5','$visualFormURI','$is-bnode')"/>
+            <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad = 5',$visualFormURI,'$is-bnode')"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="'5'"/>
-            <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad = 5','$visualFormURI','xsl:otherwise')"/>
+            <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad = 5',$visualFormURI,'xsl:otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -1655,16 +1661,16 @@ DEPRECATED in favor of @rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID
                   <xsl:if test="true or position != last()"><xsl:value-of select="$NL"/></xsl:if>
                </xsl:for-each>
             </xsl:variable>
-            <xsl:message select="acv:explainResource($resource,$owl:sameAs,'notes',$value,'$visualFormURI','$notes-predicates')"/>
+            <xsl:message select="acv:explainResource($resource,$owl:sameAs,'notes',$value,$visualFormURI,'$notes-predicates')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="count($rdfs-comments) gt 1"> 
             <xsl:value-of select="'TODO:func($rdfs-comments)'"/> 
-            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('notes = ',''),'$visualFormURI','more than one comment')"/>
+            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('notes = ',''),$visualFormURI,'more than one comment')"/>
          </xsl:when>
          <xsl:otherwise>                              
             <xsl:value-of select="$rdfs-comments"/>              
-            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('notes = ',$rdfs-comments),'$visualFormURI','xsl:otherwise')"/>
+            <xsl:message select="acv:explainResource($resource,$owl:sameAs,concat('notes = ',$rdfs-comments),$visualFormURI,'xsl:otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
