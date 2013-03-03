@@ -614,6 +614,8 @@ $rdf:type
    <xsl:variable name="q-object" select="$o/*[xfm:uri(.) = $qualified-object-predicates]/(@rdf:resource | */rdf:about)[1]"/>
    <xsl:variable name="q-o"      select="key('descriptions-by-subject',$q-object)"/>
 
+   <xsl:variable name="true-object" select="if ($q-object) then $q-object else $object"/>
+
    <xsl:variable name="object-is-set-operation"       select="key('descriptions-by-subject',$object)/(owl:unionOf | owl:intersectionOf | owl:complementOf)"/>
    <xsl:variable name="set-operand"                   select="$object-is-set-operation/(@rdf:resource | @rdf:nodeID)"/>
    <xsl:variable name="set-operand-a-list"            select="key('descriptions-by-subject',$set-operand)/rdf:first"/>
@@ -695,12 +697,12 @@ $rdf:type
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'object-vnode',$value,'object is in relaxed namespace')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
-         <xsl:when test="matches($object,'^http://inference-web.org/registry/*')"> <!-- TODO: -->
-            <!-- All resources within this namespace should be relaxed -->
+         <!--xsl:when test="matches($object,'^http://inference-web.org/registry/*')"> <!- TODO: ->
+            <- All resources within this namespace should be relaxed ->
             <xsl:value-of select="$unique-literal-vnode"/>
             <xsl:message select="concat('explain object vnode: ',pmm:bestQName($object),'relaxed b/c in relaxed namespace')"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'object-vnode',$unique-literal-vnode,'relaxed namespace')"/>
-         </xsl:when>
+         </xsl:when-->
          <xsl:when test="$object-is-bnode and $object-is-set-operation and $set-operand-a-list">
             <!-- merge multiple bnodes into a single vnode (TODO: sort list)-->
             <xsl:variable name="set-operand-list-string">
@@ -1242,7 +1244,7 @@ $rdf:type
       </xsl:call-template>
 
       <xsl:if test="not(idm:hasIdentified($visual-element-hash,$subject-vnode))">
-         <xsl:message select="'#          ( = = Drawing subject by reusing template = = = = = = = = = = = = = = = = = = = = )'"/>
+         <xsl:message select="concat('#          ( = = Drawing subject ',$subject,' )')"/>
          <!-- A bit of a hack to provide a context node for the template's key -->
          <!--xsl:for-each-group select="key('descriptions-by-subject',$subject)
                                       /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)" group-by="."-->
@@ -1257,10 +1259,13 @@ $rdf:type
       <xsl:if test="not(idm:hasIdentified($visual-element-hash,$object-vnode))">
          <xsl:choose>
             <xsl:when test="$object-is-resource">
-               <xsl:message select="'#          ( = = Drawing object by reusing template = = = = = = = = = = = = = = = = = = = = )'"/>
+               <xsl:message select="concat('#          ( = = Drawing object ',$true-object,' ) ',count(key('descriptions-by-subject',$true-object)),' references')"/>
                <!-- A bit of a hack to provide a context node for the template's key -->
-               <xsl:for-each-group select="key('descriptions-by-subject',if ($q-object) then $q-object else $object)
-                                            /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)" group-by=".">
+               <xsl:for-each-group select="if (count(key('descriptions-by-subject',if ($q-object) then $q-object else $object)
+                                                       /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)))
+                                              then  key('descriptions-by-subject',if ($q-object) then $q-object else $object)
+                                                       /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)
+                                              else //*[@rdf:resource = $object]/@rdf:resource" group-by="."> <!-- second condition for 'sinks' -->
                   <xsl:apply-templates select="current-group()[1]" mode="default">
                      <xsl:with-param name="deferrer"     select="$owl:sameAs"/>
                      <xsl:with-param name="view-context" select="$object-view-context"/>

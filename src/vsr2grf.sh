@@ -179,16 +179,22 @@ while [ $# -gt 0 ]; do
 		# The extension was not $input_extension OR extention should be appended (i.e. not replaced)
 		base=`basename $artifact`
 	fi
-	if [ $output_dir_set = "false" ]; then
+	if [[ $output_dir_set == "false" && -e $artifact ]]; then
 		# If output directory not provided, write to file at same location as artifact
 		output_dir=`dirname $artifact` 
+   else
+		output_dir="."
 	fi
 	outfile=$output_dir/$base.$output_extension
 	errorfile=$output_dir/$base.out
 
    rdf="_"`basename $0``date +%s`_$$.tmp
-   # TODO: Determine base URI from $artifact.pml.ttl or $artifact.prov.ttl
-   $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
+   # TODO: Determine base URI of local file RDF from $artifact.pml.ttl or $artifact.prov.ttl
+   if [[ ! -e "$artifact" && "$artifact" =~ http.* ]]; then
+      $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I       $artifact - > $rdf
+   else
+      $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
+   fi
 
    params=""
    if [[ `which cr-dataset-uri.sh` && `cr-dataset-uri.sh --uri` == http* ]]; then
