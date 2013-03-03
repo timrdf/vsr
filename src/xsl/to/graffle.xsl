@@ -344,12 +344,12 @@
 			<dict>
             <xsl:if test="number($h-align-text) = (0,2,3)">
                <key>Align</key>
-               <integer> <xsl:value-of select="$h-align-text"/> </integer>
+               <integer><xsl:value-of select="$h-align-text"/></integer>
             </xsl:if>
             <key>Pad</key>
             <integer><xsl:value-of select="if ($h-text-pad and number($h-text-pad)) then $h-text-pad else 2"/></integer>
 				<key>Text</key>
-				<string> <xsl:value-of select="if (string-length($label-rtf)) then $label-rtf else xfm:rtf($label,$font-color)"/> </string>
+				<string><xsl:value-of select="if (string-length($label-rtf)) then $label-rtf else xfm:rtf($label,$font-color)"/></string>
             <key>VerticalPad</key>
             <integer><xsl:value-of select="if ($v-text-pad and number($v-text-pad)) then $v-text-pad else 2"/></integer>
 			</dict>

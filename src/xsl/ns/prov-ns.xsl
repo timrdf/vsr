@@ -62,7 +62,6 @@
 <xsl:variable name="prov:hadPrimarySource"    select="concat($prov,'hadPrimarySource')"/>
 <xsl:variable name="prov:hadRole"    select="concat($prov,'hadRole')"/>
 <xsl:variable name="prov:hadUsage"    select="concat($prov,'hadUsage')"/>
-<xsl:variable name="prov:influenced"    select="concat($prov,'influenced')"/>
 <xsl:variable name="prov:influencer"    select="concat($prov,'influencer')"/>
 <xsl:variable name="prov:invalidated"    select="concat($prov,'invalidated')"/>
 <xsl:variable name="prov:invalidatedAtTime"    select="concat($prov,'invalidatedAtTime')"/>
@@ -95,6 +94,46 @@
 <xsl:variable name="prov:wasQuotedFrom"    select="concat($prov,'wasQuotedFrom')"/>
 <xsl:variable name="prov:wasRevisionOf"    select="concat($prov,'wasRevisionOf')"/>
 <xsl:variable name="prov:wasStartedBy"    select="concat($prov,'wasStartedBy')"/>
+
+
+<xsl:variable name="prov:hadDelegate"    select="concat($prov,'hadDelegate')"/>
+<xsl:variable name="prov:activityOfInfluence"    select="concat($prov,'activityOfInfluence')"/>
+<xsl:variable name="prov:agentOfInfluence"    select="concat($prov,'agentOfInfluence')"/>
+<xsl:variable name="prov:locationOf"    select="concat($prov,'locationOf')"/>
+<xsl:variable name="prov:entityOfInfluence"    select="concat($prov,'entityOfInfluence')"/>
+<xsl:variable name="prov:wasActivityOfInfluence"    select="concat($prov,'wasActivityOfInfluence')"/>
+<xsl:variable name="prov:generatedAsDerivation"    select="concat($prov,'generatedAsDerivation')"/>
+<xsl:variable name="prov:wasMemberOf"    select="concat($prov,'wasMemberOf')"/>
+<xsl:variable name="prov:wasPlanOf"    select="concat($prov,'wasPlanOf')"/>
+<xsl:variable name="prov:wasPrimarySourceOf"    select="concat($prov,'wasPrimarySourceOf')"/>
+<xsl:variable name="prov:wasRoleIn"    select="concat($prov,'wasRoleIn')"/>
+<xsl:variable name="prov:wasUsedInDerivation"    select="concat($prov,'wasUsedInDerivation')"/>
+<xsl:variable name="prov:hadInfluence"    select="concat($prov,'hadInfluence')"/>
+<xsl:variable name="prov:qualifiedAssociationOf"    select="concat($prov,'qualifiedAssociationOf')"/>
+<xsl:variable name="prov:qualifiedAttributionOf"    select="concat($prov,'qualifiedAttributionOf')"/>
+<xsl:variable name="prov:qualifiedCommunicationOf"    select="concat($prov,'qualifiedCommunicationOf')"/>
+<xsl:variable name="prov:qualifiedDelegationOf"    select="concat($prov,'qualifiedDelegationOf')"/>
+<xsl:variable name="prov:qualifiedDerivationOf"    select="concat($prov,'qualifiedDerivationOf')"/>
+<xsl:variable name="prov:qualifiedEndOf"    select="concat($prov,'qualifiedEndOf')"/>
+<xsl:variable name="prov:qualifiedGenerationOf"    select="concat($prov,'qualifiedGenerationOf')"/>
+<xsl:variable name="prov:qualifiedInfluenceOf"    select="concat($prov,'qualifiedInfluenceOf')"/>
+<xsl:variable name="prov:qualifiedInvalidationOf"    select="concat($prov,'qualifiedInvalidationOf')"/>
+<xsl:variable name="prov:qualifiedSourceOf"    select="concat($prov,'qualifiedSourceOf')"/>
+<xsl:variable name="prov:qualifiedQuotationOf"    select="concat($prov,'qualifiedQuotationOf')"/>
+<xsl:variable name="prov:revisedEntity"    select="concat($prov,'revisedEntity')"/>
+<xsl:variable name="prov:qualifiedStartOf"    select="concat($prov,'qualifiedStartOf')"/>
+<xsl:variable name="prov:qualifiedUsingActivity"    select="concat($prov,'qualifiedUsingActivity')"/>
+<xsl:variable name="prov:generalizationOf"    select="concat($prov,'generalizationOf')"/>
+<xsl:variable name="prov:wasUsedBy"    select="concat($prov,'wasUsedBy')"/>
+<xsl:variable name="prov:wasAssociateFor"    select="concat($prov,'wasAssociateFor')"/>
+<xsl:variable name="prov:contributed"    select="concat($prov,'contributed')"/>
+<xsl:variable name="prov:hadDerivation"    select="concat($prov,'hadDerivation')"/>
+<xsl:variable name="prov:ended"    select="concat($prov,'ended')"/>
+<xsl:variable name="prov:influenced"    select="concat($prov,'influenced')"/>
+<xsl:variable name="prov:informed"    select="concat($prov,'informed')"/>
+<xsl:variable name="prov:quotedAs"    select="concat($prov,'quotedAs')"/>
+<xsl:variable name="prov:hadRevision"    select="concat($prov,'hadRevision')"/>
+<xsl:variable name="prov:started"    select="concat($prov,'started')"/>
 
 <xsl:variable name="prov:ALL" select="(
    $prov:wasInformedBy,
@@ -176,7 +215,52 @@
    $prov:influencer,
    $prov:hadMember,
    $prov:agent,
-   $prov:wasRevisionOf
+   $prov:wasRevisionOf,
+
+   $prov:hadDelegate,
+   $prov:activityOfInfluence,
+   $prov:agentOfInfluence,
+   $prov:alternateOf,
+   $prov:locationOf,
+   $prov:entityOfInfluence,
+   $prov:wasGeneratedBy,
+   $prov:wasActivityOfInfluence,
+   $prov:generatedAsDerivation,
+   $prov:wasMemberOf,
+   $prov:wasPlanOf,
+   $prov:wasPrimarySourceOf,
+   $prov:wasRoleIn,
+   $prov:wasUsedInDerivation,
+   $prov:wasInfluencedBy,
+   $prov:hadInfluence,
+   $prov:wasInvalidatedBy,
+   $prov:qualifiedAssociationOf,
+   $prov:qualifiedAttributionOf,
+   $prov:qualifiedCommunicationOf,
+   $prov:qualifiedDelegationOf,
+   $prov:qualifiedDerivationOf,
+   $prov:qualifiedEndOf,
+   $prov:qualifiedGenerationOf,
+   $prov:qualifiedInfluenceOf,
+   $prov:qualifiedInvalidationOf,
+   $prov:qualifiedSourceOf,
+   $prov:qualifiedQuotationOf,
+   $prov:revisedEntity,
+   $prov:qualifiedStartOf,
+   $prov:qualifiedUsingActivity,
+   $prov:generalizationOf,
+   $prov:wasUsedBy,
+   $prov:wasAssociateFor,
+   $prov:contributed,
+   $prov:hadDerivation,
+   $prov:ended,
+   $prov:generated,
+   $prov:influenced,
+   $prov:informed,
+   $prov:invalidated,
+   $prov:quotedAs,
+   $prov:hadRevision,
+   $prov:started
 )"/>
 
 </xsl:transform>
