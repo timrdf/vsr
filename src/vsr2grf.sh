@@ -187,6 +187,7 @@ while [ $# -gt 0 ]; do
 	errorfile=$output_dir/$base.out
 
    rdf="_"`basename $0``date +%s`_$$.tmp
+   # TODO: Determine base URI from $artifact.pml.ttl or $artifact.prov.ttl
    $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
 
    params=""
