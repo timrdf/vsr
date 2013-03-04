@@ -105,6 +105,7 @@ if [ $# -lt 1 ]; then
    echo $usage_message 
    exit 1
 fi
+output_dir="."
 output_dir_set="false"
 if [ $1 = "-od" ]; then
    output_dir_set="true"
@@ -182,8 +183,6 @@ while [ $# -gt 0 ]; do
 	if [[ $output_dir_set == "false" && -e $artifact ]]; then
 		# If output directory not provided, write to file at same location as artifact
 		output_dir=`dirname $artifact` 
-   else
-		output_dir="."
 	fi
 	outfile=$output_dir/$base.$output_extension
 	errorfile=$output_dir/$base.out
