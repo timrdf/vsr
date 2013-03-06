@@ -186,6 +186,7 @@ while [ $# -gt 0 ]; do
 	fi
 	outfile=$output_dir/$base.$output_extension
 	errorfile=$output_dir/$base.out
+	provenancefile=$output_dir/$base.$output_extension.prov.ttl
 
    rdf="_"`basename $0``date +%s`_$$.tmp
    # TODO: Determine base URI of local file RDF from $artifact.pml.ttl or $artifact.prov.ttl
@@ -195,8 +196,10 @@ while [ $# -gt 0 ]; do
       $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
    fi
 
+   situated=""
    params=""
    if [[ `which cr-dataset-uri.sh` && `cr-dataset-uri.sh --uri` == http* ]]; then
+      situated="yes"
       # visual-artifact-uri
       # [-v a=1 b=2 ... -in]
       params="visual-artifact-uri=`cr-dataset-uri.sh --uri`"
@@ -217,6 +220,18 @@ while [ $# -gt 0 ]; do
          echo "Transforming $base to $outfile"
          $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $params $rdf > $outfile 2> $errorfile
          perl -pi -e 's/SLF4J:.*//' $errorfile
+         if [[ -e "$errorfile" && "$VSR_PROVENANCE" == "true" ]]; then
+            # NOTE: duplicated below.
+            $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | grep -v "^Begin provenance dump" > $provenancefile
+            if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
+               tmp="_"`basename $0``date +%s`_$$.tmp
+               rapper -q -i turtle -o turtle $provenancefile -I `cr-dataset-uri.sh --uri` > $tmp
+               mv $tmp $provenancefile
+            fi
+            tmp="_"`basename $0``date +%s`_$$.tmp
+            $CSV2RDF4LOD_HOME/bin/util/grep-head.sh -p "# Begin provenance dump." $errorfile | grep -v "^# Begin provenance dump" > $tmp
+            mv $tmp $errorfile
+         fi
       else 
          echo "$base    WARNING: $outfile already exists. Did not overwrite." $overwrite
 		fi
@@ -227,6 +242,18 @@ while [ $# -gt 0 ]; do
          echo "Transforming $base to $outfile"
          $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $params $rdf > $outfile 2> $errorfile
          perl -pi -e 's/SLF4J:.*//' $errorfile
+         if [[ -e "$errorfile" && "$VSR_PROVENANCE" == "true" ]]; then
+            # NOTE: duplicated above.
+            $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | grep -v "^Begin provenance dump" > $provenancefile
+            if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
+               tmp="_"`basename $0``date +%s`_$$.tmp
+               rapper -q -i turtle -o turtle $provenancefile -I `cr-dataset-uri.sh --uri` > $tmp
+               mv $tmp $provenancefile
+            fi
+            tmp="_"`basename $0``date +%s`_$$.tmp
+            $CSV2RDF4LOD_HOME/bin/util/grep-head.sh -p "# Begin provenance dump." $errorfile | grep -v "^# Begin provenance dump" > $tmp
+            mv $tmp $errorfile
+         fi
 		else
          # EXECUTE CONVERSION ($artifact to stdout via $intermediate_file)
          #for path in `echo $CLASSPATH | sed 's/:/ /g'`; do 
