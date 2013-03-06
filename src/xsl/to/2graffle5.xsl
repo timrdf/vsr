@@ -98,13 +98,53 @@
 	<integer>6</integer>
 	<key>GraphicsList</key>
 	<array>
+      <dict>
+         <key>Bounds</key>
+         <string>{{0, 0}, {10, 10}}</string>
+         <key>Class</key>
+         <string>ShapedGraphic</string>
+         <key>ID</key>
+         <integer>999</integer>
+         <key>IsLocked</key>
+         <string>YES</string>
+         <key>Shape</key>
+         <string>Rectangle</string>
+         <key>Style</key>
+         <dict>
+            <key>fill</key>
+            <dict>
+               <key>Draws</key>
+               <string>NO</string>
+            </dict>
+            <key>shadow</key>
+            <dict>
+               <key>Draws</key>
+               <string>NO</string>
+            </dict>
+            <key>stroke</key>
+            <dict>
+               <key>Color</key>
+               <dict>
+                  <key>b</key>
+                  <string>0.6</string>
+                  <key>g</key>
+                  <string>0.6</string>
+                  <key>r</key>
+                  <string>0.6</string>
+               </dict>
+               <key>Draws</key>
+               <string>NO</string>
+            </dict>
+         </dict>
+         <key>UserInfo</key>
+         <dict>
+            <key>http://www.w3.org/2003/g/data-view#transformation</key>
+            <string>https://raw.github.com/timrdf/vsr/master/src/xsl/grddl/graffle.xsl</string>
+         </dict>
+      </dict>
       <!--xsl:apply-templates select="*" mode="edges"/-->
       <!--xsl:apply-templates select="*" mode="nodes"/-->
       <xsl:apply-templates select="*"/> <!--NOTE: This is where 2y.xsl yields to x2.xsl -->
-      <!--xsl:call-template name="node">
-         <xsl:with-param name="id"  select="'blah'"/>
-         <xsl:with-param name="uri" select="'https://www.example.org/wiki/index.php/RDF'"/>
-      </xsl:call-template-->
 	</array>
 	<key>GridInfo</key>
 	<dict/>
