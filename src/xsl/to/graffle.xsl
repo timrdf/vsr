@@ -23,11 +23,11 @@
    </xd:detail>
    <xd:param name="id">A client-side string that uniquely identifies some thing.</xd:param>
 </xd:doc>
-<xsl:function name="xfm:to-graffle-id">
+<xsl:function name="xfm:view-id">
    <xsl:param name="id"/>
 	<!-- xsl:value-of select="if (false()) then xfm:atoid($id) else $id"/-->
 	<xsl:variable name="value" select="1000 + xfm:atoid-smaller($id)"/>
-   <xsl:message select="concat('#             GRAFFLE to-graffle-id ',$value,' from ',$id)"/>
+   <xsl:message select="concat('             GRAFFLE view-id ',$value,' from ',$id)"/>
    <xsl:value-of select="$value"/>
 </xsl:function>
 
@@ -130,6 +130,7 @@
    <xd:param name="v-text-pad"></xd:param>
    <xd:param name="url"></xd:param>
    <xd:param name="notes"></xd:param>
+   <xd:param name="a-root"></xd:param>
    <xd:param name="ignore">This value is ignored; it is here just to let caller evaluate an expression</xd:param>
 </xd:doc>
 <xsl:template name="node"> <!-- was named graffle-node -->
@@ -176,9 +177,11 @@
 	<xsl:param name="v-text-pad"/>
 	<xsl:param name="url"/>
 	<xsl:param name="notes"/>
+	<xsl:param name="tooltip"/>
+	<xsl:param name="a-root"/>
 	<xsl:param name="ignore"/>
 
-   <xsl:message select="concat('#             GRAFFLE node given vid ',$id)"/>
+   <xsl:message select="concat('             GRAFFLE node given vid ',$id)"/>
 
 	<xsl:variable name="new_width"  select="if ($width)  then $width  else xfm:graffle-width-of-text( $label,$shape)"/>
 	<xsl:variable name="new_height" select="if ($height) then $height else xfm:graffle-height-of-text($label,$shape)"/>
@@ -188,16 +191,16 @@
    <xsl:variable name="vid">
        <xsl:choose>
           <!--xsl:when test="string-length($depicts) and string-length($context)">
-             <xsl:value-of select="xfm:to-graffle-id(concat($depicts,$context))"/> 
+             <xsl:value-of select="xfm:view-id(concat($depicts,$context))"/> 
           </xsl:when-->
           <xsl:when test="string-length($uri)">
-             <xsl:value-of select="xfm:to-graffle-id($uri)"/> 
+             <xsl:value-of select="xfm:view-id($uri)"/> 
           </xsl:when>
           <xsl:when test="string-length($id)">
-             <xsl:value-of select="xfm:to-graffle-id($id)"/> 
+             <xsl:value-of select="xfm:view-id($id)"/> 
           </xsl:when>
           <xsl:otherwise>
-             <xsl:value-of select="xfm:to-graffle-id('__no id giveN!')"/> 
+             <xsl:value-of select="xfm:view-id('__no id giveN!')"/> 
           </xsl:otherwise>
        </xsl:choose>
    </xsl:variable>
@@ -206,7 +209,7 @@
 
 	<dict>
 		<key>ID</key>
-		<integer> <xsl:value-of select="xfm:to-graffle-id($id)"/> </integer>
+		<integer> <xsl:value-of select="xfm:view-id($id)"/> </integer>
 
 		<key>Class</key>
 		<string>ShapedGraphic</string>
@@ -515,13 +518,13 @@
 	<xsl:param name="line-style"/>
 	<xsl:param name="stroke-color">0.701961</xsl:param>
 
-   <xsl:message select="concat('#             GRAFFLE edge given id       ',$id)"/>
-   <xsl:message select="concat('#             GRAFFLE edge given from vid ',$from)"/>
-   <xsl:message select="concat('#             GRAFFLE edge given to   vid ',$to)"/>
+   <xsl:message select="concat('             GRAFFLE edge given id       ',$id)"/>
+   <xsl:message select="concat('             GRAFFLE edge given from vid ',$from)"/>
+   <xsl:message select="concat('             GRAFFLE edge given to   vid ',$to)"/>
 
 	<dict>
 		<key>ID</key>
-		<integer> <xsl:value-of select="xfm:to-graffle-id($id)"/> </integer>
+		<integer> <xsl:value-of select="xfm:view-id($id)"/> </integer>
 
       <xsl:if test="$graffle-version ge 5"> <!--xsl:message select="'graffle version',$graffle-version"/-->
       <key>UserInfo</key>
@@ -546,13 +549,13 @@
 		<key>Tail</key>
 		<dict>
 			<key>ID</key>
-			<integer> <xsl:value-of select="xfm:to-graffle-id($from)"/> </integer>
+			<integer> <xsl:value-of select="xfm:view-id($from)"/> </integer>
 		</dict>
 
 		<key>Head</key>
 		<dict>
 			<key>ID</key>
-			<integer> <xsl:value-of select="xfm:to-graffle-id($to)"/> </integer>
+			<integer> <xsl:value-of select="xfm:view-id($to)"/> </integer>
 		</dict>
 
 		<xsl:if test="$notes">
@@ -648,14 +651,14 @@
 
          <key>ID</key>
          <integer> 
-            <xsl:value-of select="xfm:to-graffle-id(concat($id,'s_AUTO_LABEL'))"/> <!-- This is a new ID for the text graphic --> 
+            <xsl:value-of select="xfm:view-id(concat($id,'s_AUTO_LABEL'))"/> <!-- This is a new ID for the text graphic --> 
          </integer> 
 
          <key>Line</key>
          <dict>
             <key>ID</key>
             <integer>
-               <xsl:value-of select="xfm:to-graffle-id($id)"/> <!-- This is where the text graphic points to the line it is on -->
+               <xsl:value-of select="xfm:view-id($id)"/> <!-- This is where the text graphic points to the line it is on -->
             </integer> 
 
             <key>Position</key>
@@ -744,7 +747,7 @@
 		<key>Class</key>
 		<string>ShapedGraphic</string>
 		<key>ID</key>
-		<integer> <xsl:value-of select="xfm:to-graffle-id($id)"/> </integer>
+		<integer> <xsl:value-of select="xfm:view-id($id)"/> </integer>
 		<key>Shape</key>
 		<string>Bezier</string>
 		<key>ShapeData</key>

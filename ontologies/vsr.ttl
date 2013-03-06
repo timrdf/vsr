@@ -344,6 +344,16 @@ owl:topDataProperty rdf:type owl:DatatypeProperty .
 
 
 
+###  http://purl.org/twc/vocab/vsr#SwappedForce
+
+<http://purl.org/twc/vocab/vsr#SwappedForce> rdf:type owl:Class ;
+                                             
+                                             rdfs:subClassOf <http://www.co-ode.org/ontologies/ont.owl#Graphic> ;
+                                             
+                                             rdfs:comment "A Graphic whose visual force properties are opposite of the direction present in the content representation."@en .
+
+
+
 ###  http://www.co-ode.org/ontologies/ont.owl#Graphic
 
 <http://www.co-ode.org/ontologies/ont.owl#Graphic> rdf:type owl:Class ;

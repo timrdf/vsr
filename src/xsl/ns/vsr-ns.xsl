@@ -31,6 +31,20 @@
 <xsl:variable name="vsr:PredicateOccurrenceDataset"      select="concat($vsr,'PredicateOccurrenceDataset')"/>
 <xsl:variable name="vsr:Bin"                             select="concat($vsr,'Bin')"/>
 
+<!-- Processing provenance -->
+<xsl:variable name="vsr:Prevent_default_processing"      select="concat($vsr,'Prevent_default_processing')"/>
+
+<!-- Abstract Visual Representation -->
+<xsl:variable name="vsr:fill"                            select="concat($vsr,'fill')"/>
+<xsl:variable name="vsr:stroke"                          select="concat($vsr,'stroke')"/>
+<xsl:variable name="vsr:from"                            select="concat($vsr,'from')"/>
+<xsl:variable name="vsr:from_domain"                     select="concat($vsr,'from_domain')"/>
+<xsl:variable name="vsr:from_context"                    select="concat($vsr,'from_context')"/>
+<xsl:variable name="vsr:to"                              select="concat($vsr,'to')"/>
+<xsl:variable name="vsr:to_domain"                       select="concat($vsr,'to_domain')"/>
+<xsl:variable name="vsr:tooltip"                         select="concat($vsr,'tooltip')"/>
+
+
 <xsl:variable name="vsr:ALL" select="(
    $vsr:VisualElementFactory,
    $vsr:BlacklistChecker,
@@ -41,7 +55,8 @@
    $vsr:TypedLiteralObjectDataset,
    $vsr:Bin,
    $vsr:TypedLiteralObjectsValueDataset,
-   $vsr:PredicateOccurrenceDataset
+   $vsr:PredicateOccurrenceDataset,
+   $vsr:Prevent_default_processing
 )"/>
 
 </xsl:transform>

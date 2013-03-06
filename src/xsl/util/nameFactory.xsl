@@ -20,4 +20,9 @@
    <xsl:value-of select="nmf:getUUIDName($string_id)"/>
 </xsl:function>
 
+<xsl:function name="jvr:getMD5">
+   <xsl:param name="string"/>
+   <xsl:value-of select="nmf:getMD5($string)"/>
+</xsl:function>
+
 </xsl:transform>
