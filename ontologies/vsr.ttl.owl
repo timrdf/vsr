@@ -1,29 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF
-   xmlns:dcterms="http://purl.org/dc/terms/"
-   xmlns:nie="http://www.semanticdesktop.org/ontologies/2007/01/19/nie#"
    xmlns:owl="http://www.w3.org/2002/07/owl#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-   xmlns:rss="http://purl.org/rss/1.0/"
-   xmlns:vsr="http://purl.org/twc/vocab/vsr#"
-   xmlns="https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#">
-  <owl:Class rdf:about="https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#PDF">
-    <rdfs:label>PDF</rdfs:label>
-    <owl:equivalentClass>
-      <owl:Restriction>
-        <owl:hasValue>application/pdf</owl:hasValue>
-        <owl:onProperty rdf:resource="http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType"/>
-      </owl:Restriction>
-    </owl:equivalentClass>
+   xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+   xmlns:xml="http://www.w3.org/XML/1998/namespace"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+   xmlns="http://purl.org/twc/vocab/vsr##">
+  <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/creator"/>
+  <owl:Ontology rdf:about="http://purl.org/twc/vocab/vsr#">
+    <ns1:creator xmlns:ns1="http://purl.org/dc/elements/1.1/" xml:lang="en">Timothy Lebo</ns1:creator>
+    <ns2:preferredNamespacePrefix xmlns:ns2="http://purl.org/vocab/vann/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">vsr</ns2:preferredNamespacePrefix>
+    <ns3:preferredNamespaceUri xmlns:ns3="http://purl.org/vocab/vann/" rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral">http://purl.org/twc/vocab/vsr#</ns3:preferredNamespaceUri>
+    <rdfs:label xml:lang="en">Visual Strategies in RDF</rdfs:label>
+    <owl:imports rdf:resource="http://www.w3.org/ns/prov-o#"/>
+    <owl:versionInfo xml:lang="en">2013-02-27</owl:versionInfo>
+    <ns4:page xmlns:ns4="http://xmlns.com/foaf/0.1/" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://prefix.cc/vsr</ns4:page>
+    <ns5:page xmlns:ns5="http://xmlns.com/foaf/0.1/" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://github.com/timrdf/vsr</ns5:page>
+  </owl:Ontology>
+  <owl:Class rdf:about="http://purl.org/twc/vocab/vsr#Color">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
   </owl:Class>
-  <owl:Class rdf:about="https://raw.github.com/timrdf/vsr/master/ontologies/vsr.ttl.owl#Postscript">
-    <rdfs:label>Postscript</rdfs:label>
-    <owl:equivalentClass>
-      <owl:Restriction>
-        <owl:hasValue>application/postscript</owl:hasValue>
-        <owl:onProperty rdf:resource="http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType"/>
-      </owl:Restriction>
-    </owl:equivalentClass>
+  <owl:Class rdf:about="http://purl.org/twc/vocab/vsr#Root">
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
   </owl:Class>
+  <owl:Class rdf:about="http://purl.org/twc/vocab/vsr#Stroke">
+    <rdfs:comment xml:lang="en">An abstractly linear Graphic.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://purl.org/twc/vocab/vsr#b">
+    <rdfs:comment xml:lang="en">The blue component of an RGB triplet.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://purl.org/twc/vocab/vsr#Color"/>
+  </owl:DatatypeProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#content">
+    <rdfs:comment xml:lang="en">Relations from a Graphic to its content.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#depicts">
+    <rdfs:comment xml:lang="en">The (content) resource shown or represented by a Graphic (i.e., drawing, painting, or other visual form).</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+    <rdfs:label xml:lang="en">depicts</rdfs:label>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#content"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#directPlanarRelation">
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#planarRelation"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#elevation">
+    <rdfs:comment xml:lang="en">A visual property encoded in a non-planar Bertin elevation. Elevation variables can be sub-organized into more- and less-prominent from a visual observer's perspective.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#fill">
+    <rdfs:comment xml:lang="en">The background region of the graphic, i.e. within the boundary of the graphic.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#elevation"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#from">
+    <rdfs:comment xml:lang="en">The source Graphic of a binary relation that is encoded in the Bertin semiotic plane.</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#planar"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#from_domain">
+    <rdfs:comment xml:lang="en">A content-oriented identifier of a visual binary relation's source Graphic. There exists a mapping from from_domain to the planar variable 'from', which exists in the graphical identity space.</rdfs:comment>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#content"/>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="http://purl.org/twc/vocab/vsr#g">
+    <rdfs:comment xml:lang="en">The green component of an RGB triplet.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://purl.org/twc/vocab/vsr#Color"/>
+  </owl:DatatypeProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#planar">
+    <rdfs:comment xml:lang="en">A visual property that is encoded in Bertin's semiotic plane, as opposed to the elevation visual variables.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#planarRelation">
+    <rdfs:comment xml:lang="en">A visual relation that is encoded in the visual (Bertin) plane.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Could be a transitive of directPlanarRelation.</rdfs:comment>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#relatesTo"/>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="http://purl.org/twc/vocab/vsr#r">
+    <rdfs:comment xml:lang="en">The red component of an RGB triplet.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://purl.org/twc/vocab/vsr#Color"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+  </owl:DatatypeProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#relatesTo">
+    <rdfs:comment xml:lang="en">A related Graphic at the visual level (not necessarilty the content level).</rdfs:comment>
+    <rdfs:comment xml:lang="en">TODO: Use SIO?</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+    <rdfs:range rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="http://purl.org/twc/vocab/vsr#rgb">
+    <rdfs:comment xml:lang="en">The red, green, and blue components of an RGB triplet delimited by some string. Can contains just one value, in which case all RGB will assume it.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://purl.org/twc/vocab/vsr#Color"/>
+  </owl:DatatypeProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#stroke">
+    <rdfs:comment xml:lang="en">The boundary edge of the graphic.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+    <rdfs:range rdf:resource="http://purl.org/twc/vocab/vsr#Color"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#elevation"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#to">
+    <rdfs:comment xml:lang="en">The target Graphic of a binary relation that is encoded in the Bertin semiotic plane.</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#planar"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#to_domain">
+    <rdfs:comment xml:lang="en">A content-oriented identifier of a visual binary relation's target Graphic. There exists a mapping from to_domain to the planar variable 'to', which exists in the graphical identity space.</rdfs:comment>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#content"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#tooltip">
+    <rdfs:comment xml:lang="en">The contents that should be rendered when the subject graphic is in focus by the cursor. The traditional way to render a tooltip is to show it hovering above the tooltipped-resource. If the tooltip is just a string literal, use a resource with prov:value. If the tooltip should be constructed according to a plan/recipe, then the contents resource should be described as such.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.co-ode.org/ontologies/ont.owl#Graphic"/>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#elevation"/>
+  </owl:ObjectProperty>
+  <rdf:Description rdf:about="http://purl.org/twc/vocab/vsr#width">
+    <rdfs:comment>The thickness of the stroke at the boundary edge of a graphic. The value is a resource that in turn can be described in a variety of ways, depending on the implementation (e.g. absolute vs. relative thicknesses; screen constant vs. relative to the region area; etc.).</rdfs:comment>
+  </rdf:Description>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#x">
+    <rdfs:comment xml:lang="en">The horizontal position of a Graphic.</rdfs:comment>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#planar"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://purl.org/twc/vocab/vsr#y">
+    <rdfs:comment xml:lang="en">The vertical position of a Graphic.</rdfs:comment>
+    <rdfs:subPropertyOf rdf:resource="http://purl.org/twc/vocab/vsr#planar"/>
+  </owl:ObjectProperty>
+  <owl:AnnotationProperty rdf:about="http://purl.org/vocab/vann/preferredNamespacePrefix"/>
+  <owl:AnnotationProperty rdf:about="http://purl.org/vocab/vann/preferredNamespaceUri"/>
+  <owl:Class rdf:about="http://www.co-ode.org/ontologies/ont.owl#Graphic">
+    <rdfs:comment xml:lang="en">A visual presentation on some surface, such as a wall, canvas, screen, paper, or stone to brand, inform, illustrate, or entertain. A computer file or data element within a computer file that provides instruction for creating a visual presentation isre also considered graphic.</rdfs:comment>
+    <rdfs:label xml:lang="en">Graphic</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+  </owl:Class>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#comment"/>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#label"/>
+  <owl:DatatypeProperty rdf:about="http://www.w3.org/2002/07/owl#topDataProperty"/>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/2002/07/owl#versionInfo"/>
+  <owl:Class rdf:about="http://www.w3.org/ns/prov#Entity"/>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/ns/prov#wasDerivedFrom"/>
+  <owl:AnnotationProperty rdf:about="http://xmlns.com/foaf/0.1/page"/>
 </rdf:RDF>
