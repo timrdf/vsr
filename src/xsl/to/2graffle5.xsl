@@ -87,7 +87,9 @@
 	<key>ColumnSpacing</key>
 	<real>36</real>
 	<key>CreationDate</key>
-	<string>2008-06-25 18:23:07 -0400</string>
+	<!--string>2008-06-25 18:23:07 -0400</string-->
+	<string><xsl:value-of select="format-dateTime(current-dateTime(),'[Y0001]-[M01]-[D01] [H]:[m]:[s] [Z]')"/></string>
+   <!-- 2013-03-06T18:50:12.386-05:00 2013-3-6 18:54:25 -05:00-->
 	<key>Creator</key>
 	<string>lebot</string>
 	<key>DisplayScale</key>
@@ -195,7 +197,8 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2008-06-25 18:23:17 -0400</string>
+	<!--string>2008-06-25 18:23:17 -0400</string-->
+	<string><xsl:value-of select="format-dateTime(current-dateTime(),'[Y0001]-[M01]-[D01] [H]:[m]:[s] [Z]')"/></string>
 	<key>Modifier</key>
 	<string>lebot</string>
 	<key>NotesVisible</key>
