@@ -139,15 +139,17 @@ script_home="`cd \"$D\" 2>/dev/null && pwd || echo \"$D\"`"
 intermediate_file="_`basename $0`_pid$$.date`date +%s`.tmp"
 
 XSL=$intermediate_file.${vis_strat}2${graphical_format}_$$.xsl
-echo '<xsl:transform version="2.0"'                                      > $XSL
-echo '   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'             >> $XSL
-echo "   <xsl:include href=\"$vis_strat_full\"/>"                       >> $XSL
+echo '<xsl:transform version="2.0"'                                               > $XSL
+echo '   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'                      >> $XSL
+echo "   <xsl:include href=\"$vis_strat_full\"/>"                                >> $XSL
 if [   "$graphical_format" == "graffle" ]; then
-   echo "   <xsl:include href=\"$VSR_HOME/src/xsl/to/2graffle5.xsl\"/>" >> $XSL
+   echo "   <xsl:include href=\"$VSR_HOME/src/xsl/to/2graffle5.xsl\"/>"          >> $XSL
 elif [ "$graphical_format" == "graphml" ]; then
-   echo "   <xsl:include href=\"$VSR_HOME/src/xsl/to/2graphml.xsl\"/>"  >> $XSL
+   echo "   <xsl:include href=\"$VSR_HOME/src/xsl/to/2graphml.xsl\"/>"           >> $XSL
+else
+   echo "   <xsl:include href=\"$VSR_HOME/src/xsl/to/2$graphical_format.xsl\"/>" >> $XSL
 fi
-echo '</xsl:transform>'                                                 >> $XSL
+echo '</xsl:transform>'                                                          >> $XSL
 
 if [ $debug = "true" ]; then
    echo "-----------------"
