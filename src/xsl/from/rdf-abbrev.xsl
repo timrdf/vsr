@@ -24,7 +24,7 @@
    xmlns:vsr="http://purl.org/twc/vocab/vsr#"
    xmlns:xfm="transform namespace">
 
-<xsl:import href="../ns/ov-ns.xsl"/>
+<xsl:import  href="../ns/ov-ns.xsl"/>
 <xsl:include href="../util/lists.xsl"/>
 
 <xd:doc type="stylesheet">
@@ -634,7 +634,7 @@ $rdf:type
 
    <xsl:variable name="gedge-id" select="nmf:getUUIDName('gedge')"/> <!-- TODO: Just concat spo -->
    <!--xsl:variable name="gedge-id" select="concat($subject,' ',$predicate,' ',$object)"/-->
-   <xsl:variable name="visualFormURI" select="concat($visual-artifact-uri,'/graphic/edge/',xfm:view-id($gedge-id))"/>
+   <xsl:variable name="visualFormURI" select="concat($visual-artifact-uri,'/graphic/edge/',vsr:view-id($gedge-id))"/>
 
    <xsl:variable name="subject-vnode">
       <xsl:choose>
@@ -769,27 +769,27 @@ $rdf:type
          </xsl:when>
          <xsl:when test="$predicate = $swap-directionality-predicates">
             <xsl:variable name="value" select="$object-vnode"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,xfm:view-id($value),'$swap-directionality-predicates')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,vsr:view-id($value),'$swap-directionality-predicates')"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,$value,'$swap-directionality-predicates')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$object-is-qualification-and-should-be-swapped">
             <xsl:variable name="value" select="$q-object"/>
             <xsl:variable name="justification" select="'qualification class is a $swap-directionality-predicates'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,xfm:view-id($value),$justification)"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,vsr:view-id($value),$justification)"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,$value,$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$predicate = $rdfs:subClassOf and $object-is-bnode">
             <!-- TODO: this should be pushed up to owl and it should call down with 'swap-directionality-predicates' -->
             <xsl:variable name="value" select="$subject-vnode"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,xfm:view-id($value),'subclassof of object is bnode')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,vsr:view-id($value),'subclassof of object is bnode')"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,$value,'subclassof of object is bnode')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="$subject-vnode"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,xfm:view-id($value),'otherwise')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,vsr:view-id($value),'otherwise')"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,$value,'otherwise')"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
@@ -1083,31 +1083,31 @@ $rdf:type
       <xsl:choose>
          <xsl:when test="$draw-literal-rdf">
             <xsl:variable name="value" select="$object-vnode"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,xfm:view-id($from),xfm:view-id($value),'$draw-literal-rdf')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,vsr:view-id($from),vsr:view-id($value),'$draw-literal-rdf')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$predicate = $rdfs:subClassOf and $object-is-bnode">
             <xsl:variable name="value" select="$object-vnode"/>
             <xsl:variable name="justification" select="'$predicate = $rdfs:subClassOf and $object-is-bnode'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,xfm:view-id($from),xfm:view-id($value),$justification)"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,vsr:view-id($from),vsr:view-id($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$predicate = $swap-directionality-predicates">
             <xsl:variable name="value" select="$subject-vnode"/>
             <xsl:variable name="justification" select="'$predicate = $swap-directionality-predicates'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,xfm:view-id($from),xfm:view-id($value),$justification)"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,vsr:view-id($from),vsr:view-id($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$object-is-qualification-and-should-be-swapped">
             <xsl:variable name="value" select="$subject-vnode"/>
             <xsl:variable name="justification" select="'qualification class is a $swap-directionality-predicates'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,xfm:view-id($from),xfm:view-id($value),$justification)"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,vsr:view-id($from),vsr:view-id($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="$object-vnode"/>
             <xsl:variable name="justification" select="'otherwise'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,xfm:view-id($from),xfm:view-id($value),$justification)"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,vsr:view-id($from),vsr:view-id($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
       </xsl:choose>

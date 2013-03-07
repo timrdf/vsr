@@ -3,6 +3,7 @@
    xmlns:xd="http://www.pnp-software.com/XSLTdoc"
    xmlns:xs="http://www.w3.org/2001/XMLSchema"
    xmlns:xfm="transform namespace"
+   xmlns:vsr="http://purl.org/twc/vocab/vsr#"
    exclude-result-prefixes="xs xfm xd">
 
 <xd:doc type="stylesheet">
@@ -23,7 +24,7 @@
    </xd:detail>
    <xd:param name="id">A client-side string that uniquely identifies some thing.</xd:param>
 </xd:doc>
-<xsl:function name="xfm:view-id">
+<xsl:function name="vsr:view-id">
    <xsl:param name="id"/>
 	<!-- xsl:value-of select="if (false()) then xfm:atoid($id) else $id"/-->
 	<xsl:variable name="value" select="1000 + xfm:atoid-smaller($id)"/>
@@ -191,16 +192,16 @@
    <xsl:variable name="vid">
        <xsl:choose>
           <!--xsl:when test="string-length($depicts) and string-length($context)">
-             <xsl:value-of select="xfm:view-id(concat($depicts,$context))"/> 
+             <xsl:value-of select="vsr:view-id(concat($depicts,$context))"/> 
           </xsl:when-->
           <xsl:when test="string-length($uri)">
-             <xsl:value-of select="xfm:view-id($uri)"/> 
+             <xsl:value-of select="vsr:view-id($uri)"/> 
           </xsl:when>
           <xsl:when test="string-length($id)">
-             <xsl:value-of select="xfm:view-id($id)"/> 
+             <xsl:value-of select="vsr:view-id($id)"/> 
           </xsl:when>
           <xsl:otherwise>
-             <xsl:value-of select="xfm:view-id('__no id giveN!')"/> 
+             <xsl:value-of select="vsr:view-id('__no id giveN!')"/> 
           </xsl:otherwise>
        </xsl:choose>
    </xsl:variable>
@@ -209,7 +210,7 @@
 
 	<dict>
 		<key>ID</key>
-		<integer> <xsl:value-of select="xfm:view-id($id)"/> </integer>
+		<integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
 
 		<key>Class</key>
 		<string>ShapedGraphic</string>
@@ -256,7 +257,7 @@
 		<string> <xsl:value-of select="if ($shape = ('Rectangle', 'Circle', 'Cross')) then $shape else 'Rectangle'"/> </string>
 
       <!--xsl:message select="concat($depicts,' height ',$height,' new_height ',$new_height)"/-->
-		<key>Bounds</key>
+		<key>Bounds</key> <!-- {{upper-left's X, upper-left's Y}, {{width, height}} -->
 		<string> <xsl:value-of select="concat('{{',     if (string-length(string($x)))          then $x          else '50',
                                                ', ',  if (string-length(string($y)))          then $y          else '50',
                                                '}, {',if (string-length(string($new_width)))  then $new_width  else '3',
@@ -407,7 +408,7 @@
             <xsl:if test="string-length($depicts)"><!-- and not($depicts = ('[]','bnode','blank node'))"-->
                <xsl:choose>
                   <xsl:when test="contains($depicts,':')">                          <!-- URI -->
-                     <key>http://open.vocab.org/terms/depicts</key>            
+                     <key>http://purl.org/twc/vocab/vsr#depicts</key>            
                      <string> <xsl:value-of select="$depicts"/> </string>
                   </xsl:when>
                   <xsl:otherwise>
@@ -524,7 +525,7 @@
 
 	<dict>
 		<key>ID</key>
-		<integer> <xsl:value-of select="xfm:view-id($id)"/> </integer>
+		<integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
 
       <xsl:if test="$graffle-version ge 5"> <!--xsl:message select="'graffle version',$graffle-version"/-->
       <key>UserInfo</key>
@@ -549,13 +550,13 @@
 		<key>Tail</key>
 		<dict>
 			<key>ID</key>
-			<integer> <xsl:value-of select="xfm:view-id($from)"/> </integer>
+			<integer> <xsl:value-of select="vsr:view-id($from)"/> </integer>
 		</dict>
 
 		<key>Head</key>
 		<dict>
 			<key>ID</key>
-			<integer> <xsl:value-of select="xfm:view-id($to)"/> </integer>
+			<integer> <xsl:value-of select="vsr:view-id($to)"/> </integer>
 		</dict>
 
 		<xsl:if test="$notes">
@@ -651,14 +652,14 @@
 
          <key>ID</key>
          <integer> 
-            <xsl:value-of select="xfm:view-id(concat($id,'s_AUTO_LABEL'))"/> <!-- This is a new ID for the text graphic --> 
+            <xsl:value-of select="vsr:view-id(concat($id,'s_AUTO_LABEL'))"/> <!-- This is a new ID for the text graphic --> 
          </integer> 
 
          <key>Line</key>
          <dict>
             <key>ID</key>
             <integer>
-               <xsl:value-of select="xfm:view-id($id)"/> <!-- This is where the text graphic points to the line it is on -->
+               <xsl:value-of select="vsr:view-id($id)"/> <!-- This is where the text graphic points to the line it is on -->
             </integer> 
 
             <key>Position</key>
@@ -747,7 +748,7 @@
 		<key>Class</key>
 		<string>ShapedGraphic</string>
 		<key>ID</key>
-		<integer> <xsl:value-of select="xfm:view-id($id)"/> </integer>
+		<integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
 		<key>Shape</key>
 		<string>Bezier</string>
 		<key>ShapeData</key>

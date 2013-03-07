@@ -35,6 +35,7 @@
 <xsl:variable name="vsr:Prevent_default_processing"      select="concat($vsr,'Prevent_default_processing')"/>
 
 <!-- Abstract Visual Representation -->
+<xsl:variable name="vsr:depicts"                         select="concat($vsr,'depicts')"/>
 <xsl:variable name="vsr:fill"                            select="concat($vsr,'fill')"/>
 <xsl:variable name="vsr:stroke"                          select="concat($vsr,'stroke')"/>
 <xsl:variable name="vsr:from"                            select="concat($vsr,'from')"/>

@@ -592,7 +592,7 @@
          </xsl:choose>
       </xsl:variable>
 
-      <xsl:variable name="visualFormURI" select="concat($visual-artifact-uri,'/graphic/',xfm:view-id($id))"/>
+      <xsl:variable name="visualFormURI" select="concat($visual-artifact-uri,'/graphic/',vsr:view-id($id))"/>
 
       <!-- Sub-surfacing variables -->
 
