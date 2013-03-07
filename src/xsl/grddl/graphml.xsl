@@ -2,6 +2,7 @@
 #3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/src/xsl/grddl/graphml.xsl>;
 #3>    prov:has_provenance   <https://raw.github.com/timrdf/vsr/master/src/xsl/grddl/graphml.xsl.prov.ttl>;
 #3>    prov:wasAttributedTo  <http://purl.org/twc/id/person/TimLebo>;
+#3>    rdfs:seeAlso <http://graphml.graphdrawing.org/>;
 #3> .
 -->
 <xsl:transform version="2.0" 
@@ -37,6 +38,8 @@
 <xsl:variable name="vsr:depicts" select="'http://purl.org/twc/vocab/vsr#depicts'"/>
 
 <xsl:key name="graphic" match="graphml:node | graphml:edge" use="@id"/>
+
+<!-- See http://graphml.graphdrawing.org/primer/graphml-primer.html#Attributes -->
 
 <xsl:key name="attr" match="graphml:key/@attr.name" use="../@id"/>
 <xsl:key name="id"   match="graphml:key/@id"        use="../@attr.name"/>
