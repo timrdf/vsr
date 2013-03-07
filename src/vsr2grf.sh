@@ -59,6 +59,9 @@ if [[ $# -lt 3 || "$1" == "--help" ]]; then
 fi
 
 ################################# owl, rdf, rdf-literal, or full path to vsr.
+
+# TODO: https://github.com/timrdf/vsr/issues/10
+
 vsr="$1"                                   
 if [ $vsr == "rdf-literal" ]; then
    vis_strat_full="$VSR_HOME/src/xsl/from/rdf2.xsl"
@@ -137,6 +140,8 @@ D=`dirname "$0"`
 script_home="`cd \"$D\" 2>/dev/null && pwd || echo \"$D\"`"
 
 intermediate_file="_`basename $0`_pid$$.date`date +%s`.tmp"
+
+# TODO: https://github.com/timrdf/vsr/issues/10
 
 XSL=$intermediate_file.${vis_strat}2${graphical_format}_$$.xsl
 echo '<xsl:transform version="2.0"'                                               > $XSL
