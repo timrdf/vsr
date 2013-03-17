@@ -53,6 +53,16 @@ debug="false"
 
 usage_message="usage: `basename $0` {pml, owl, rdf, rdf-literal, path/to/some.vsr} {graffle, graphml} [-w] [-od path/to/dir] some.$input_extension+" 
 
+if [[ "$1" == "--count" ]]; then
+   # Note, this regex needs to match the annotation shown below at GRAPHIC_TIC.
+   # e.g.
+
+   #3> <> a prov:Bundle; foaf:primaryTopic <vis> . <vis> a vsr:Graphic .
+
+   grep "^#3> <> a prov:Bundle.* a vsr:Graphic" `find . -name "*.prov.ttl"` | awk '{print $6}' | sort -u | wc -l
+   exit
+fi
+
 if [[ $# -lt 3 || "$1" == "--help" ]]; then
    echo $usage_message 
    exit
@@ -256,6 +266,8 @@ while [ $# -gt 0 ]; do
             # NOTE: duplicated above.
             $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | \
                perl -pe "s|^# Begin provenance dump.*$|#3> <> a prov:Bundle; foaf:primaryTopic <$graphicURI> . <$graphicURI> a vsr:Graphic .|" > $provenancefile
+            #                                          GRAPHIC_TIC
+
             #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
             #   tmp="_"`basename $0``date +%s`_$$.tmp
             #   rapper -q -i turtle -o turtle $provenancefile -I `cr-dataset-uri.sh --uri` > $tmp
