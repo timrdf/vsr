@@ -212,7 +212,7 @@ while [ $# -gt 0 ]; do
 		output_dir=`dirname $artifact` 
 	fi
 	outfile=$output_dir/$base.$output_extension
-	errorfile=$output_dir/$base.out
+	errorfile=$output_dir/$base.$output_extension.out
 	provenancefile=$output_dir/$base.$output_extension.prov.ttl
 
    rdf="_"`basename $0``date +%s`_$$.tmp
