@@ -53,13 +53,19 @@ debug="false"
 
 usage_message="usage: `basename $0` {pml, owl, rdf, rdf-literal, path/to/some.vsr} {graffle, graphml} [-w] [-od path/to/dir] some.$input_extension+" 
 
-if [[ "$1" == "--count" ]]; then
+if [[ "$1" == "--count" || "$1" == "--next-id" ]]; then
    # Note, this regex needs to match the annotation shown below at GRAPHIC_TIC.
    # e.g.
 
    #3> <> a prov:Bundle; foaf:primaryTopic <vis> . <vis> a vsr:Graphic .
 
-   grep "^#3> <> a prov:Bundle.* a vsr:Graphic" `find . -name "*.prov.ttl"` | awk '{print $6}' | sort -u | wc -l
+   count=`grep "^#3> <> a prov:Bundle.* a vsr:Graphic" \`find . -name "*.prov.ttl"\` | awk '{print $6}' | sort -u | wc -l`
+   if [[ "$1" == "--next-id" ]]; then
+      let "next=count+1"
+      echo $next
+   else
+      echo $count
+   fi
    exit
 fi
 
