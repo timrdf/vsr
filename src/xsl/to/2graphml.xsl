@@ -18,7 +18,7 @@
 
 <xsl:include href="../util/atoid.xsl"/>
 <xsl:include href="../util/tertiary.xsl"/>
-<xsl:include href="../ns/vsr-ns.xsl"/>
+<!--xsl:include href="../ns/vsr-ns.xsl"/-->
 <xsl:include href="../ns/yworks-ns.xsl"/>
 
 <xd:doc>
