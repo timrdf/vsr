@@ -210,6 +210,7 @@ while [ $# -gt 0 ]; do
       # visual-artifact-uri
       # [-v a=1 b=2 ... -in]
       params="visual-artifact-uri=`cr-dataset-uri.sh --uri`"
+      # ^^ e.g. http://ieeevis.tw.rpi.edu/source/datahub.io/dataset/vis-seven-scenarios-codings/version/2013-Mar-08
    fi
    if [[ "$VSR_PROVENANCE" == "true" ]]; then
       params="$params log-visual-decisions=true"
@@ -229,15 +230,15 @@ while [ $# -gt 0 ]; do
          perl -pi -e 's/SLF4J:.*//' $errorfile
          if [[ -e "$errorfile" && "$VSR_PROVENANCE" == "true" ]]; then
             # NOTE: duplicated below.
-            $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | grep -v "^Begin provenance dump" > $provenancefile
-            if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
-               tmp="_"`basename $0``date +%s`_$$.tmp
-               rapper -q -i turtle -o turtle $provenancefile -I `cr-dataset-uri.sh --uri` > $tmp
-               mv $tmp $provenancefile
-            fi
-            tmp="_"`basename $0``date +%s`_$$.tmp
-            $CSV2RDF4LOD_HOME/bin/util/grep-head.sh -p "# Begin provenance dump." $errorfile | grep -v "^# Begin provenance dump" > $tmp
-            mv $tmp $errorfile
+            #$CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | grep -v "^Begin provenance dump" > $provenancefile
+            #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
+            #   tmp="_"`basename $0``date +%s`_$$.tmp
+            #   rapper -q -i turtle -o turtle $provenancefile -I `cr-dataset-uri.sh --uri` > $tmp
+            #   mv $tmp $provenancefile
+            #fi
+            #tmp="_"`basename $0``date +%s`_$$.tmp
+            #$CSV2RDF4LOD_HOME/bin/util/grep-head.sh -p "# Begin provenance dump." $errorfile | grep -v "^# Begin provenance dump" > $tmp
+            #mv $tmp $errorfile
          fi
       else 
          echo "$base    WARNING: $outfile already exists. Did not overwrite." $overwrite
@@ -252,11 +253,11 @@ while [ $# -gt 0 ]; do
          if [[ -e "$errorfile" && "$VSR_PROVENANCE" == "true" ]]; then
             # NOTE: duplicated above.
             $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | grep -v "^Begin provenance dump" > $provenancefile
-            if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
-               tmp="_"`basename $0``date +%s`_$$.tmp
-               rapper -q -i turtle -o turtle $provenancefile -I `cr-dataset-uri.sh --uri` > $tmp
-               mv $tmp $provenancefile
-            fi
+            #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
+            #   tmp="_"`basename $0``date +%s`_$$.tmp
+            #   rapper -q -i turtle -o turtle $provenancefile -I `cr-dataset-uri.sh --uri` > $tmp
+            #   cp $tmp $provenancefile
+            #fi
             tmp="_"`basename $0``date +%s`_$$.tmp
             $CSV2RDF4LOD_HOME/bin/util/grep-head.sh -p "# Begin provenance dump." $errorfile | grep -v "^# Begin provenance dump" > $tmp
             mv $tmp $errorfile
