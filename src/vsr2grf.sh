@@ -203,13 +203,15 @@ while [ $# -gt 0 ]; do
       $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
    fi
 
+   graphicURI=""
    situated=""
    params=""
    if [[ `which cr-dataset-uri.sh` && `cr-dataset-uri.sh --uri` == http* ]]; then
       situated="yes"
       # visual-artifact-uri
       # [-v a=1 b=2 ... -in]
-      params="visual-artifact-uri=`cr-dataset-uri.sh --uri`"
+      graphicURI=`cr-dataset-uri.sh --uri`
+      params="visual-artifact-uri=$graphicURI"
       # ^^ e.g. http://ieeevis.tw.rpi.edu/source/datahub.io/dataset/vis-seven-scenarios-codings/version/2013-Mar-08
    fi
    if [[ "$VSR_PROVENANCE" == "true" ]]; then
@@ -252,7 +254,7 @@ while [ $# -gt 0 ]; do
          perl -pi -e 's/SLF4J:.*//' $errorfile
          if [[ -e "$errorfile" && "$VSR_PROVENANCE" == "true" ]]; then
             # NOTE: duplicated above.
-            $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | sed 's/^# Begin provenance dump.*$/#3> <> a prov:Bundle ./' > $provenancefile
+            $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | sed "s/^# Begin provenance dump.*$/#3> <> a prov:Bundle; foaf:primaryTopic <$graphicURI> ./" > $provenancefile
             #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
             #   tmp="_"`basename $0``date +%s`_$$.tmp
             #   rapper -q -i turtle -o turtle $provenancefile -I `cr-dataset-uri.sh --uri` > $tmp
