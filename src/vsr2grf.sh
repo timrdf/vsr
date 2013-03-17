@@ -228,7 +228,7 @@ while [ $# -gt 0 ]; do
          echo "Transforming $base to $outfile"
          $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $params $rdf > $outfile 2> $errorfile
          perl -pi -e 's/SLF4J:.*//' $errorfile
-         if [[ -e "$errorfile" && "$VSR_PROVENANCE" == "true" ]]; then
+         #if [[ -e "$errorfile" && "$VSR_PROVENANCE" == "true" ]]; then
             # NOTE: duplicated below.
             #$CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | grep -v "^Begin provenance dump" > $provenancefile
             #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
@@ -239,7 +239,7 @@ while [ $# -gt 0 ]; do
             #tmp="_"`basename $0``date +%s`_$$.tmp
             #$CSV2RDF4LOD_HOME/bin/util/grep-head.sh -p "# Begin provenance dump." $errorfile | grep -v "^# Begin provenance dump" > $tmp
             #mv $tmp $errorfile
-         fi
+         #fi
       else 
          echo "$base    WARNING: $outfile already exists. Did not overwrite." $overwrite
 		fi
