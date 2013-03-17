@@ -277,6 +277,7 @@ while [ $# -gt 0 ]; do
             $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | \
                perl -pe "s|^# Begin provenance dump.*$|#3> <> a prov:Bundle; foaf:primaryTopic <$graphicURI> . <$graphicURI> a vsr:Graphic .|" > $provenancefile
             #                                          GRAPHIC_TIC
+            echo "<$artifact> a vsr:Graphic, nfo:FileDataObject ." >> $provenancefile
 
             #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
             #   tmp="_"`basename $0``date +%s`_$$.tmp
