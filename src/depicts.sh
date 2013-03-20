@@ -48,7 +48,7 @@ fi
 
 follow=""
 if [ "$1" == "--follow" ]; then
-  follow="$1"
+  follow="$2"
   shift 2
 fi
 
