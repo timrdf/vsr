@@ -98,7 +98,7 @@ while [ $# -gt 0 ]; do
    if [[ -n "$follow" ]]; then
       if [[ ! "$follow" =~ http* ]]; then
          namespace=`curl -s http://prefix.cc/sio.file.txt | awk '{print $2}'`
-         follow=$namespace${follow#*.}
+         follow=$namespace${follow#*:}
       fi
       echo $follow
    fi
