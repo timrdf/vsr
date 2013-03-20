@@ -96,7 +96,9 @@ while [ $# -gt 0 ]; do
    void-triples.sh $outfile >&2
 
    if [[ -n "$follow" ]]; then
+      if [[ ! "$follow" =~ http* ]]; then
+         curl -s http://prefix.cc/sio.file.txt | awk '{print $2}'
+      fi
       echo $follow
-      curl -s http://prefix.cc/sio.file.txt | awk '{print $2}'
    fi
 done
