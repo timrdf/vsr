@@ -75,8 +75,10 @@ while [ $# -gt 0 ]; do
    provenancefile=$output_dir/$base.$output_extension.prov.ttl
 
    grddl.sh $artifact > $outfile
+   void-triples.sh $outfile >&2
    for depicted in `rdf2nt.sh --version 2 $outfile | awk '{if($2 == "<http://purl.org/twc/vocab/vsr#depicts>"){ gsub("<",""); gsub(">",""); print $3 }}'`; do
       rapper -q -g -o turtle $depicted >> $outfile
+      void-triples.sh $outfile >&2
    done
    rapper -q -g -o turtle $outfile > $intermediate_file
    mv $intermediate_file $outfile
