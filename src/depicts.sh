@@ -57,13 +57,13 @@ while [ $# -gt 0 ]; do
    shift
 
    # Determine full path of output file (stored in var 'outfile')
-   if [ 1 -a `echo $artifact | sed 's/^.*\.\(.*\)$/\1/' | grep $input_extension | wc -l` -gt 0 -a $replace_extension = "yes" ]; then
+   #if [ 1 -a `echo $artifact | sed 's/^.*\.\(.*\)$/\1/' | grep $input_extension | wc -l` -gt 0 -a $replace_extension = "yes" ]; then
       # If the extension is the expected $input_extension and extention should be replaced
-      base=`basename $artifact | sed 's/^\(.*\)\..*$/\1/'` # Strip all after last period.
-   else
+   #   base=`basename $artifact | sed 's/^\(.*\)\..*$/\1/'` # Strip all after last period.
+   #else
       # The extension was not $input_extension OR extention should be appended (i.e. not replaced)
       base=`basename $artifact`
-   fi
+   #fi
    if [[ $output_dir_set == "false" && -e $artifact ]]; then
       # If output directory not provided, write to file at same location as artifact
       output_dir=`dirname $artifact`
