@@ -98,7 +98,7 @@ while [ $# -gt 0 ]; do
    if [[ -n "$follow" ]]; then
       follow=`prefix.cc $follow`
       echo $follow
-      for object in `o-of-p.sh $follow $outfile`; do
+      for object in `o-of-p.sh $follow $outfile | awk '{gsub("<",""); gsub(">",""); print"'`; do
          rapper -q -g -o turtle $depicted >> $outfile
       done
    fi
