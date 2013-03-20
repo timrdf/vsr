@@ -96,11 +96,7 @@ while [ $# -gt 0 ]; do
    void-triples.sh $outfile >&2
 
    if [[ -n "$follow" ]]; then
-      if [[ ! "$follow" =~ http* ]]; then
-         prefix=${follow%%:*}
-         namespace=`curl -s http://prefix.cc/$prefix.file.txt | awk '{print $2}'`
-         follow=$namespace${follow#*:}
-      fi
+      follow=`prefix.cc $follow`
       echo $follow
    fi
 done
