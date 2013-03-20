@@ -16,12 +16,17 @@ export CLASSPATH=$CLASSPATH`$VSR_HOME/src/vsr-situate-classpaths.sh`
 #export CLASSPATH=$CLASSPATH`$CSV2RDF4LOD_HOME/bin/util/cr-situate-classpaths.sh`
 
 if [[ $# -lt 1 || "$1" == "--help" ]]; then
-   echo "usage: `basename $0` [-w] [-od <directory>] <graphic-file>..."
+   echo "usage: `basename $0` [-w] [-od <directory>] [--follow <rdf-property>] <graphic-file>..."
+   echo
+   echo "                      -w : write the output to file."
+   echo "         -od <directory> : write the outputs into the given directory."
+   echo " --follow <rdf-property> : after dereferencing the depictions, also resolve all objects of the given RDF property."
+   echo
    exit
 fi
 
 overwrite="no"
-if [ $1 = "-w" ]; then
+if [ "$1" == "-w" ]; then
   overwrite="yes"
   shift
 fi
@@ -32,13 +37,19 @@ if [ $# -lt 1 ]; then
 fi
 output_dir="."
 output_dir_set="false"
-if [ $1 = "-od" ]; then
+if [ "$1" == "-od" ]; then
    output_dir_set="true"
    output_dir="$2"
    if [ ! -d $output_dir ]; then
      mkdir $output_dir
    fi
    shift 2
+fi
+
+follow=""
+if [ "$1" == "--follow" ]; then
+  follow="$1"
+  shift
 fi
 
 if [ $# -lt 1 ]; then
@@ -83,4 +94,9 @@ while [ $# -gt 0 ]; do
    rapper -q -g -o turtle $outfile > $intermediate_file
    mv $intermediate_file $outfile
    void-triples.sh $outfile >&2
+
+   if [[ -n "$follow" ]]; then
+      echo $follow
+      curl http://prefix.cc/sio.file.txt
+   fi
 done
