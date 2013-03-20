@@ -97,6 +97,7 @@ while [ $# -gt 0 ]; do
 
    if [[ -n "$follow" ]]; then
       follow=`prefix.cc $follow`
+      echo $follow
       for object in `o-of-p.sh $follow $outfile`; do
          echo following $follow $object
       done
