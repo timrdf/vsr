@@ -97,6 +97,6 @@ while [ $# -gt 0 ]; do
 
    if [[ -n "$follow" ]]; then
       echo $follow
-      curl http://prefix.cc/sio.file.txt | awk '{print $2}'
+      curl -s http://prefix.cc/sio.file.txt | awk '{print $2}'
    fi
 done
