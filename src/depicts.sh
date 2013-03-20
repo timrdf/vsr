@@ -80,4 +80,5 @@ while [ $# -gt 0 ]; do
    done
    rapper -q -g -o turtle $outfile > $intermediate_file
    mv $intermediate_file $outfile
+   void-triples.sh $outfile >&2
 done
