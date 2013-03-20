@@ -73,7 +73,7 @@
 
    <xsl:for-each select="svg:metadata/*">
       <xsl:variable name="attr"  select="xfm:uri(.)"/>
-      <xsl:variable name="value" select="@rdf:resource | text()[1]"/>
+      <xsl:variable name="value" select="@resource | @rdf:resource | text()[1]"/>
       <xsl:choose>
          <xsl:when test="starts-with($attr,'http:') and starts-with($value,'http:')">
             <xsl:value-of select="concat('   &lt;',$attr,'&gt; &lt;',$value,'&gt;;',$NL)"/>
