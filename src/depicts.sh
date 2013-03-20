@@ -99,7 +99,11 @@ while [ $# -gt 0 ]; do
       follow=`prefix.cc $follow`
       echo $follow
       for object in `o-of-p.sh $follow $outfile`; do
-         echo following $follow $object
+         rapper -q -g -o turtle $depicted >> $outfile
       done
    fi
+   rapper -q -g -o turtle $outfile > $intermediate_file
+   mv $intermediate_file $outfile
+   void-triples.sh $outfile >&2
+
 done
