@@ -52,6 +52,8 @@ fi
 
 intermediate_file="_`basename $0`_pid$$.date`date +%s`.tmp"
 
+output_extension='ttl'
+
 while [ $# -gt 0 ]; do
    artifact="$1"
    shift
