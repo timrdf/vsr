@@ -77,7 +77,7 @@ while [ $# -gt 0 ]; do
    grddl.sh $artifact > $outfile
    for depicted in `rdf2nt.sh --version 2 $outfile | awk '{if($2 == "<http://purl.org/twc/vocab/vsr#depicts>"){ gsub("<",""); gsub(">",""); print $3 }}'`; do
       rapper -q -g -o turtle $depicted >> $outfile
-      rapper -g -o turtle $outfile > $intermediate_file
-      mv $intermediate_file $outfile
    done
+   rapper -q -g -o turtle $outfile > $intermediate_file
+   mv $intermediate_file $outfile
 done
