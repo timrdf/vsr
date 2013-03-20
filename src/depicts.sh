@@ -75,7 +75,7 @@ while [ $# -gt 0 ]; do
    provenancefile=$output_dir/$base.$output_extension.prov.ttl
 
    grddl.sh $artifact > $outfile
-   for depicted in `rdf2nt.sh --version 2 $outfile | awk '{if($2 == "<http://purl.org/twc/vocab/vsr#depicts>"){ print $3 }}'`; do
+   for depicted in `rdf2nt.sh --version 2 $outfile | awk '{if($2 == "<http://purl.org/twc/vocab/vsr#depicts>"){ gsub("<",""); gsub(">",""); print $3 }}'`; do
       echo $depicted
    done
 done
