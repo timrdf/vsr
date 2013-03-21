@@ -16,15 +16,18 @@ export CLASSPATH=$CLASSPATH`$VSR_HOME/src/vsr-situate-classpaths.sh`
 #export CLASSPATH=$CLASSPATH`$CSV2RDF4LOD_HOME/bin/util/cr-situate-classpaths.sh`
 
 if [[ $# -lt 1 || "$1" == "--help" ]]; then
-   echo "usage: `basename $0` [-w] [-od <directory>] [--follow <rdf-property>] <graphic-file>..."
+   echo "usage: `basename $0` [-w] [-od <directory>] <graphic-file> [--start-to] [--follow <rdf-property>]"
    echo
    echo "                      -w : write the output to file."
    echo "         -od <directory> : write the outputs into the given directory."
+   echo "          <graphic-file> : GRDDL-annotated XML file."
+   echo "              --start-to : clear the visit list."
    echo " --follow <rdf-property> : after dereferencing the depictions, also resolve all objects of the given RDF property."
    echo
    exit
 fi
 
+# [-w]
 overwrite="no"
 if [ "$1" == "-w" ]; then
   overwrite="yes"
@@ -35,6 +38,8 @@ if [ $# -lt 1 ]; then
    echo $usage_message 
    exit 1
 fi
+
+# [-od <directory>]
 output_dir="."
 output_dir_set="false"
 if [ "$1" == "-od" ]; then
@@ -45,6 +50,17 @@ if [ "$1" == "-od" ]; then
    fi
    shift 2
 fi
+
+# [--start-to]
+visited=".`basename $0`-visit-list"
+if [ "$1" == "--start-to" ]; then
+  rm -f $visited 
+  shift
+fi
+
+# <graphic-file>
+artifact="$1"
+shift
 
 follow=""
 if [ "$1" == "--follow" ]; then
@@ -64,10 +80,6 @@ fi
 intermediate_file="_`basename $0`_pid$$.date`date +%s`.tmp"
 
 output_extension='ttl'
-
-while [ $# -gt 0 ]; do
-   artifact="$1"
-   shift
 
    # Determine full path of output file (stored in var 'outfile')
    #if [ 1 -a `echo $artifact | sed 's/^.*\.\(.*\)$/\1/' | grep $input_extension | wc -l` -gt 0 -a $replace_extension = "yes" ]; then
@@ -89,20 +101,26 @@ while [ $# -gt 0 ]; do
    void-triples.sh $outfile >&2
    for depicted in `rdf2nt.sh --version 2 $outfile | awk '{if($2 == "<http://purl.org/twc/vocab/vsr#depicts>"){ gsub("<",""); gsub(">",""); print $3 }}'`; do
       rapper -q -g -o turtle $depicted >> $outfile
-      void-triples.sh $outfile >&2
+      echo "`void-triples.sh $outfile` < $depicted" >&2
    done
    rapper -q -g -o turtle $outfile > $intermediate_file
    mv $intermediate_file $outfile
    void-triples.sh $outfile >&2
 
-   if [[ -n "$follow" ]]; then
-      follow=`prefix.cc $follow`
-      echo $follow
-      for object in `o-of-p.sh $follow $outfile | awk '{gsub("<",""); gsub(">",""); print}'`; do
-         rapper -q -g -o turtle $object >> $outfile
-         void-triples.sh $outfile >&2
-      done
-   fi
+followed=0
+while [ $# -gt 0 ]; do
+
+   let "followed=followed+1"
+   follow=`prefix.cc $1`
+   shift
+   echo "($followed / $#) $follow"
+
+   for object in `o-of-p.sh $follow $outfile`; do
+      rapper -q -g -o turtle $object >> $outfile
+      echo "`void-triples.sh $outfile` < $object" >&2
+      echo $object >> $visited
+   done
+
    rapper -q -g -o turtle $outfile > $intermediate_file
    mv $intermediate_file $outfile
    void-triples.sh $outfile >&2
