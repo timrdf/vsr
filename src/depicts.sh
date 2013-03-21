@@ -80,48 +80,45 @@ intermediate_file="_`basename $0`_pid$$.date`date +%s`.tmp"
 
 output_extension='ttl'
 
-   # Determine full path of output file (stored in var 'outfile')
-   #if [ 1 -a `echo $artifact | sed 's/^.*\.\(.*\)$/\1/' | grep $input_extension | wc -l` -gt 0 -a $replace_extension = "yes" ]; then
-      # If the extension is the expected $input_extension and extention should be replaced
-   #   base=`basename $artifact | sed 's/^\(.*\)\..*$/\1/'` # Strip all after last period.
-   #else
-      # The extension was not $input_extension OR extention should be appended (i.e. not replaced)
-      base=`basename $artifact`
-   #fi
-   if [[ $output_dir_set == "false" && -e $artifact ]]; then
-      # If output directory not provided, write to file at same location as artifact
-      output_dir=`dirname $artifact`
-   fi
-   outfile=$output_dir/$base.$output_extension
-   errorfile=$output_dir/$base.$output_extension.out
-   provenancefile=$output_dir/$base.$output_extension.prov.ttl
+# Determine full path of output file (stored in var 'outfile')
+#if [ 1 -a `echo $artifact | sed 's/^.*\.\(.*\)$/\1/' | grep $input_extension | wc -l` -gt 0 -a $replace_extension = "yes" ]; then
+   # If the extension is the expected $input_extension and extention should be replaced
+#   base=`basename $artifact | sed 's/^\(.*\)\..*$/\1/'` # Strip all after last period.
+#else
+   # The extension was not $input_extension OR extention should be appended (i.e. not replaced)
+   base=`basename $artifact`
+#fi
+if [[ $output_dir_set == "false" && -e $artifact ]]; then
+   # If output directory not provided, write to file at same location as artifact
+   output_dir=`dirname $artifact`
+fi
+outfile=$output_dir/$base.$output_extension
+errorfile=$output_dir/$base.$output_extension.out
+provenancefile=$output_dir/$base.$output_extension.prov.ttl
 
-   grddl.sh $artifact > $outfile
-   echo "`void-triples.sh $outfile` < $artifact" >&2
-   for depicted in `rdf2nt.sh --version 2 $outfile | awk '{if($2 == "<http://purl.org/twc/vocab/vsr#depicts>"){ gsub("<",""); gsub(">",""); print $3 }}'`; do
-      rapper -q -g -o turtle $depicted >> $outfile
-      echo "`void-triples.sh $outfile` < $depicted" >&2
-   done
-   rapper -q -g -o turtle $outfile > $intermediate_file
-   mv $intermediate_file $outfile
-   void-triples.sh $outfile >&2
+grddl.sh $artifact > $outfile
+echo "`void-triples.sh $outfile` < $artifact" >&2
+for depicted in `o-of-p.sh 'vsr:depicts' $outfile`; do
+   rapper -q -g -o turtle $depicted >> $outfile
+   echo "`void-triples.sh $outfile` < $depicted" >&2
+done
 
 followed=0
+total=$#
 while [ $# -gt 0 ]; do
 
-   let "followed=followed+1"
    follow=`prefix.cc $1`
+   let "followed=followed+1"
    shift
-   echo "($followed / $#) $follow"
+   echo "following ($followed / $total) $follow"
 
    for object in `o-of-p.sh $follow $outfile`; do
       rapper -q -g -o turtle $object >> $outfile
       echo "`void-triples.sh $outfile` < $object" >&2
       echo $object >> $visited
    done
-
-   rapper -q -g -o turtle $outfile > $intermediate_file
-   mv $intermediate_file $outfile
-   void-triples.sh $outfile >&2
-
 done
+
+rapper -q -g -o turtle $outfile > $intermediate_file
+mv $intermediate_file $outfile
+void-triples.sh $outfile >&2
