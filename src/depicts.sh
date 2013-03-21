@@ -106,9 +106,6 @@ output_extension='ttl'
    mv $intermediate_file $outfile
    void-triples.sh $outfile >&2
 
-echo $*
-exit
-
 followed=0
 while [ $# -gt 0 ]; do
 
