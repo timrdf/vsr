@@ -16,7 +16,7 @@ export CLASSPATH=$CLASSPATH`$VSR_HOME/src/vsr-situate-classpaths.sh`
 #export CLASSPATH=$CLASSPATH`$CSV2RDF4LOD_HOME/bin/util/cr-situate-classpaths.sh`
 
 if [[ $# -lt 1 || "$1" == "--help" ]]; then
-   echo "usage: `basename $0` [-w] [-od <directory>] <graphic-file> [--start-to] [--follow <rdf-property>]"
+   echo "usage: `basename $0` [-w] [-od <directory>] <graphic-file> [--start-to] [--follow <rdf-property>+]"
    echo
    echo "                      -w : write the output to file."
    echo "         -od <directory> : write the outputs into the given directory."
@@ -62,10 +62,9 @@ fi
 artifact="$1"
 shift
 
-follow=""
+# [--follow <rdf-predicate>+]
 if [ "$1" == "--follow" ]; then
-  follow="$2"
-  shift 2
+   shift
 fi
 
 if [ $# -lt 1 ]; then
@@ -73,9 +72,9 @@ if [ $# -lt 1 ]; then
    exit 1
 fi
 multiple_files="false"
-if [ $# -gt 1 ]; then
-  multiple_files="true"
-fi
+#if [ $# -gt 1 ]; then
+#  multiple_files="true"
+#fi
 
 intermediate_file="_`basename $0`_pid$$.date`date +%s`.tmp"
 
