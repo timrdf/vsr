@@ -51,16 +51,16 @@ if [ "$1" == "-od" ]; then
    shift 2
 fi
 
+# <graphic-file>
+artifact="$1"
+shift
+
 # [--start-to]
 visited=".`basename $0`-visit-list"
 if [ "$1" == "--start-to" ]; then
   rm -f $visited 
   shift
 fi
-
-# <graphic-file>
-artifact="$1"
-shift
 
 # [--follow <rdf-predicate>+]
 if [ "$1" == "--follow" ]; then
