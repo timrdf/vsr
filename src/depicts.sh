@@ -98,7 +98,7 @@ output_extension='ttl'
    provenancefile=$output_dir/$base.$output_extension.prov.ttl
 
    grddl.sh $artifact > $outfile
-   void-triples.sh $outfile >&2
+   echo "`void-triples.sh $outfile` < $artifact" >&2
    for depicted in `rdf2nt.sh --version 2 $outfile | awk '{if($2 == "<http://purl.org/twc/vocab/vsr#depicts>"){ gsub("<",""); gsub(">",""); print $3 }}'`; do
       rapper -q -g -o turtle $depicted >> $outfile
       echo "`void-triples.sh $outfile` < $depicted" >&2
