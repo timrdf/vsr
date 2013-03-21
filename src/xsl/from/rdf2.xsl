@@ -647,17 +647,18 @@
       <!--xsl:message select="concat('num in label preds: ',count($in-label-predicates))"/-->
       <!-- NOTE: This is listed out "elevation predominance" b/c it is needed by less-dominant elevation logic -->
       <xsl:variable name="in-label-predicates-label">
-         <xsl:for-each select="$in-label-predicates">
-            <xsl:variable name="label-pred" select="."/>
-            <xsl:for-each select="$s/*">
+         <!--xsl:for-each select="$in-label-predicates">
+            <xsl:variable name="label-pred" select="."/-->
+            <!--xsl:for-each select="$s/*[xfm:uri(.) = $label-pred and string-length(text())]"-->
+            <xsl:for-each select="$s/*[xfm:uri(.) = $in-label-predicates and string-length(text())]">
                <xsl:variable name="predicate" select="xfm:uri(.)"/>
                <!--xsl:message select="concat($label-pred,'(',string-length(text()),') vs ',$predicate)"/-->
-               <xsl:if test="xfm:uri(.) = $label-pred and string-length(text())">
+               <!--xsl:if test="xfm:uri(.) = $label-pred and string-length(text())"-->
                   <!--xsl:message select="'HIT'"/-->
-                  <xsl:value-of select="concat($NL,pmm:bestLocalName($predicate),' : ',text())"/>
-               </xsl:if>
+                  <xsl:value-of select="concat(if (position()=1) then '' else $NL,pmm:bestLocalName($predicate),' : ',text())"/>
+               <!--/xsl:if-->
             </xsl:for-each>
-         </xsl:for-each>
+         <!--/xsl:for-each-->
       </xsl:variable>
 
       <!-- Elevation variables, to be ordered by visual dominance. -->
@@ -790,6 +791,11 @@
                <xsl:variable name="value" select="concat('a ',pmm:tryQName($rdf-types[1]),
                                                          if (string-length($in-label-predicates-label)) then concat($NL,'with') else '',$in-label-predicates-label)"/>
                <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$rdfs:label,$value,$visualFormURI,'instance should be anonymous.',$defin)"/>
+               <xsl:value-of select="$value"/>
+            </xsl:when>
+            <xsl:when test="string-length($in-label-predicates-label)">
+               <xsl:variable name="value" select="$in-label-predicates-label"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$rdfs:label,$value,$visualFormURI,'has in-label predicates',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="$priority-label-descriptions/*">
