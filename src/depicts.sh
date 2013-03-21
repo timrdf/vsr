@@ -59,6 +59,7 @@ shift
 visited=".`basename $0`-visit-list"
 if [ "$1" == "--start-to" ]; then
   rm -f $visited 
+   touch $visited
   shift
 fi
 
