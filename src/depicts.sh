@@ -114,7 +114,7 @@ while [ $# -gt 0 ]; do
    echo "following ($followed / $total) $follow"
 
    for object in `o-of-p.sh $follow $outfile`; do
-      if [[ `grep "$object" $visited` ]]; then
+      if [[ `grep "^$object$" $visited` ]]; then
          echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
       else
          rapper -q -g -o turtle $object >> $outfile
