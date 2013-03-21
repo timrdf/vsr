@@ -76,7 +76,9 @@
       <xsl:variable name="value" select="@resource | @rdf:resource | text()[1]"/>
       <xsl:choose>
          <xsl:when test="starts-with($attr,'http:') and starts-with($value,'http:')">
-            <xsl:value-of select="concat('   &lt;',$attr,'&gt; &lt;',$value,'&gt;;',$NL)"/>
+            <xsl:for-each select="tokenize($value,'\s+')[starts-with(.,'http:')]">
+               <xsl:value-of select="concat('   &lt;',$attr,'&gt; &lt;',.,'&gt;;',$NL)"/>
+            </xsl:for-each>
          </xsl:when>
          <xsl:otherwise>
             <!--xsl:value-of select="concat('   &lt;',.,'&gt; ',$DQ,replace($value,$DQ,''),$DQ,';',$NL)"/-->
