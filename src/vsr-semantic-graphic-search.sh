@@ -104,7 +104,7 @@ pushd $cockpit &> /dev/null
    cp $me.rq automatic/$rq
 
    echo $me.rq against endpoint: $CSV2RDF4LOD_PUBLISH_SPARQL_ENDPOINT 
-   if [[ "$CSV2RDF4LOD_PUBLISH_SPARQL_ENDPOINT" =~ http ]]; then
+   if [[ "$CSV2RDF4LOD_PUBLISH_SPARQL_ENDPOINT" =~ http && ! -e source/$rq.xml ]]; then
       rm -f $rq
       ln automatic/$rq $rq # Work around cache-queries.sh assumptions.
       cache-queries.sh $CSV2RDF4LOD_PUBLISH_SPARQL_ENDPOINT -o xml -q `basename $rq` -od source
