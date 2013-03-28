@@ -115,7 +115,11 @@ pushd $cockpit &> /dev/null
          if [[ "$url" =~ http* ]]; then
             download=${url%%_||_*}
             page=${url##*_||_}
-            echo $download also $page
+            if [[ "$url" == "$page" ]]; then
+               echo $download
+            else
+               echo $download also $page
+            fi
             echo $download > source/`md5.sh -qs $download`.access
          fi
       done
