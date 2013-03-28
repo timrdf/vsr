@@ -114,7 +114,7 @@ pushd $cockpit &> /dev/null
       for url in `saxon.sh $me.xsl a a source/$rq.xml`; do
          if [[ "$url" =~ http* ]]; then
             download=${url%%_||_*}
-            page=${blah##*_||_}
+            page=${url##*_||_}
             echo $download also $page
             echo $download > source/`md5.sh -qs $download`.access
          fi
