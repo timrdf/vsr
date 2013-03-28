@@ -113,9 +113,19 @@ while [ $# -gt 0 ]; do
    let "followed=followed+1"
    shift
 
-   for property in $follow $sames; do
-      echo "following ($followed / $total) $follow $property"
-      for object in `o-of-p.sh $property $outfile | sort -u | grep 'http://ieeevis.tw.rpi.edu/'`; do
+   echo "following ($followed / $total) $follow $property"
+   for object in `o-of-p.sh $follow $outfile | sort -u | grep 'http://ieeevis.tw.rpi.edu/'`; do
+      if [[ `grep "^$object$" $visited` ]]; then
+         echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
+      else
+         rapper -q -g -o turtle $object >> $outfile
+         echo "`void-triples.sh $outfile` < $object" >&2
+         echo $object >> $visited
+      fi
+   done
+
+   for sameas in $sames; do
+      for object in `o-of-p.sh --inverse-of $sameas $outfile | sort -u | grep 'http://ieeevis.tw.rpi.edu/'`; do
          if [[ `grep "^$object$" $visited` ]]; then
             echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
          else
