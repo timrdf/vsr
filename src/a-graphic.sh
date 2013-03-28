@@ -76,7 +76,7 @@ while [ $# -gt 0 ]; do
 
    if [ -e $artifact ]; then
       cr-default-prefixes.sh --turtle > $intermediate_file
-      echo "<$base> a vsr:Graphic ." >> $intermediate_file
+      echo "<$base> a vsr:Graphic, nfo:FileDataObject ." >> $intermediate_file
    fi
 
    if [[ -e "$provenancefile" ]]; then
