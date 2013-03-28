@@ -113,14 +113,16 @@ while [ $# -gt 0 ]; do
    shift
    echo "following ($followed / $total) $follow"
 
-   for object in `o-of-p.sh $follow $outfile | sort -u`; do
-      if [[ `grep "^$object$" $visited` ]]; then
-         echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
-      else
-         rapper -q -g -o turtle $object >> $outfile
-         echo "`void-triples.sh $outfile` < $object" >&2
-         echo $object >> $visited
-      fi
+   for property in $follow owl:sameAs prov:alternateOf; do
+      for object in `o-of-p.sh $property $outfile | sort -u`; do
+         if [[ `grep "^$object$" $visited` ]]; then
+            echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
+         else
+            rapper -q -g -o turtle $object >> $outfile
+            echo "`void-triples.sh $outfile` < $object" >&2
+            echo $object >> $visited
+         fi
+      done
    done
 done
 
