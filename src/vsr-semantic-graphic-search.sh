@@ -110,6 +110,12 @@ pushd $cockpit &> /dev/null
       rm -f `basename $rq`
    fi
 
+   if [ -e $rq.xml ]; then
+      for url in `saxon.sh $me.xsl a a source/\`basename $rq\`.xml`; do
+         echo $url > source/`md5.sh -s $url`.access
+      done
+   fi
+
    #tally=1
    #valid=""
    #for droid in `find . -mindepth 6 -maxdepth 6 -name cr-droid.ttl`; do
