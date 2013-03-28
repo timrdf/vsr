@@ -101,7 +101,7 @@ cr-default-prefixes.sh --turtle > $outfile
 grddl.sh $artifact >> $outfile
 echo "`void-triples.sh $outfile` < $artifact" >&2
 for depicted in `o-of-p.sh 'vsr:depicts' $outfile`; do
-   rapper -q -g -o turtle $depicted >> $outfile
+   rapper -q -g -o ntriples $depicted >> $outfile
    echo "`void-triples.sh $outfile` < $depicted" >&2
 done
 
