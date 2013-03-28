@@ -85,5 +85,6 @@ while [ $# -gt 0 ]; do
       cat $intermediate_file >> $provenancefile
    fi
 
+   echo $provenancefile 2>&1
    rm -f $intermediate_file
 done
