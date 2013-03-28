@@ -116,11 +116,13 @@ pushd $cockpit &> /dev/null
             download=${url%%_||_*}
             page=${url##*_||_}
             if [[ "$url" == "$page" ]]; then
-               echo $download
+               page=''
             else
                echo $download also $page
             fi
-            echo $download > source/`md5.sh -qs $download`.access
+            hash=`md5.sh -qs $download`
+            echo $download > source/$hash.access
+            pcurl.sh "$download" -n $hash -e graphic
          fi
       done
    fi
