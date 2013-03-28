@@ -125,6 +125,7 @@ while [ $# -gt 0 ]; do
    done
 
    for sameas in $sames; do
+      echo "filling ($followed / $total) $follow $sameas"
       for object in `o-of-p.sh --inverse-of $sameas $outfile | sort -u | grep 'http://ieeevis.tw.rpi.edu/'`; do
          if [[ `grep "^$object$" $visited` ]]; then
             echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
