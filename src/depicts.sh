@@ -111,9 +111,9 @@ while [ $# -gt 0 ]; do
    follow=`prefix.cc $1`
    let "followed=followed+1"
    shift
-   echo "following ($followed / $total) $follow"
 
    for property in $follow owl:sameAs prov:alternateOf; do
+      echo "following ($followed / $total) $follow $property"
       for object in `o-of-p.sh $property $outfile | sort -u`; do
          if [[ `grep "^$object$" $visited` ]]; then
             echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
