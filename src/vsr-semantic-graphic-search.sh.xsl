@@ -10,7 +10,7 @@
 </xsl:template>
 
 <xsl:template match="sr:result">
-   <xsl:value-of select="concat(sr:binding[@name='file'],if (sr:binding[@name='page']) then concat(' ',sr:binding[@name='page']) else '',$NL)"/>
+   <xsl:value-of select="concat(sr:binding[@name='file'],if (sr:binding[@name='page']) then concat('_||_',sr:binding[@name='page']) else '',$NL)"/>
 </xsl:template>
 
 <!--xsl:template match="text()">
