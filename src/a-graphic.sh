@@ -49,41 +49,41 @@ if [ "$1" == "-od" ]; then
    shift 2
 fi
 
-# <graphic-file>
-artifact="$1"
-shift
-
 intermediate_file="_`basename $0`_pid$$.date`date +%s`.tmp"
 
-output_extension='ttl'
-
-# Determine full path of output file (stored in var 'outfile')
-#if [ 1 -a `echo $artifact | sed 's/^.*\.\(.*\)$/\1/' | grep $input_extension | wc -l` -gt 0 -a $replace_extension = "yes" ]; then
-   # If the extension is the expected $input_extension and extention should be replaced
-#   base=`basename $artifact | sed 's/^\(.*\)\..*$/\1/'` # Strip all after last period.
-#else
-   # The extension was not $input_extension OR extention should be appended (i.e. not replaced)
-   base=`basename $artifact`
-#fi
-if [[ $output_dir_set == "false" && -e $artifact ]]; then
-   # If output directory not provided, write to file at same location as artifact
-   output_dir=`dirname $artifact`
-fi
-outfile=$output_dir/$base.$output_extension
-errorfile=$output_dir/$base.out
-provenancefile=$output_dir/$base.prov.ttl
-
-cr-default-prefixes.sh --turtle > $intermediate_file
 while [ $# -gt 0 ]; do
-   if [ -e $file ]; then
+   # <graphic-file>
+   artifact="$1"
+   shift
+
+   if [ -e $artifact ]; then
+      cr-default-prefixes.sh --turtle > $intermediate_file
       echo "<$file> a vsr:Graphic ." >> $intermediate_file
    fi
+
+   output_extension=''
+
+   # Determine full path of output file (stored in var 'outfile')
+   #if [ 1 -a `echo $artifact | sed 's/^.*\.\(.*\)$/\1/' | grep $input_extension | wc -l` -gt 0 -a $replace_extension = "yes" ]; then
+      # If the extension is the expected $input_extension and extention should be replaced
+   #   base=`basename $artifact | sed 's/^\(.*\)\..*$/\1/'` # Strip all after last period.
+   #else
+      # The extension was not $input_extension OR extention should be appended (i.e. not replaced)
+      base=`basename $artifact`
+   #fi
+   if [[ $output_dir_set == "false" && -e $artifact ]]; then
+      # If output directory not provided, write to file at same location as artifact
+      output_dir=`dirname $artifact`
+   fi
+   outfile=$output_dir/$base.$output_extension
+   errorfile=$output_dir/$base.out
+   provenancefile=$output_dir/$base.prov.ttl
+
+   if [[ -e "$provenancefile" ]]; then
+      cat $intermediate_file >> $provenancefile
+   else
+      cat $intermediate_file >> $provenancefile
+   fi
+
+   rm -f $intermediate_file
 done
-
-if [[ -e "$provenancefile" ]]; then
-   cat $intermediate_file >> $provenancefile
-else
-   cat $intermediate_file >> $provenancefile
-fi
-
-rm -f $intermediate_file
