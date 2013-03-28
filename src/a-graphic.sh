@@ -58,7 +58,7 @@ while [ $# -gt 0 ]; do
 
    if [ -e $artifact ]; then
       cr-default-prefixes.sh --turtle > $intermediate_file
-      echo "<$file> a vsr:Graphic ." >> $intermediate_file
+      echo "<$artifact> a vsr:Graphic ." >> $intermediate_file
    fi
 
    output_extension=''
