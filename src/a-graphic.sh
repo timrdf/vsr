@@ -56,11 +56,6 @@ while [ $# -gt 0 ]; do
    artifact="$1"
    shift
 
-   if [ -e $artifact ]; then
-      cr-default-prefixes.sh --turtle > $intermediate_file
-      echo "<$artifact> a vsr:Graphic ." >> $intermediate_file
-   fi
-
    output_extension=''
 
    # Determine full path of output file (stored in var 'outfile')
@@ -78,6 +73,11 @@ while [ $# -gt 0 ]; do
    outfile=$output_dir/$base.$output_extension
    errorfile=$output_dir/$base.out
    provenancefile=$output_dir/$base.prov.ttl
+
+   if [ -e $artifact ]; then
+      cr-default-prefixes.sh --turtle > $intermediate_file
+      echo "<$base> a vsr:Graphic ." >> $intermediate_file
+   fi
 
    if [[ -e "$provenancefile" ]]; then
       cat $intermediate_file >> $provenancefile
