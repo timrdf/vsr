@@ -112,7 +112,7 @@ pushd $cockpit &> /dev/null
 
    if [ -e source/$rq.xml ]; then
       for url in `saxon.sh $me.xsl a a source/$rq.xml`; do
-         echo $url > source/`md5.sh -s $url`.access
+         echo $url > source/`md5.sh -qs $url`.access
       done
    fi
 
