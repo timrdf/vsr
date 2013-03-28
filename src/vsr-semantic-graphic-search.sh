@@ -19,6 +19,9 @@
 # Example usage:
 # 
 
+VSR_HOME=$(cd ${0%/*} && echo ${PWD%/*})
+me=$(cd ${0%/*} && echo ${PWD})/`basename $0`
+
 see="https://github.com/timrdf/csv2rdf4lod-automation/wiki/CSV2RDF4LOD-not-set"
 CSV2RDF4LOD_HOME=${CSV2RDF4LOD_HOME:?"not set; source csv2rdf4lod/source-me.sh or see $see"}
 
@@ -94,56 +97,61 @@ fi
 rm -rf $cockpit/source/*
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-$CSV2RDF4LOD_HOME/bin/util/cr-droid.sh --conversion-cockpit-sources
-#tally=1
-#valid=""
-for droid in `find . -mindepth 6 -maxdepth 6 -name cr-droid.ttl`; do
-   echo $droid
-   loc=`dirname $droid`
-   loc=`dirname $loc`
-   sdv=$(cd $loc && cr-sdv.sh) # Local file name in the aggregated source/ directory.
+pushd $cockpit &> /dev/null
 
-   # Files are referenced relatively in the turtle file, so 
-   # moving it will lose the file it's talking about.
-   # We need to set the @base in the file's new location.
-   # e.g., "<Hospital_flatfiles.zip>" 
-   #   in:
-   #    "<Hospital_flatfiles.zip> dcterms:format <http://provenanceweb.org/formats/pronom/x-fmt/263> ."
-   #   in:
-   #     /srv/twc-healthdata/data/source/hub-healthdata-gov/hospital-compare/version/2012-Oct-10
-   #   is:
-   #     http://healthdata.tw.rpi.edu/source/hub-healthdata-gov/file/hospital-compare/version/2012-Oct-10/source/Hospital_flatfiles.zip 
-   #
-   # cr-dataset-uri.sh --uri | sed 's/\/dataset\//\/file\//' | awk '{print $0"/source/"}'
-   # gives
-   #     http://purl.org/twc/health/source/hub-healthdata-gov/file/hospital-compare/version/2012-Oct-10/source/
-   url=$(cd $loc && cr-dataset-uri.sh --uri)
-   base=`echo $url | sed 's/\/dataset\//\/file\//' | awk '{print "@base <"$0"/source/> ."}'`
+   rq="automatic/graphic-urls.rq"
+   cp $me.rq $rq
 
-   #ext=${droid%*.}
-   #let "tally=tally+1
-   echo "   --> $sdv.ttl"
-   if [ "$dryRun" != "true" ]; then
-      echo $base  > $cockpit/source/$sdv.ttl
-      echo       >> $cockpit/source/$sdv.ttl
-      cat $droid >> $cockpit/source/$sdv.ttl
-   fi
-   #count=`void-triples.sh $cockpit/automatic/$tally$ext.ttl`
-   #if [ "$count" -gt 0 ]; then
-   #   valid="$valid $tic"
-   #fi
-done
+   #tally=1
+   #valid=""
+   #for droid in `find . -mindepth 6 -maxdepth 6 -name cr-droid.ttl`; do
+   #   echo $droid
+   #   loc=`dirname $droid`
+   #   loc=`dirname $loc`
+   #   sdv=$(cd $loc && cr-sdv.sh) # Local file name in the aggregated source/ directory.
+
+      # Files are referenced relatively in the turtle file, so 
+      # moving it will lose the file it's talking about.
+      # We need to set the @base in the file's new location.
+      # e.g., "<Hospital_flatfiles.zip>" 
+      #   in:
+      #    "<Hospital_flatfiles.zip> dcterms:format <http://provenanceweb.org/formats/pronom/x-fmt/263> ."
+      #   in:
+      #     /srv/twc-healthdata/data/source/hub-healthdata-gov/hospital-compare/version/2012-Oct-10
+      #   is:
+      #     http://healthdata.tw.rpi.edu/source/hub-healthdata-gov/file/hospital-compare/version/2012-Oct-10/source/Hospital_flatfiles.zip 
+      #
+      # cr-dataset-uri.sh --uri | sed 's/\/dataset\//\/file\//' | awk '{print $0"/source/"}'
+      # gives
+      #     http://purl.org/twc/health/source/hub-healthdata-gov/file/hospital-compare/version/2012-Oct-10/source/
+   #   url=$(cd $loc && cr-dataset-uri.sh --uri)
+   #   base=`echo $url | sed 's/\/dataset\//\/file\//' | awk '{print "@base <"$0"/source/> ."}'`
+
+      #ext=${droid%*.}
+      #let "tally=tally+1
+   #   echo "   --> $sdv.ttl"
+   #   if [ "$dryRun" != "true" ]; then
+   #      echo $base  > $cockpit/source/$sdv.ttl
+   #      echo       >> $cockpit/source/$sdv.ttl
+   #      cat $droid >> $cockpit/source/$sdv.ttl
+   #   fi
+   #   #count=`void-triples.sh $cockpit/automatic/$tally$ext.ttl`
+   #   #if [ "$count" -gt 0 ]; then
+   #   #   valid="$valid $tic"
+   ##   #fi
+   #done
+popd &> /dev/null
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-pushd $cockpit &> /dev/null
-   echo
-   echo aggregate-source-rdf.sh --link-as-latest source/* 
-   if [ "$dryRun" != "true" ]; then
-      aggregate-source-rdf.sh --link-as-latest source/* 
-      # WARNING: ^^ publishes even with -n b/c it checks for CSV2RDF4LOD_PUBLISH_VIRTUOSO
-   fi
-popd &> /dev/null
-
+#pushd $cockpit &> /dev/null
+#   echo
+#   echo aggregate-source-rdf.sh --link-as-latest source/* 
+#   if [ "$dryRun" != "true" ]; then
+#      aggregate-source-rdf.sh --link-as-latest source/* 
+#      # WARNING: ^^ publishes even with -n b/c it checks for CSV2RDF4LOD_PUBLISH_VIRTUOSO
+#   fi
+#popd &> /dev/null
+#
 if [ "$clearGraph" == "true" ]; then
    echo
    echo "Deleting $graphName" >&2

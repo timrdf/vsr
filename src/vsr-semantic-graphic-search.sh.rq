@@ -1,0 +1,10 @@
+prefix nfo: <http://www.semanticdesktop.org/ontologies/nfo/#>
+prefix vsr: <http://purl.org/twc/vocab/vsr#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix sioc: <http://rdfs.org/sioc/ns#>
+
+select distinct ?file ?page
+where {
+  ?file a vsr:Graphic, nfo:FileDataObject .
+  optional { ?file prov:wasDerivedFrom ?page . ?page a sioc:Item }
+}
