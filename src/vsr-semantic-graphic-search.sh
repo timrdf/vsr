@@ -103,6 +103,7 @@ pushd $cockpit &> /dev/null
    cp $me.rq $rq
 
    echo $me.rq
+   echo $CSV2RDF4LOD_PUBLISH_SPARQL_ENDPOINT 
 
    #tally=1
    #valid=""
