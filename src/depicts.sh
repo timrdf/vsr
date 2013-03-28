@@ -97,7 +97,8 @@ outfile=$output_dir/$base.$output_extension
 errorfile=$output_dir/$base.$output_extension.out
 provenancefile=$output_dir/$base.$output_extension.prov.ttl
 
-grddl.sh $artifact > $outfile
+cr-default-prefixes.sh --turtle > $outfile
+grddl.sh $artifact >> $outfile
 echo "`void-triples.sh $outfile` < $artifact" >&2
 for depicted in `o-of-p.sh 'vsr:depicts' $outfile`; do
    rapper -q -g -o turtle $depicted >> $outfile
