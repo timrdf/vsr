@@ -104,6 +104,7 @@ for depicted in `o-of-p.sh 'vsr:depicts' $outfile`; do
    echo "`void-triples.sh $outfile` < $depicted" >&2
 done
 
+sames="`prefix.cc owl:sameAs` `prefix.cc prov:alternateOf`"
 followed=0
 total=$#
 while [ $# -gt 0 ]; do
@@ -112,7 +113,7 @@ while [ $# -gt 0 ]; do
    let "followed=followed+1"
    shift
 
-   for property in $follow owl:sameAs prov:alternateOf; do
+   for property in $follow $sames; do
       echo "following ($followed / $total) $follow $property"
       for object in `o-of-p.sh $property $outfile | sort -u`; do
          if [[ `grep "^$object$" $visited` ]]; then
