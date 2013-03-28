@@ -99,19 +99,19 @@ rm -rf $cockpit/source/*
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 pushd $cockpit &> /dev/null
 
-   rq="automatic/graphic-urls.rq"
-   cp $me.rq $rq
+   rq="graphic-urls.rq"
+   cp $me.rq automatic/$rq
 
    echo $me.rq against endpoint: $CSV2RDF4LOD_PUBLISH_SPARQL_ENDPOINT 
    if [[ "$CSV2RDF4LOD_PUBLISH_SPARQL_ENDPOINT" =~ http ]]; then
-      rm -f `basename $rq`
-      ln $rq `basename $rq` # Work around cache-queries.sh assumptions.
+      rm -f $rq
+      ln automatic/$rq $rq # Work around cache-queries.sh assumptions.
       cache-queries.sh $CSV2RDF4LOD_PUBLISH_SPARQL_ENDPOINT -o xml -q `basename $rq` -od source
-      rm -f `basename $rq`
+      rm -f $rq
    fi
 
-   if [ -e $rq.xml ]; then
-      for url in `saxon.sh $me.xsl a a source/\`basename $rq\`.xml`; do
+   if [ -e source/$rq.xml ]; then
+      for url in `saxon.sh $me.xsl a a source/$rq.xml`; do
          echo $url > source/`md5.sh -s $url`.access
       done
    fi
