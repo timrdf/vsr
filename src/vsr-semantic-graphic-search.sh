@@ -102,6 +102,8 @@ pushd $cockpit &> /dev/null
    rq="automatic/graphic-urls.rq"
    cp $me.rq $rq
 
+   echo $me.rq
+
    #tally=1
    #valid=""
    #for droid in `find . -mindepth 6 -maxdepth 6 -name cr-droid.ttl`; do
@@ -152,19 +154,19 @@ popd &> /dev/null
 #   fi
 #popd &> /dev/null
 #
-if [ "$clearGraph" == "true" ]; then
-   echo
-   echo "Deleting $graphName" >&2
-   if [ "$dryRun" != "true" ]; then
-      publish/bin/virtuoso-delete-$sourceID-$datasetID-$versionID.sh
-   fi
-fi
+#if [ "$clearGraph" == "true" ]; then
+#   echo
+#   echo "Deleting $graphName" >&2
+#   if [ "$dryRun" != "true" ]; then
+#      publish/bin/virtuoso-delete-$sourceID-$datasetID-$versionID.sh
+#   fi
+#fi
 
-if [ "$dryRun" != "true" ]; then
-   pushd $cockpit &> /dev/null
-      publish/bin/virtuoso-load-$sourceID-$datasetID-$versionID.sh
-   popd &> /dev/null
-fi
+#if [ "$dryRun" != "true" ]; then
+#   pushd $cockpit &> /dev/null
+#      publish/bin/virtuoso-load-$sourceID-$datasetID-$versionID.sh
+#   popd &> /dev/null
+#fi
 
 # if [ "$CSV2RDF4LOD_PUBLISH_COMPRESS" == "true" ]; then
 # fi
