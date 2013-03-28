@@ -122,7 +122,7 @@ pushd $cockpit &> /dev/null
                   echo $download also $page
                fi
                hash=`md5.sh -qs $download`
-               echo $download > source/$hash.access
+               echo $download > $hash.access
                pcurl.sh "$download" -n $hash -e graphic
             fi
          popd &> /dev/null
