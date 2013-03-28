@@ -112,7 +112,7 @@ pushd $cockpit &> /dev/null
 
    if [[ -e source/$rq.xml ]]; then
       for url in `saxon.sh $me.xsl a a source/$rq.xml`; do
-         pushd &> /dev/null
+         pushd source &> /dev/null
             if [[ "$url" =~ http* ]]; then
                download=${url%%_||_*}
                page=${url##*_||_}
