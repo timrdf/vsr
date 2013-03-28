@@ -130,7 +130,9 @@ pushd $cockpit &> /dev/null
                pcurl.sh "$download" -n $hash -e graphic
 
                # Content-augment the graphics.
-               depicts.sh -w $hash.graphic --start-to --follow $property_path
+               if [ ! -e $hash.graphic.ttl ]; then
+                  depicts.sh -w $hash.graphic --start-to --follow $property_path
+               fi
             fi
          done
 
