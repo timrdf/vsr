@@ -119,7 +119,7 @@ while [ $# -gt 0 ]; do
       if [[ `grep "^$object$" $visited` ]]; then
          echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
       else
-         rapper -q -g -o turtle $object >> $outfile
+         rapper -q -g -o ntriples $object >> $outfile
          echo "`void-triples.sh $outfile` < $object" >&2
          echo $object >> $visited
       fi
@@ -131,7 +131,7 @@ while [ $# -gt 0 ]; do
          if [[ `grep "^$object$" $visited` ]]; then
             echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
          else
-            rapper -q -g -o turtle $object >> $outfile
+            rapper -q -g -o ntriples $object >> $outfile
             echo "`void-triples.sh $outfile` < $object" >&2
             echo $object >> $visited
          fi
