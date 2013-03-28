@@ -70,8 +70,8 @@ if [[ $output_dir_set == "false" && -e $artifact ]]; then
    output_dir=`dirname $artifact`
 fi
 outfile=$output_dir/$base.$output_extension
-errorfile=$output_dir/$base.$output_extension.out
-provenancefile=$output_dir/$base.$output_extension.prov.ttl
+errorfile=$output_dir/$base.out
+provenancefile=$output_dir/$base.prov.ttl
 
 cr-default-prefixes.sh --turtle > $intermediate_file
 while [ $# -gt 0 ]; do
