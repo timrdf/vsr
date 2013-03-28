@@ -97,6 +97,7 @@ fi
 rm -rf $cockpit/source/*
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+property_path="sio:has-member dcterms:subject skos:broader skos:broader skos:broader"
 pushd $cockpit &> /dev/null
 
    rq="graphic-urls.rq"
@@ -111,9 +112,10 @@ pushd $cockpit &> /dev/null
    fi
 
    if [[ -e source/$rq.xml ]]; then
-      for url in `saxon.sh $me.xsl a a source/$rq.xml`; do
-         pushd source &> /dev/null
+      pushd source &> /dev/null
+         for url in `saxon.sh $me.xsl a a $rq.xml`; do
             if [[ "$url" =~ http* ]]; then
+
                download=${url%%_||_*}
                page=${url##*_||_}
                if [[ "$url" == "$page" ]]; then
@@ -123,10 +125,16 @@ pushd $cockpit &> /dev/null
                fi
                hash=`md5.sh -qs $download`
                echo $download > $hash.access
+
+               # Retrieve the graphics.
                pcurl.sh "$download" -n $hash -e graphic
+
+               # Content-augment the graphics.
+               depicts.sh -w $hash.graphic --start-to --follow $property_path
             fi
-         popd &> /dev/null
-      done
+         done
+
+      popd &> /dev/null
    fi
 
    #tally=1
