@@ -127,7 +127,9 @@ pushd $cockpit &> /dev/null
                echo $download > $hash.access
 
                # Retrieve the graphics.
-               pcurl.sh "$download" -n $hash -e graphic
+               if [ ! -e $hash.graphic ]; then
+                  pcurl.sh "$download" -n $hash -e graphic
+               fi
 
                # Content-augment the graphics.
                if [ ! -e $hash.graphic.ttl ]; then
