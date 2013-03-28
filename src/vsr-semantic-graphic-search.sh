@@ -112,18 +112,20 @@ pushd $cockpit &> /dev/null
 
    if [[ -e source/$rq.xml ]]; then
       for url in `saxon.sh $me.xsl a a source/$rq.xml`; do
-         if [[ "$url" =~ http* ]]; then
-            download=${url%%_||_*}
-            page=${url##*_||_}
-            if [[ "$url" == "$page" ]]; then
-               page=''
-            else
-               echo $download also $page
+         pushd &> /dev/null
+            if [[ "$url" =~ http* ]]; then
+               download=${url%%_||_*}
+               page=${url##*_||_}
+               if [[ "$url" == "$page" ]]; then
+                  page=''
+               else
+                  echo $download also $page
+               fi
+               hash=`md5.sh -qs $download`
+               echo $download > source/$hash.access
+               pcurl.sh "$download" -n $hash -e graphic
             fi
-            hash=`md5.sh -qs $download`
-            echo $download > source/$hash.access
-            pcurl.sh "$download" -n $hash -e graphic
-         fi
+         popd &> /dev/null
       done
    fi
 
