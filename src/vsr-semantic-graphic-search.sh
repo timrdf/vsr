@@ -136,6 +136,9 @@ pushd $cockpit &> /dev/null
                   depicts.sh -w $hash.graphic --start-to --follow $property_path
                fi
             fi
+     
+            pvdelete.sh `cat $hash.access`
+            vload ttl $url.graphic.ttl `cat $hash.access` -v
          done
 
       popd &> /dev/null
