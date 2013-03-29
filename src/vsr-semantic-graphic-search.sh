@@ -134,13 +134,12 @@ pushd $cockpit &> /dev/null
                # Content-augment the graphics.
                if [ ! -e $hash.graphic.ttl ]; then
                   depicts.sh -w $hash.graphic --start-to --follow $property_path
+               else
+                  pvdelete.sh `cat $hash.access`
+                  vload ttl $hash.graphic.ttl `cat $hash.access` -v
                fi
             fi
-     
-            pvdelete.sh `cat $hash.access`
-            vload ttl $url.graphic.ttl `cat $hash.access` -v
          done
-
       popd &> /dev/null
    fi
 
