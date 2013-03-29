@@ -132,12 +132,17 @@ pushd $cockpit &> /dev/null
                fi
 
                # Content-augment the graphics.
-               if [ ! -e $hash.graphic.ttl ]; then
+               if [[ ! -e $hash.graphic.ttl ]]; then
                   depicts.sh -w $hash.graphic --start-to --follow $property_path
                fi
-               if [ -e $hash.graphic.ttl ]; then
+               if [[ -e $hash.graphic.ttl ]]; then
                   pvdelete.sh `cat $hash.access`
+                  echo "<`cat $hash.access`> a vsr:Dataset ." >> $hash.graphic.ttl
                   vload ttl $hash.graphic.ttl `cat $hash.access` -v
+                  if [[ -n "$page" ]]; then
+                     echo "<$page> a vsr:Dataset ." >> $hash.graphic.ttl
+                     vload ttl $hash.graphic.ttl $page -v
+                  fi
                fi
             fi
          done
