@@ -94,7 +94,7 @@ if [ ! -d $cockpit/source ]; then
    mkdir -p $cockpit/source
    mkdir -p $cockpit/automatic
 fi
-rm -rf $cockpit/source/*
+#rm -rf $cockpit/source/*
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 property_path="sio:has-member dcterms:subject skos:broader skos:broader skos:broader"
