@@ -138,13 +138,13 @@ pushd $cockpit &> /dev/null
                   pushd ../ &> /dev/null
                      #graph_name=`cat source/$hash.access` # OLD WAY FOR VAST 2013 paper.
                      graph_name="`cr-dataset-uri.sh --uri`/$hash"
-                     echo pvdelete.sh $graph_name
+                     pvdelete.sh $graph_name
                      # TODO: needs new modeling (should pvload do it?) echo "<$graph_name> a vsr:Dataset ." >> source/$hash.graphic.ttl
 
                      # OLD: echo vload ttl $hash.graphic.ttl $graph_name -v
                      file_path=`cr-ln-to-www-root.sh source/$hash.graphic.ttl`
                      url=`cr-ln-to-www-root.sh --url-of-filepath $file_path`
-                     echo pvload.sh $url -ng $graph_name
+                     pvload.sh $url -ng $graph_name
 
                      if [[ -n "$page" ]]; then
                         # TODO: needs new modeling (should pvload do it?) echo "<$page> a vsr:Dataset ." >> $hash.graphic.ttl
