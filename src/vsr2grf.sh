@@ -55,14 +55,16 @@ usage_message="usage: `basename $0` {pml, owl, rdf, rdf-literal, path/to/some.vs
 
 
 
-# Note, this regex needs to match the annotation shown below at GRAPHIC_TIC.
-# e.g.
 
-#3> <> a prov:Bundle; foaf:primaryTopic <vis> . <vis> a vsr:Graphic .
-count=`grep "^#3> <> a prov:Bundle.* a vsr:Graphic" \`find . -name "*.prov.ttl"\` | awk '{print $6}' | sort -u | wc -l`
-let "next=count+1"
+# TODO: moved into --count to avoid infinite loop on no args - need to recover this capability that was done for VAST 2013.
 
 if [[ "$1" == "--count" ]]; then
+   # Note, this regex needs to match the annotation shown below at GRAPHIC_TIC.
+   # e.g.
+   #3> <> a prov:Bundle; foaf:primaryTopic <vis> . <vis> a vsr:Graphic .
+   count=`grep "^#3> <> a prov:Bundle.* a vsr:Graphic" \`find . -name "*.prov.ttl"\` | awk '{print $6}' | sort -u | wc -l`
+   let "next=count+1"
+
    echo $count
    exit
 elif [[ "$1" == "--next-id" ]]; then
