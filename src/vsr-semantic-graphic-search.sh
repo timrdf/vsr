@@ -96,7 +96,6 @@ if [ ! -d $cockpit/source ]; then
 fi
 #rm -rf $cockpit/source/*
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 property_path="sio:has-member dcterms:subject skos:broader skos:broader skos:broader"
 pushd $cockpit &> /dev/null
 
@@ -126,7 +125,7 @@ pushd $cockpit &> /dev/null
                hash=`md5.sh -qs $download`
                echo $download > $hash.access
 
-               # Retrieve the graphics.
+               # Retrieve the graphic.
                if [ ! -e $hash.graphic ]; then
                   pcurl.sh "$download" -n $hash -e graphic
                fi
@@ -135,16 +134,19 @@ pushd $cockpit &> /dev/null
                if [[ ! -e $hash.graphic.ttl ]]; then
                   depicts.sh -w $hash.graphic --start-to --follow $property_path
                fi
-               if [[ -e $hash.graphic.ttl ]]; then
+               if [[   -e $hash.graphic.ttl ]]; then
                   pushd ../ &> /dev/null
-                     # TODO: cr-ln-to-www-root.sh source/c36b17db5117176b70a67fef5410f70d.graphic.ttl
-                     # TODO: pvload source/c36b17db5117176b70a67fef5410f70d.graphic.ttl `cat source/c36b17db5117176b70a67fef5410f70d.access`
-                     graph_name=`cat source/$hash.access`
-                     pvdelete.sh $graph_name
-                     echo "<$graph_name> a vsr:Dataset ." >> source/$hash.graphic.ttl
-                     echo vload ttl $hash.graphic.ttl $graph_name -v
+                     #graph_name=`cat source/$hash.access` # OLD WAY FOR VAST 2013 paper.
+                     graph_name="`cr-dataset-uri.sh --uri`/$hash"
+                     echo pvdelete.sh $graph_name
+                     # TODO: needs new modeling (should pvload do it?) echo "<$graph_name> a vsr:Dataset ." >> source/$hash.graphic.ttl
+
+                     # OLD: echo vload ttl $hash.graphic.ttl $graph_name -v
+                     url=`cr-ln-to-www-root.sh source/$hash.graphic.ttl`
+                     echo pvload.sh $url -ng $graph_name
+
                      if [[ -n "$page" ]]; then
-                        echo "<$page> a vsr:Dataset ." >> $hash.graphic.ttl
+                        # TODO: needs new modeling (should pvload do it?) echo "<$page> a vsr:Dataset ." >> $hash.graphic.ttl
                         echo vload ttl $hash.graphic.ttl $page -v
                      fi
                   popd &> /dev/null
@@ -155,32 +157,5 @@ pushd $cockpit &> /dev/null
    fi
 
 popd &> /dev/null
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-#pushd $cockpit &> /dev/null
-#   echo
-#   echo aggregate-source-rdf.sh --link-as-latest source/* 
-#   if [ "$dryRun" != "true" ]; then
-#      aggregate-source-rdf.sh --link-as-latest source/* 
-#      # WARNING: ^^ publishes even with -n b/c it checks for CSV2RDF4LOD_PUBLISH_VIRTUOSO
-#   fi
-#popd &> /dev/null
-#
-#if [ "$clearGraph" == "true" ]; then
-#   echo
-#   echo "Deleting $graphName" >&2
-#   if [ "$dryRun" != "true" ]; then
-#      publish/bin/virtuoso-delete-$sourceID-$datasetID-$versionID.sh
-#   fi
-#fi
-
-#if [ "$dryRun" != "true" ]; then
-#   pushd $cockpit &> /dev/null
-#      publish/bin/virtuoso-load-$sourceID-$datasetID-$versionID.sh
-#   popd &> /dev/null
-#fi
-
-# if [ "$CSV2RDF4LOD_PUBLISH_COMPRESS" == "true" ]; then
-# fi
 
 dryrun.sh $dryrun ending
