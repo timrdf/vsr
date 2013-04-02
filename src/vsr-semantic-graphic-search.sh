@@ -142,7 +142,8 @@ pushd $cockpit &> /dev/null
                      # TODO: needs new modeling (should pvload do it?) echo "<$graph_name> a vsr:Dataset ." >> source/$hash.graphic.ttl
 
                      # OLD: echo vload ttl $hash.graphic.ttl $graph_name -v
-                     url=`cr-ln-to-www-root.sh source/$hash.graphic.ttl`
+                     file_path=`cr-ln-to-www-root.sh source/$hash.graphic.ttl`
+                     url=`cr-ln-to-www-root.sh --url-of-filepath $file_path`
                      echo pvload.sh $url -ng $graph_name
 
                      if [[ -n "$page" ]]; then
