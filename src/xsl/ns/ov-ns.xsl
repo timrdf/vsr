@@ -18,6 +18,8 @@
 <xsl:variable name="ov:depictsSameResourceAs" select="concat($ov,'depictsSameResourceAs')"/>
 <xsl:variable name="ov:depicts"               select="concat($ov,'depicts')"/>
 
+<xsl:variable name="ov:shortName"             select="concat($ov,'shortName')"/>
+
 <xsl:variable name="ov:csvRow"                select="concat($ov,'csvRow')"/>
 <xsl:variable name="ov:csvCol"                select="concat($ov,'csvCol')"/>
 <xsl:variable name="ov:csvHeader"             select="concat($ov,'csvHeader')"/>
