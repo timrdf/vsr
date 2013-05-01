@@ -48,8 +48,12 @@ echo $VSR_HOME
 echo $me
 echo $opt
 
-see='https://github.com/timrdf/csv2rdf4lod-automation/wiki/CSV2RDF4LOD-not-set'
-CSV2RDF4LOD_HOME=${CSV2RDF4LOD_HOME:?"not set; source csv2rdf4lod/source-me.sh or see $see"}
+if [[ -d $opt/csv2rdf4lod-automation ]]; then
+   CSV2RDF4LOD_HOME=$opt/csv2rdf4lod-automation
+else
+   see='https://github.com/timrdf/vsr/wiki/Installing-VSR'
+   CSV2RDF4LOD_HOME=${CSV2RDF4LOD_HOME:?"not set; source csv2rdf4lod/source-me.sh or see $see"}
+fi
 
 input_extension="rdf"
 output_extension="<graffle,graphml>"
