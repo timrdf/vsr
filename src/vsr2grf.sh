@@ -39,16 +39,11 @@
 
 VSR_HOME=$(cd ${0%/*} && echo ${PWD%/*})
 me=$(cd ${0%/*} && echo ${PWD})/`basename $0`
-opt=${VSR_HOME%/*}
 
 export CLASSPATH=$CLASSPATH`$VSR_HOME/src/vsr-situate-classpaths.sh`
 #export CLASSPATH=$CLASSPATH`$CSV2RDF4LOD_HOME/bin/util/cr-situate-classpaths.sh`
 
-echo $VSR_HOME
-echo $me
-echo $opt
-ls $opt
-
+opt=${VSR_HOME%/*}
 if [[ -d $opt/csv2rdf4lod-automation ]]; then
    CSV2RDF4LOD_HOME=$opt/csv2rdf4lod-automation
 else
