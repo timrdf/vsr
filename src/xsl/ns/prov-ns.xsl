@@ -35,6 +35,8 @@
 <xsl:variable name="prov:InstantaneousEvent"    select="concat($prov,'InstantaneousEvent')"/>
 <xsl:variable name="prov:Invalidation"    select="concat($prov,'Invalidation')"/>
 <xsl:variable name="prov:Location"    select="concat($prov,'Location')"/>
+<xsl:variable name="prov:hadLocation"    select="concat($prov,'hadLocation')"/>
+
 <xsl:variable name="prov:Organization"    select="concat($prov,'Organization')"/>
 <xsl:variable name="prov:Person"    select="concat($prov,'Person')"/>
 <xsl:variable name="prov:Plan"    select="concat($prov,'Plan')"/>
@@ -95,6 +97,7 @@
 <xsl:variable name="prov:wasRevisionOf"    select="concat($prov,'wasRevisionOf')"/>
 <xsl:variable name="prov:wasStartedBy"    select="concat($prov,'wasStartedBy')"/>
 
+<!-- prov-o-inverses -->
 
 <xsl:variable name="prov:hadDelegate"    select="concat($prov,'hadDelegate')"/>
 <xsl:variable name="prov:activityOfInfluence"    select="concat($prov,'activityOfInfluence')"/>
@@ -134,6 +137,9 @@
 <xsl:variable name="prov:quotedAs"    select="concat($prov,'quotedAs')"/>
 <xsl:variable name="prov:hadRevision"    select="concat($prov,'hadRevision')"/>
 <xsl:variable name="prov:started"    select="concat($prov,'started')"/>
+
+<!-- prov-dictionary -->
+<xsl:variable name="prov:pairKey"    select="concat($prov,'pairKey')"/>
 
 <xsl:variable name="prov:ALL" select="(
    $prov:wasInformedBy,

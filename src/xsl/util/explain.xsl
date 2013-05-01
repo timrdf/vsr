@@ -133,7 +133,7 @@
    <xsl:variable name="space" select="concat($in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in,$in)"/>
 
    <xsl:value-of select="concat($in, pmm:tryQName($predicate), $in,pmm:tryQName($object),' . ',
-                                '( ®~o ',pmm:bestLocalName($actor),')',$visitToken)"/>
+                                '( ®~o ',pmm:bestLocalName($actor),' o.b.o. ',pmm:bestLocalName($deferrer),' ) ',$visitToken)"/>
 </xsl:function>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 100 -->
@@ -281,7 +281,7 @@
    <!--xsl:variable name="description" select="concat(pmm:tryQName($subject),$NL,$in,pmm:tryQName($actor),': ',
                                              pmm:tryQName($action),' b/c ',pmm:tryQName($justification))"/-->
    <xsl:variable name="description" select="concat(
-      $in, $property,' = ',$value,' [b/c ',
+      $in, pmm:tryQName($property),' = ',pmm:tryQName($value),' [b/c ',
       pmm:tryQName($justification),'] ( x®^_ ',pmm:bestLocalName($actor),' )')"/>
    <xsl:variable name="decisionURI">
       <xsl:choose>
@@ -410,7 +410,7 @@
    <xsl:param name="justification" as="xs:string"/>
 
    <xsl:variable name="description" select="concat(
-      $in,$in, $property,' = ',$value,' [b/c ',pmm:tryQName($justification),'] ',
+      $in,$in, pmm:tryQName($property),' = ',$value,' [b/c ',pmm:tryQName($justification),'] ',
       '( x®~o^_ ',pmm:bestLocalName($actor),' )')"/>
 
    <xsl:variable name="decisionURI">

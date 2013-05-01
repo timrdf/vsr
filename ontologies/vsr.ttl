@@ -92,9 +92,9 @@ rdfs:comment rdf:type owl:AnnotationProperty .
                                         
                                         rdfs:comment "The (content) resource shown or represented by a Graphic (i.e., drawing, painting, or other visual form)."@en ;
                                         
-                                        rdfs:subPropertyOf <http://purl.org/twc/vocab/vsr#content> ;
+                                        rdfs:domain <http://www.co-ode.org/ontologies/ont.owl#Graphic> ;
                                         
-                                        rdfs:domain <http://www.co-ode.org/ontologies/ont.owl#Graphic> .
+                                        rdfs:subPropertyOf <http://www.w3.org/ns/prov#specializationOf> .
 
 
 
@@ -232,23 +232,9 @@ rdfs:comment rdf:type owl:AnnotationProperty .
 
 
 
-###  http://purl.org/twc/vocab/vsr#x
+###  http://www.w3.org/ns/prov#specializationOf
 
-<http://purl.org/twc/vocab/vsr#x> rdf:type owl:ObjectProperty ;
-                                  
-                                  rdfs:comment "The horizontal position of a Graphic."@en ;
-                                  
-                                  rdfs:subPropertyOf <http://purl.org/twc/vocab/vsr#planar> .
-
-
-
-###  http://purl.org/twc/vocab/vsr#y
-
-<http://purl.org/twc/vocab/vsr#y> rdf:type owl:ObjectProperty ;
-                                  
-                                  rdfs:comment "The vertical position of a Graphic."@en ;
-                                  
-                                  rdfs:subPropertyOf <http://purl.org/twc/vocab/vsr#planar> .
+<http://www.w3.org/ns/prov#specializationOf> rdf:type owl:ObjectProperty .
 
 
 
@@ -300,6 +286,22 @@ rdfs:comment rdf:type owl:AnnotationProperty .
                                     rdfs:comment "The red, green, and blue components of an RGB triplet delimited by some string. Can contains just one value, in which case all RGB will assume it."@en ;
                                     
                                     rdfs:domain <http://purl.org/twc/vocab/vsr#Color> .
+
+
+
+###  http://purl.org/twc/vocab/vsr#x
+
+<http://purl.org/twc/vocab/vsr#x> rdf:type owl:DatatypeProperty ;
+                                  
+                                  rdfs:comment "The horizontal position of a Graphic."@en .
+
+
+
+###  http://purl.org/twc/vocab/vsr#y
+
+<http://purl.org/twc/vocab/vsr#y> rdf:type owl:DatatypeProperty ;
+                                  
+                                  rdfs:comment "The vertical position of a Graphic."@en .
 
 
 

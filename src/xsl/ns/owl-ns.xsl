@@ -19,6 +19,7 @@
 <xsl:variable name="rdf" select="'http://www.w3.org/1999/02/22-rdf-syntax-ns#'"/>
 <!-- Terms within the namespace -->
 <xsl:variable name="rdf:type"         select="concat($rdf,'type')"/>
+<xsl:variable name="rdf:value"        select="concat($rdf,'value')"/>
 <xsl:variable name="rdf:Property"     select="concat($rdf,'Property')"/>
 <xsl:variable name="rdf:Restriction"  select="concat($rdf,'Restriction')"/>
 <xsl:variable name="rdf:Statement"    select="concat($rdf,'Statement')"/>
@@ -47,6 +48,7 @@
 <xsl:variable name="rdfs:comment"     select="concat($rdfs,'comment')"/>
 <xsl:variable name="rdfs:isDefinedBy" select="concat($rdfs,'isDefinedBy')"/>
 <xsl:variable name="rdfs:subClassOf"  select="concat($rdfs,'subClassOf')"/>
+<xsl:variable name="rdfs:seeAlso"     select="concat($rdfs,'seeAlso')"/>
 
 <!-- The namespace itself -->
 <xsl:variable name="xs"               select="'http://www.w3.org/2001/XMLSchema#'"/>
@@ -83,6 +85,7 @@
 <xsl:variable name="owl:onDataRange"               select="concat($owl,'onDataRange')"/>
 <xsl:variable name="owl:propertyChainAxiom"        select="concat($owl,'propertyChainAxiom')"/>
 <xsl:variable name="owl:NamedIndividual"           select="concat($owl,'NamedIndividual')"/>
+<xsl:variable name="owl:versionInfo"               select="concat($owl,'versionInfo')"/>
 
 <!-- OWL Time -->
 <xsl:variable name="time"               select="'http://www.w3.org/2006/time#'"/>
