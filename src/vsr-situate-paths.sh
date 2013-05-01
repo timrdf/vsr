@@ -23,9 +23,9 @@ if [ "$1" == "--help" ]; then
 fi
 
 missing=""
-if [[ -d ../../csv2rdf4lod-automation/bin/util/cr-situate-paths.sh ]]; then
+if [[ -d $HOME/../csv2rdf4lod-automation/bin/util/cr-situate-paths.sh ]]; then
    # In case VSR's dependency is installed, too.
-   missing=`../../csv2rdf4lod-automation/bin/util/cr-situate-paths.sh`
+   missing=`$HOME/../csv2rdf4lod-automation/bin/util/cr-situate-paths.sh`
 fi
 
 if [ ! `which vsr2grf.sh` ]; then
