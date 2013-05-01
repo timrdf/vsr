@@ -14,7 +14,8 @@ me=$(cd ${0%/*} && echo ${PWD})/`basename $0`
 if [ "$1" == "--help" ]; then
    echo "`basename $0` [--help]"
    echo
-   #echo "$HOME `which vsr2grf.sh`"
+   echo "$HOME `which vsr2grf.sh`"
+   echo "${HOME%/*}"
    echo "Return the shell paths needed for Prizms scripts to run."
    echo "Set them by executing:"
    echo
