@@ -45,10 +45,10 @@ export CLASSPATH=$CLASSPATH`$VSR_HOME/src/vsr-situate-classpaths.sh`
 
 opt=${VSR_HOME%/*}
 if [[ -d $opt/csv2rdf4lod-automation ]]; then
-   CSV2RDF4LOD_HOME=$opt/csv2rdf4lod-automation
+   export CSV2RDF4LOD_HOME=$opt/csv2rdf4lod-automation
 else
    see='https://github.com/timrdf/vsr/wiki/Installing-VSR'
-   CSV2RDF4LOD_HOME=${CSV2RDF4LOD_HOME:?"not set; source csv2rdf4lod/source-me.sh or see $see"}
+   export CSV2RDF4LOD_HOME=${CSV2RDF4LOD_HOME:?"not set; source csv2rdf4lod/source-me.sh or see $see"}
 fi
 
 input_extension="rdf"
