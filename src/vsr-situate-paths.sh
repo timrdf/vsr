@@ -24,7 +24,8 @@ fi
 
 missing=""
 opt="${HOME%/*/*}"
-if [[ -d $opt/csv2rdf4lod-automation/bin/util/cr-situate-paths.sh ]]; then
+echo $opt
+if [[ -e $opt/csv2rdf4lod-automation/bin/util/cr-situate-paths.sh ]]; then
    # In case VSR's dependency is installed, too.
    missing=`$opt/csv2rdf4lod-automation/bin/util/cr-situate-paths.sh`
 fi
