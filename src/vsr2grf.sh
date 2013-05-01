@@ -47,6 +47,7 @@ export CLASSPATH=$CLASSPATH`$VSR_HOME/src/vsr-situate-classpaths.sh`
 echo $VSR_HOME
 echo $me
 echo $opt
+ls $opt
 
 if [[ -d $opt/csv2rdf4lod-automation ]]; then
    CSV2RDF4LOD_HOME=$opt/csv2rdf4lod-automation
@@ -61,9 +62,6 @@ replace_extension="false"
 debug="false"
 
 usage_message="usage: `basename $0` {pml, owl, rdf, rdf-literal, path/to/some.vsr} {graffle, graphml} [-w] [-od path/to/dir] some.$input_extension+" 
-
-
-
 
 # TODO: moved into --count to avoid infinite loop on no args - need to recover this capability that was done for VAST 2013.
 
