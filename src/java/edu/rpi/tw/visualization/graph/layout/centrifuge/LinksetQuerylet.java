@@ -54,6 +54,7 @@ public class LinksetQuerylet extends DefaultQuerylet<Graph> {
       
       String orderBy = "";
 
+      //System.out.println(this.composeQuery(select, context, graphPattern, orderBy));
       return this.composeQuery(select, context, graphPattern, orderBy);
    }
 

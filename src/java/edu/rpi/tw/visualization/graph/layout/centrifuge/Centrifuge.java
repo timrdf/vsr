@@ -40,17 +40,16 @@ public class Centrifuge {
       
       String fileName = args[0];
       Repository repo = Cat.load(fileName);
-      System.out.println("loaded " + Cat.size(repo) + " triples");
+      System.out.println("loaded " + Cat.size(repo) + " triples from " + fileName);
       LinksetQuerylet querylet = new LinksetQuerylet(Constants.PIPE_CONTEXT);
       QueryletProcessor.processQuery(repo, querylet);
       Graph graph = querylet.get();
-      System.out.println(graph.toString());
       
       List<Component> components = decompose(graph);
       
       System.out.println("\n== Graph had "+components.size()+" component"+s(components.size())+" ==");
       for( int i = 0; i < components.size(); i++ ) {
-         System.out.println("\n  Component "+i+" of "+ components.size()+" "+ components.get(i).describe());
+         System.out.println("\n  Component "+(i+1)+" of "+ components.size()+" "+ components.get(i).describe());
       }
 
       graph.shutdown();
@@ -74,49 +73,55 @@ public class Centrifuge {
     */
    public static List<Component> decompose(Graph graph, int removalDepth, String previousComponent) {
       
-      System.out.println("\ndepth " + removalDepth);
-      Set<String> paths = findComponents(graph, removalDepth, previousComponent);
-      if( paths.size() > 0 ) {
-         System.out.println("\\=> " + paths.size() + " component"+s(paths.size())+" at depth " + removalDepth);
+      System.out.println("\n\\/" + removalDepth + " " + graph + " \"" + previousComponent +"\"");
+      Set<String> paths = findComponents(graph, removalDepth, previousComponent);                   // Updates vertices' "component" attribute e.g. component/1/1/2
+      if( paths.size() > 0 ) {                                                                      // The set of unique "component" attribute values
+         System.out.println("\\=> " + paths.size() + " component"+s(paths.size())+" at depth " + removalDepth + " " + previousComponent + " (" + graph + ")");
       }else {
-         System.out.println("(0 components)");
+         //System.out.println("(0 components) "+graph);
+         System.out.println("---"); // This happens when the component was nothing but a delegate and {cling-ons}.
       }
       
       List<Component> components = new ArrayList<Component>();
       for( String path : paths ) {
-         
-         if( componentSize(graph, path) > 0 ) {
-         
+         if( !path.startsWith(previousComponent) ) {
+            System.err.println("component "+ path +" is not the current focus (\""+ previousComponent +"\")");
+         }else if( componentSize(graph, path) > 0 ) {               // The count of nodes with the "component" attribute value
             System.out.println();
-            Vertex                                                       delegate  = findDelegate(graph, path);
+            Vertex                                                       delegate = findDelegate(graph, path);
             Component      component = new Component(removalDepth, path, delegate, degree(delegate));
             components.add(component);
-            graph.removeVertex(                                          delegate);
+            graph.removeVertex(                                          delegate);                 // Graph \minus delegate
    
+            int flung = 0;
             for( Vertex vertex : graph.getVertices() ) {
                if( degree(vertex) == 0 ) {
-                  System.out.println("   flung " + vertex.getId());
-                  graph.removeVertex(vertex);
+                  System.out.println("   flung " + vertex.getId() + " (" + vertex.getProperty("component")+")");
+                  graph.removeVertex(vertex);                                                       // Graph \minus {cling-ons}
                   component.addLeaf(vertex);
+                  flung++;
                }
             }
+            System.out.println("   ("+flung+" total)");
          }else {
-            System.err.println("path empty: " + path);
+            System.err.println("component " + path + " is empty");
          }
-      }
-      for( Component component : components ) {
-         List<Component> subcomponents = decompose(graph, removalDepth+1, component.getPath());
+      }                                         // delegate and cling-on vertices already removed.
+      for( Component component : components ) { // given component's delegate, depth, path, and cling-ons...
+         // RECURSIVE CALL to this method. =====================================================\
+         List<Component> subcomponents = decompose(graph, removalDepth+1, component.getPath());  // RECURSIVE CALL to this method.
+         // RECURSIVE CALL to this method. =====================================================/
          Collections.sort(subcomponents);
+         System.out.println("^" + removalDepth +", "+ subcomponents.size() + " subcomponent"+s(subcomponents.size())+" of " + component.getPath() + " (" + component.getDelegate().getId() + ") "+graph);
          if( !subcomponents.isEmpty() ) {
-            System.out.println(component.getPath() + " (" + component.getDelegate().getId() + ") has " + subcomponents.size() + " subcomponents:");
+            String bullet = "*";
             for(Component sub : subcomponents) {
-               System.out.println("  * " + sub.getPath() + " (" + sub.getDelegate().getId() + " x "+sub.getDelegateDegree()+")");
+               System.out.println("  "+bullet+" " + sub.getPath() + " (" + sub.getDelegate().getId() + " x "+sub.getDelegateDegree()+")");
+               bullet="+";
             }
             component.setPrimarySubcomponent(subcomponents.get(0));
             subcomponents.remove(0);
             component.setSecondarySubcomponent(subcomponents);
-         }else {
-            System.out.println(component.getPath() + " has 0 subcomponents.");
          }
       }
       return components;
@@ -127,18 +132,27 @@ public class Centrifuge {
     * @param graph             - The graph within which to find connected components.
     * @param removalDepth      - the number of vertices that have been snapped from `graph` so far.
     * @param previousComponent - 
-    * @return the number of components found in `graph`.
+    * 
+    * @return the paths identifying the components found in `graph`.
     */
    public static Set<String> findComponents(Graph graph, int removalDepth, String previousComponent) {
       int component = 0;
       for( Vertex vertex : graph.getVertices() ) {
-         if( !visitedAtDepth(vertex, removalDepth) )  {
+         /* 
+          * NOT visited at depth 0  <==  vertex."component" = ""
+          *     Visited at depth 0  <==  vertex."component" = "component/x"
+          *     
+          * NOT visited at depth 1  <==  vertex."component" = "component/x"
+          *     Visited at depth 1  <==  vertex."component" = "component/x/y"
+          */
+         if( !visitedAtDepth(vertex, removalDepth, previousComponent) )  {
             findComponents(vertex, removalDepth, previousComponent, ++component, "");
          }
       }
+      System.out.println();
       Set<String> paths = new HashSet<String>();
       for( Vertex vertex : graph.getVertices() ) {
-         //System.out.println(vertex.getProperty("component") + ": " + vertex.getId() + " (with "+degree(vertex)+" connections)");
+         System.out.println(vertex.getProperty("component") + ": " + vertex.getId() + " (with "+degree(vertex)+" connections)");
          paths.add(vertex.getProperty("component").toString());
       }
       return paths;
@@ -146,9 +160,31 @@ public class Centrifuge {
    
    /**
     * 
-    * @param vertex
-    * @param removalDepth
+    * @param vertex - the vertex to evaluate
+    * @param removalDepth - the depth at which to evaluate
+    * @param component - component that 'vertex' must be part of
     * @return
+    */
+   private static boolean visitedAtDepth(Vertex vertex, int removalDepth, String component) {
+      if( null == vertex.getProperty("component") ) {
+         return false;
+      }else if( !vertex.getProperty("component").toString().startsWith(component) ) {
+         /*
+          * e.g. a vertex at "component/1/1" is NOT within "component/1/3".
+          * (so don't visit it yet)
+          */
+         return true;
+      }else {
+         return visitedAtDepth(vertex, removalDepth);
+      }
+   }
+   
+   /**
+    * 
+    * @param vertex - the vertex to evaluate
+    * @param removalDepth - the depth at which to evaluate
+    * 
+    * @return true if the given 'vertex' was visited at 'removalDepth'
     */
    private static boolean visitedAtDepth(Vertex vertex, int removalDepth) {
       if( null == vertex.getProperty("component") ) {
@@ -161,10 +197,15 @@ public class Centrifuge {
           * "component/1/3/3"        3         T  T  T  -  ...
           * "component/2/1/4/2/7/1"  6         T  T  T  T  T 
           */
-         boolean visited = vertex.getProperty("component").toString().split("\\/").length > 1+removalDepth;
-         /*System.out.println("\""+vertex.getProperty("component")+"\"" + " length " + 
-                                 vertex.getProperty("component").toString().split("\\d+").length + 
-                            " depth " + removalDepth + " " + " ==> " + visited);*/
+         boolean visited = vertex.getProperty("component").toString().split("\\/").length - 1 > removalDepth;
+         /*System.out.println("\""+vertex.getProperty("component")+"\""+
+                             " length " + (vertex.getProperty("component").toString().split("\\/").length - 1) + 
+                             " depth "  + removalDepth + " " + " ==> " + visited);*/
+         /*
+          * "component/1"     length 1 depth 0  ==> true
+          * "component/1/1"   length 2 depth 1  ==> true
+          * "component/1/1/1" length 3 depth 2  ==> true 
+          */
          return visited;
       }
    }
@@ -177,7 +218,9 @@ public class Centrifuge {
     * @param component         - the label for the current connected component being traversed.
     * @param indent            - grows in recursion.
     */
-   private static void findComponents(Vertex vertex, int removalDepth, String previousComponent, int component, String indent) {
+   private static void findComponents(Vertex vertex, int removalDepth, String previousComponent, 
+                                      int component, String indent) {
+      
       if( null == vertex.getProperty("component") ) {
          vertex.setProperty("component", previousComponent+"/"+component);
       }else {
@@ -187,7 +230,7 @@ public class Centrifuge {
       }
       System.out.println(vertex.getProperty("component") + ":  " + indent + vertex.getId());
       for( Vertex neighbor : vertex.getVertices(direction) ) {
-         if( !visitedAtDepth(neighbor, removalDepth) ) {
+         if( !visitedAtDepth(neighbor, removalDepth, previousComponent) ) {
             findComponents(neighbor, removalDepth, previousComponent, component, "  "+indent);
          }
       }

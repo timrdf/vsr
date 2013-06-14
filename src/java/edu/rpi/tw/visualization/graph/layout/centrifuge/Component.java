@@ -56,11 +56,13 @@ public class Component implements Comparable<Component> {
    
    public void setPrimarySubcomponent(Component sub) {
       this.primarySubcomponent = sub;
+      //System.out.println(this.getPath()+"("+this.getDelegate().getId()+")'s *primary* subcomponent: "+sub.getPath()+"("+sub.getDelegate().getId()+")");
    }
    
    public void setSecondarySubcomponent(Collection<Component> subs) {
       for( Component sub : subs ) {
          this.secondarySubcomponents.add(sub);
+         //System.out.println(this.getPath()+"("+this.getDelegate().getId()+")'s secondary subcomponent: "+sub.getPath()+"("+sub.getDelegate().getId()+")");
       }
    }
    
@@ -126,7 +128,7 @@ public class Component implements Comparable<Component> {
       
       System.err.println("describing " + getDelegate().getId());
       
-      String primaryDelegateDescription = "";
+      String primaryDelegateDescription    = "";
       String secondaryDelegatesDescription = "";
       
       String description = 
