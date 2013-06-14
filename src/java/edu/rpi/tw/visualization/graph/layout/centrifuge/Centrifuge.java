@@ -1,12 +1,22 @@
 package edu.rpi.tw.visualization.graph.layout.centrifuge;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.openrdf.model.Resource;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.rio.RDFHandlerException;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
@@ -14,6 +24,9 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 
 import edu.rpi.tw.data.rdf.sesame.query.QueryletProcessor;
+import edu.rpi.tw.data.rdf.sesame.vocabulary.DCTerms;
+import edu.rpi.tw.data.rdf.sesame.vocabulary.PROVO;
+import edu.rpi.tw.data.rdf.sesame.vocabulary.VSR;
 import edu.rpi.tw.data.rdf.utils.pipes.Constants;
 import edu.rpi.tw.data.rdf.utils.pipes.starts.Cat;
 
@@ -26,6 +39,13 @@ public class Centrifuge {
     * 1 component if BOTH; 183 if OUT...
     */
    public static final Direction direction = Direction.BOTH;
+   
+   protected static ValueFactory vf = ValueFactoryImpl.getInstance();
+   
+   public static final String PREFIX      = "centrifuge";
+   public static final String BASE_URI    = "http://purl.org/twc/vocab/centrifuge#";
+   public static final Resource Primary   = vf.createURI(BASE_URI+"Primary");
+   public static final Resource Secondary = vf.createURI(BASE_URI+"Secondary");
    
    /**
     * 
@@ -47,12 +67,45 @@ public class Centrifuge {
       
       List<Component> components = decompose(graph);
       
-      System.out.println("\n== Graph had "+components.size()+" component"+s(components.size())+" ==");
-      for( int i = 0; i < components.size(); i++ ) {
-         System.out.println("\n  Component "+(i+1)+" of "+ components.size()+" "+ components.get(i).describe());
+      Repository rep = Cat.load("");
+      RepositoryConnection conn = null;
+      
+      try {
+         conn = rep.getConnection();
+         
+         for( int i = 0; i < components.size(); i++ ) {
+            System.out.println("\nComponent "+(i+1)+" of "+ components.size() + ":");
+            components.get(i).describe(System.out,conn,"http://eg.org");
+         }
+      } catch (RepositoryException e) {
+         e.printStackTrace();
+      } finally {
+         if( conn != null ) {
+            try {
+               conn.setNamespace("xsd", XMLSchema.NAMESPACE);
+               conn.setNamespace(PROVO.PREFIX,   PROVO.BASE_URI);
+               conn.setNamespace("vsr",          VSR.BASE_URI);
+               conn.setNamespace("dcterms",      DCTerms.BASE_URI);
+               conn.setNamespace(PREFIX,   BASE_URI);
+               FileOutputStream fos = new FileOutputStream(new File(fileName+".cent.ttl"), false);
+               conn.export(Constants.handlerForFileExtension("ttl", fos));
+            } catch (RepositoryException e1) {
+               e1.printStackTrace();
+            } catch (RDFHandlerException e1) {
+               e1.printStackTrace();
+            } catch (FileNotFoundException e) {
+               e.printStackTrace();
+            }
+            try {
+               conn.close();
+            } catch (RepositoryException e) {
+               e.printStackTrace();
+            }
+         }
       }
 
       graph.shutdown();
+
    }
    
    /**
