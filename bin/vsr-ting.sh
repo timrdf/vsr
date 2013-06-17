@@ -64,8 +64,11 @@ while [ $# -gt 0 ]; do
          graph_name="$default_graph_name"
       fi
       if [[ -n "$graph_name" ]]; then
+         # \/ Accesses implementaion in csv2rdf4lod's NameFactory#getSPARQLEndpointGraphName
          ng_ugly=`resource-name.sh --named-graph $endpoint $graph_name`
-         ng="$endpoint/id/named-graph/`md5.sh -qs "$ng_ugly"`"
+         ng="$endpoint/id/named-graph/`md5.sh -qs "$ng_ugly"`" 
+         # ^^ Also implemented in csv2rdf4lod's NameFactory#getSPARQLEndpointGraphNameTiny
+         # See https://github.com/timrdf/csv2rdf4lod-automation/wiki/Naming-sparql-service-description's-sd:NamedGraph
 
          echo "@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ."
          echo "@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> ."
