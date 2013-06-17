@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+#3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/bin/vsr-spo-balance.sh> .
 
 VSR_HOME=$(cd ${0%/*} && echo ${PWD%/*})
 me=$(cd ${0%/*} && echo ${PWD})/`basename $0`
