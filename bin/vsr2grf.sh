@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#3> <> prov:specializationOf <https://github.com/timrdf/vsr/tree/master/src/vsr2grf.sh> .
+#3> <> prov:specializationOf <https://github.com/timrdf/vsr/tree/master/bin/vsr2grf.sh> .
 #
 # usage:
 #
@@ -40,7 +40,7 @@
 VSR_HOME=$(cd ${0%/*} && echo ${PWD%/*})
 me=$(cd ${0%/*} && echo ${PWD})/`basename $0`
 
-export CLASSPATH=$CLASSPATH`$VSR_HOME/src/vsr-situate-classpaths.sh`
+export CLASSPATH=$CLASSPATH`$VSR_HOME/bin/vsr-situate-classpaths.sh`
 #export CLASSPATH=$CLASSPATH`$CSV2RDF4LOD_HOME/bin/util/cr-situate-classpaths.sh`
 
 opt=${VSR_HOME%/*}
