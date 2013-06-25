@@ -1,0 +1,24 @@
+#3> <> prov:specializationOf <https://github.com/timrdf/vsr/tree/master/query/ring.rq>;
+#3>    rdfs:comment "This query lists the URIs that appeared in a named graph based on an SPO Balance summary." .
+
+prefix void: <http://rdfs.org/ns/void#> 
+prefix sd:   <http://www.w3.org/ns/sparql-service-description#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix sio:  <http://semanticscience.org/resource/>
+prefix vsr:  <http://purl.org/twc/vocab/vsr#>
+
+select distinct ?ng ?resource
+where {
+   ?spo 
+      a vsr:SPODataset; 
+      prov:wasDerivedFrom ?ng;
+      void:subset [ a ?type; 
+         void:subset [ 
+            void:subset [ 
+               sio:has-member ?resource 
+            ]
+         ]
+      ] .
+   ?ng a sd:NamedGraph;
+   filter(?type = vsr:SubjectsDataset || ?type = vsr:SubjectsDataset)
+}
