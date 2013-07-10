@@ -143,4 +143,10 @@
   <owl:ObjectProperty rdf:about="http://www.w3.org/ns/prov#specializationOf"/>
   <owl:AnnotationProperty rdf:about="http://www.w3.org/ns/prov#wasDerivedFrom"/>
   <owl:AnnotationProperty rdf:about="http://xmlns.com/foaf/0.1/page"/>
+  <owl:Axiom>
+    <owl:annotatedProperty rdf:resource="http://www.w3.org/2000/01/rdf-schema#comment"/>
+    <owl:annotatedSource rdf:resource="http://purl.org/twc/vocab/vsr#color"/>
+    <owl:annotatedTarget xml:lang="en">A visual perceptual property derived from the spectrum of light. A Graphic may be attributed to have multiple distinct Colors, depending on the observer and the different visual components of a Graphic. For example, a shape with a green stroke, blue font, and a gray fill can be said to be green, blue, and gray. Any and all are correct. Similarly, a Graphic may be stated to have a *color*, without the specifics about what aspects exhibit that color. This can be useful during the development of a visual strategy, where it is decided that a Graphic should be a particular color without specifying *what* about the Graphic exhibits that color.</owl:annotatedTarget>
+    <ns6:wasDerivedFrom xmlns:ns6="http://www.w3.org/ns/prov#" rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">http://en.wikipedia.org/wiki/Color</ns6:wasDerivedFrom>
+  </owl:Axiom>
 </rdf:RDF>

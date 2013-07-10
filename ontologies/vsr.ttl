@@ -81,6 +81,12 @@ rdfs:comment rdf:type owl:AnnotationProperty .
                                       rdfs:comment "A visual perceptual property derived from the spectrum of light. A Graphic may be attributed to have multiple distinct Colors, depending on the observer and the different visual components of a Graphic. For example, a shape with a green stroke, blue font, and a gray fill can be said to be green, blue, and gray. Any and all are correct. Similarly, a Graphic may be stated to have a *color*, without the specifics about what aspects exhibit that color. This can be useful during the development of a visual strategy, where it is decided that a Graphic should be a particular color without specifying *what* about the Graphic exhibits that color."@en ;
                                       
                                       rdfs:subPropertyOf <http://purl.org/twc/vocab/vsr#elevation> .
+[ rdf:type owl:Axiom ;
+  <http://www.w3.org/ns/prov#wasDerivedFrom> "http://en.wikipedia.org/wiki/Color"^^xsd:anyURI ;
+  owl:annotatedTarget "A visual perceptual property derived from the spectrum of light. A Graphic may be attributed to have multiple distinct Colors, depending on the observer and the different visual components of a Graphic. For example, a shape with a green stroke, blue font, and a gray fill can be said to be green, blue, and gray. Any and all are correct. Similarly, a Graphic may be stated to have a *color*, without the specifics about what aspects exhibit that color. This can be useful during the development of a visual strategy, where it is decided that a Graphic should be a particular color without specifying *what* about the Graphic exhibits that color."@en ;
+  owl:annotatedSource <http://purl.org/twc/vocab/vsr#color> ;
+  owl:annotatedProperty rdfs:comment
+] .
 
 
 
