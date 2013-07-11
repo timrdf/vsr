@@ -1,0 +1,23 @@
+#3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/query/linksets-from-bal.rq>;
+#3>    rdfs:seeAlso <https://github.com/timrdf/vsr/wiki/Deriving-a-VoID-Linkset-view-of-an-SPO-Balance> .
+
+prefix void: <http://rdfs.org/ns/void#>
+prefix dcat: <http://www.w3.org/ns/dcat#>
+prefix sd:   <http://www.w3.org/ns/sparql-service-description#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix sio:  <http://semanticscience.org/resource/>
+prefix vsr:  <http://purl.org/twc/vocab/vsr#>
+
+select distinct ?dataset ?resource
+where {
+
+   {?dataset a dcat:Dataset, vsr:SPODataset; 
+      prov:wasDerivedFrom [ a sd:NamedGraph; sd:name ?name ] .
+   ?dataset void:subset [ a vsr:SubjectsDataset; void:subset [ void:subset [ sio:has-member ?resource ] ] ] .}
+
+    union
+
+   {?dataset a dcat:Dataset, vsr:SPODataset; 
+      prov:wasDerivedFrom [ a sd:NamedGraph; sd:name ?name ] .
+   ?dataset void:subset [ a vsr:ObjectsDataset;  void:subset [ void:subset [ sio:has-member ?resource ] ] ] .}
+}
