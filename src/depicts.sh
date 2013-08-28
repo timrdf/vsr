@@ -120,8 +120,9 @@ while [ $# -gt 0 ]; do
    let "followed=followed+1"
    shift
 
-   echo "following ($followed / $total) $follow $property"
+   echo "following ($followed / $total) $follow"
    for object in `o-of-p.sh $follow $outfile | sort -u | grep 'http://ieeevis.tw.rpi.edu/'`; do
+      echo "  $object"
       if [[ `grep "^$object$" $visited` ]]; then
          echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
       else
