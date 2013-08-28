@@ -124,8 +124,10 @@ while [ $# -gt 0 ]; do
    for object in `o-of-p.sh $follow $outfile | sort -u | grep 'http://ieeevis.tw.rpi.edu/'`; do
       echo "  $object"
       if [[ `grep "^$object$" $visited` ]]; then
+         echo grepped
          echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
       else
+         echo dd not
          rapper -q -g -o ntriples $object >> $outfile
          echo "`void-triples.sh $outfile` < $object" >&2
          echo $object >> $visited
