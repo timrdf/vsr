@@ -108,7 +108,7 @@ if [[ `valid-rdf.sh $artifact` != 'yes' ]]; then
    done
 else
    # Skip past GRDDL if the file is already RDF.
-   cp $artifact $outfile
+   rdf2ttl.sh $artifact > $outfile
 fi
 
 sames="`prefix.cc owl:sameAs` `prefix.cc prov:alternateOf`"
