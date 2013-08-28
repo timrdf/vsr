@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 #3> <> prov:specializationOf <https://github.com/timrdf/vsr/tree/master/src/depicts.sh>;
-#3>    prov:wasDerivedFrom   <https://github.com/timrdf/vsr/tree/master/src/vsr2grf.sh> .
+#3>    prov:wasDerivedFrom   <https://github.com/timrdf/vsr/tree/master/src/vsr2grf.sh>;
+#3>                          <http://richard.cyganiak.de/blog/2008/03/what-is-your-rdf-browsers-accept-header/> .
 #
 # usage:
 #
@@ -27,11 +28,54 @@ if [[ $# -lt 1 || "$1" == "--help" ]]; then
    exit
 fi
 
+# This is what rapper requests (see http://richard.cyganiak.de/blog/2008/03/what-is-your-rdf-browsers-accept-header/)
+accept='application/rdf+xml, text/rdf;q=0.6, text/plain;q=0.1, text/turtle, application/x-turtle, application/turtle, text/n3;q=0.3, text/rdf+n3;q=0.3, application/rdf+n3;q=0.3, application/x-trig, application/rss;q=0.8, application/rss+xml;q=0.8, text/rss;q=0.8, application/xml;q=0.3, text/xml;q=0.3, application/atom+xml;q=0.3, text/html;q=0.2, application/xhtml+xml;q=0.4, text/html;q=0.6, application/xhtml+xml;q=0.8, text/x-nquads, */*;q=0.1'
+timeout='--max-time 60'
+
+TEMP="_"`basename $0``date +%s`_$$.tmp
+
+function dereference {
+   local uri="$1"
+   local outfile="$2"
+   local visited="$3"
+
+   if [[ `grep "^$uri$" $visited` ]]; then
+      echo "          `void-triples.sh $outfile | sed 's/./ /g'` | $uri" >&2
+   else
+      local ERROR=''
+      #rapper -q -g -o ntriples $uri >> $outfile
+      curl $timeout -sH "Accept: $accept" -L "$uri" > $TEMP
+      local status=$?
+      if [[ $status = '6' ]]; then
+         ERROR=" (curl ERROR 6 Couldn't resolve host.) " # The given remote host was not resolved."
+      elif [[ $status = '7' ]]; then
+         ERROR=" (curl ERROR 7 Failed to connect to host."
+      elif [[ $status = '28' ]]; then
+         ERROR=" (curl ERROR 28 Operation timeout.) "    # The specified time-out period was reached according to the conditions."
+      elif [[ $status -ne 0 ]]; then
+         ERROR=" (curl ERROR $status) "
+      else
+         ERROR=' '
+      fi
+
+      if [[ `valid-rdf.sh $TEMP` == 'yes' ]]; then
+         rdf2nt.sh $TEMP >> $outfile
+      else
+         if [[ "${#ERROR}" -eq 0 ]]; then
+            ERROR=" (ERROR invalid RDF response) "
+         fi
+      fi
+      echo "          `void-triples.sh $outfile` <$ERROR$uri" >&2
+
+      echo $uri >> $visited
+   fi
+}
+
 # [-w]
 overwrite="no"
 if [ "$1" == "-w" ]; then
-  overwrite="yes"
-  shift
+overwrite="yes"
+shift
 fi
 
 if [ $# -lt 1 ]; then
@@ -103,12 +147,11 @@ if [[ `valid-rdf.sh $artifact` != 'yes' ]]; then
    grddl.sh $artifact >> $outfile
    echo "`void-triples.sh $outfile` < $artifact" >&2
    for depicted in `o-of-p.sh 'vsr:depicts' $outfile`; do
-      rapper -q -g -o ntriples $depicted >> $outfile
-      echo "`void-triples.sh $outfile` < $depicted" >&2
+      dereference "$depicted" "$outfile" "$visited"
    done
 else
    # Skip past GRDDL if the file is already RDF.
-   rdf2ttl.sh $artifact > $outfile
+   rdf2nt.sh $artifact > $outfile
 fi
 
 sames="`prefix.cc owl:sameAs` `prefix.cc prov:alternateOf`"
@@ -120,27 +163,15 @@ while [ $# -gt 0 ]; do
    let "followed=followed+1"
    shift
 
-   echo "following ($followed / $total) $follow in $outfile"
+   echo "following $follow ($followed / $total) from subjects in $outfile"
    for object in `o-of-p.sh $follow $outfile | sort -u`; do
-      if [[ `grep "^$object$" $visited` ]]; then
-         echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
-      else
-         rapper -q -g -o ntriples $object >> $outfile
-         echo "`void-triples.sh $outfile` < $object" >&2
-         echo $object >> $visited
-      fi
+      dereference "$object" "$outfile" "$visited"
    done
 
    for sameas in $sames; do
-      echo "filling ($followed / $total) $follow $sameas"
+      echo "   filling \"sameness\" relation $sameas for objects of $follow ($followed / $total)"
       for object in `o-of-p.sh --inverse-of $sameas $outfile | sort -u`; do
-         if [[ `grep "^$object$" $visited` ]]; then
-            echo "`void-triples.sh $outfile | sed 's/./ /g'` | $object" >&2
-         else
-            rapper -q -g -o ntriples $object >> $outfile
-            echo "`void-triples.sh $outfile` < $object" >&2
-            echo $object >> $visited
-         fi
+         dereference "$object" "$outfile" "$visited"
       done
    done
 done
