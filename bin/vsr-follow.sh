@@ -1,7 +1,8 @@
 #!/bin/bash
 #
-#3> <> prov:specializationOf <https://github.com/timrdf/vsr/tree/master/src/depicts.sh>;
-#3>    prov:wasDerivedFrom   <https://github.com/timrdf/vsr/tree/master/src/vsr2grf.sh>;
+#3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/bin/vsr-follow.sh>;
+#3>    prov:wasDerivedFrom   <https://github.com/timrdf/vsr/tree/master/bin/vsr2grf.sh>,
+#3>                          <https://github.com/timrdf/vsr/tree/master/src/depicts.sh>;
 #3>                          <http://richard.cyganiak.de/blog/2008/03/what-is-your-rdf-browsers-accept-header/> .
 #
 # usage:
@@ -39,6 +40,7 @@ function dereference {
    local outfile="$2"
    local visited="$3"
 
+   uri=${uri%#*}
    if [[ `grep "^$uri$" $visited` ]]; then
       echo "          `void-triples.sh $outfile | sed 's/./ /g'` | $uri" >&2
    else
@@ -179,3 +181,4 @@ done
 rapper -q -g -o turtle $outfile > $intermediate_file
 mv $intermediate_file $outfile
 void-triples.sh $outfile >&2
+rm $TEMP
