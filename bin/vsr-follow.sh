@@ -40,9 +40,10 @@ function dereference {
    local outfile="$2"
    local visited="$3"
 
+   fragment=${uri#*#}
    uri=${uri%#*}
    if [[ `grep "^$uri$" $visited` ]]; then
-      echo "          `void-triples.sh $outfile | sed 's/./ /g'` | $uri" >&2
+      echo "          `void-triples.sh $outfile | sed 's/./ /g'` | $uri $fragment" >&2
    else
       local ERROR=''
       #rapper -q -g -o ntriples $uri >> $outfile
@@ -67,7 +68,7 @@ function dereference {
             ERROR=" (ERROR invalid RDF response) "
          fi
       fi
-      echo "          `void-triples.sh $outfile` <$ERROR$uri" >&2
+      echo "          `void-triples.sh $outfile` <$ERROR$uri $fragment" >&2
 
       echo $uri >> $visited
    fi
