@@ -42,6 +42,9 @@ function dereference {
 
    fragment=${uri#*#}
    uri=${uri%#*}
+   if [[ "$fragment" == "$uri" ]]; then
+      fragment=""
+   fi
    if [[ `grep "^$uri$" $visited` ]]; then
       echo "          `void-triples.sh $outfile | sed 's/./ /g'` | $uri $fragment" >&2
    else
