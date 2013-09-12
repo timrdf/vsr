@@ -18,11 +18,12 @@ export CLASSPATH=$CLASSPATH`$VSR_HOME/bin/vsr-situate-classpaths.sh`
 #export CLASSPATH=$CLASSPATH`$CSV2RDF4LOD_HOME/bin/util/cr-situate-classpaths.sh`
 
 if [[ $# -lt 1 || "$1" == "--help" ]]; then
-   echo "usage: `basename $0` [-w] [-od <directory>] <graphic-file> [--start-to] [--follow <rdf-property>+]"
+   echo "usage: `basename $0` [-w] [-od <directory>] <graphic-file> [--no-sameness] [--start-to] [--follow <rdf-property>+]"
    echo
    echo "                      -w : write the output to file."
    echo "         -od <directory> : write the outputs into the given directory."
    echo "          <graphic-file> : GRDDL-annotated XML file."
+   echo "           --no-sameness : do not follow owl:sameAs, prov:specialization, or prov:alternateOf on followed objects."
    echo "              --start-to : clear the visit list."
    echo " --follow <rdf-property> : after dereferencing the depictions, also resolve all objects of the given RDF property."
    echo
@@ -57,9 +58,11 @@ function dereference {
       if [[ $status = '6' ]]; then
          ERROR=" (curl ERROR 6 Couldn't resolve host.) " # The given remote host was not resolved."
       elif [[ $status = '7' ]]; then
-         ERROR=" (curl ERROR 7 Failed to connect to host."
+         ERROR=" (curl ERROR 7 Failed to connect to host. "
       elif [[ $status = '28' ]]; then
          ERROR=" (curl ERROR 28 Operation timeout.) "    # The specified time-out period was reached according to the conditions."
+      elif [[ $status = '56' ]]; then
+         ERROR=" (curl ERROR 56 Failure in receiving network data.) "
       elif [[ $status -ne 0 ]]; then
          ERROR=" (curl ERROR $status) "
       else
@@ -98,7 +101,7 @@ if [ "$1" == "-od" ]; then
    output_dir_set="true"
    output_dir="$2"
    if [ ! -d $output_dir ]; then
-     mkdir $output_dir
+      mkdir $output_dir
    fi
    shift 2
 fi
@@ -107,12 +110,20 @@ fi
 artifact="$1"
 shift
 
+# --no-sameness
+fill_sameness="true"
+if [ "$1" == "--no-sameness" ]; then
+   fill_sameness="false" 
+   shift
+fi
+
+
 # [--start-to]
 visited=".`basename $0`-visit-list"
 if [ "$1" == "--start-to" ]; then
-  rm -f $visited 
+   rm -f $visited 
    touch $visited
-  shift
+   shift
 fi
 
 # [--follow <rdf-predicate>+]
@@ -176,12 +187,14 @@ while [ $# -gt 0 ]; do
       dereference "$object" "$outfile" "$visited"
    done
 
-   for sameas in $sames; do
-      echo "   filling \"sameness\" relation $sameas for objects of $follow ($followed / $total)"
-      for object in `o-of-p.sh --inverse-of $sameas $outfile | sort -u`; do
-         dereference "$object" "$outfile" "$visited"
+   if [[ "$fill_sameness" == "true" ]]; then
+      for sameas in $sames; do
+         echo "   filling \"sameness\" relation $sameas for objects of $follow ($followed / $total)"
+         for object in `o-of-p.sh --inverse-of $sameas $outfile | sort -u`; do
+            dereference "$object" "$outfile" "$visited"
+         done
       done
-   done
+   fi
 done
 
 rapper -q -g -o turtle $outfile > $intermediate_file
