@@ -36,10 +36,13 @@ timeout='--max-time 60'
 
 TEMP="_"`basename $0``date +%s`_$$.tmp
 
+follow_count=0
+
 function dereference {
    local uri="$1"
    local outfile="$2"
    local visited="$3"
+   let "follow_count=$follow_count+1"
 
    fragment=${uri#*#}
    uri=${uri%#*}
@@ -49,7 +52,7 @@ function dereference {
       fragment="(for #$fragment)"
    fi
    if [[ `grep "^$uri$" $visited` ]]; then
-      echo "          `void-triples.sh $outfile | sed 's/./ /g'` | $uri $fragment" >&2
+      echo "          `void-triples.sh $outfile | sed 's/./ /g'` | $uri $fragment ($follow_count)" >&2
    else
       local ERROR=''
       #rapper -q -g -o ntriples $uri >> $outfile
@@ -76,7 +79,7 @@ function dereference {
             ERROR=" (ERROR invalid RDF response) "
          fi
       fi
-      echo "          `void-triples.sh $outfile` <$ERROR$uri $fragment" >&2
+      echo "          `void-triples.sh $outfile` <$ERROR$uri $fragment ($follow_count)" >&2
 
       echo $uri >> $visited
    fi
