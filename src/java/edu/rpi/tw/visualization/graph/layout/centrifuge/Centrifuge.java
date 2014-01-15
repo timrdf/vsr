@@ -3,6 +3,7 @@ package edu.rpi.tw.visualization.graph.layout.centrifuge;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.openrdf.model.Resource;
+import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.XMLSchema;
@@ -34,18 +36,116 @@ import edu.rpi.tw.data.rdf.utils.pipes.starts.Cat;
  * 
  */
 public class Centrifuge {
-
+   
+   //
+   // Vocabulary
+   //
+   protected static ValueFactory vf = ValueFactoryImpl.getInstance();
+   
+   public static final String   PREFIX    = "centrifuge";
+   public static final String   BASE_URI  = "http://purl.org/twc/vocab/centrifuge#";
+   public static final Resource Primary   = vf.createURI(BASE_URI+"Primary");
+   public static final Resource Secondary = vf.createURI(BASE_URI+"Secondary");
+   public static final URI      hasRoot   = vf.createURI(BASE_URI+"hasRoot");
+   
    /*
     * 1 component if BOTH; 183 if OUT...
     */
    public static final Direction direction = Direction.BOTH;
    
-   protected static ValueFactory vf = ValueFactoryImpl.getInstance();
+   protected String baseURI  = null;
+   protected String specimen = null;
    
-   public static final String PREFIX      = "centrifuge";
-   public static final String BASE_URI    = "http://purl.org/twc/vocab/centrifuge#";
-   public static final Resource Primary   = vf.createURI(BASE_URI+"Primary");
-   public static final Resource Secondary = vf.createURI(BASE_URI+"Secondary");
+   /**
+    * 
+    * @param baseURI
+    */
+   public Centrifuge(String baseURI) {
+      this(baseURI, null);
+   }
+   
+   /**
+    * 
+    * @param baseURI
+    * @param specimen
+    */
+   public Centrifuge(String baseURI, String specimen) {
+      this.baseURI  = baseURI+"/centrifuge";
+      this.specimen = specimen;
+   }
+   
+   /**
+    * 
+    * @param out - the OutputStream to print the layout information.
+    */
+   public void layout(OutputStream out) {
+      
+      Repository repo = Cat.load(specimen);
+      System.err.println("loaded " + Cat.size(repo) + " triples from " + specimen);
+      layout(repo, Constants.PIPE_CONTEXT, Centrifuge.Primary); // Just need some URI...
+
+      RepositoryConnection conn = null;
+      try {
+         conn = repo.getConnection();
+         conn.export(Constants.handlerForFileExtension("ttl", out), Centrifuge.Primary);
+      } catch (RepositoryException e) {
+         e.printStackTrace();
+      } catch (RDFHandlerException e) {
+         e.printStackTrace();
+      } finally {
+         if( conn != null ) {
+            try {
+               conn.close();
+            } catch (RepositoryException e) {
+               e.printStackTrace();
+            }
+         }
+      }
+   }
+   
+   /**
+    * 
+    * @param specimenRepo    - A Repository to write the layout information to
+    * @param reportR - The context / named graph to write into repo.
+    */
+   public void layout(Repository specimenRepo, Resource specimenNG, Resource reportR) {
+      
+      LinksetQuerylet querylet = new LinksetQuerylet(specimenNG);
+      QueryletProcessor.processQuery(specimenRepo, querylet);
+      Graph graph = querylet.get();
+      
+      List<Component> components = decompose(graph);
+      
+      RepositoryConnection conn = null;
+      
+      try {
+         conn = specimenRepo.getConnection();
+         conn.setNamespace("xsd",        XMLSchema.NAMESPACE);
+         conn.setNamespace(PROVO.PREFIX,     PROVO.BASE_URI);
+         conn.setNamespace("vsr",              VSR.BASE_URI);
+         conn.setNamespace("dcterms",      DCTerms.BASE_URI);
+         conn.setNamespace(PREFIX,                 BASE_URI);
+         
+         for( int i = 0; i < components.size(); i++ ) {
+            System.err.println("\nComponent "+(i+1)+" of "+ components.size() + ":");
+            components.get(i).describe(baseURI, conn, reportR, System.err);
+         }
+      } catch (RepositoryException e) {
+         e.printStackTrace();
+      } finally {
+         if( conn != null ) {
+            try {
+               conn.close();
+            } catch (RepositoryException e) {
+               e.printStackTrace();
+            }
+         }
+      }
+      
+      graph.shutdown();
+   }
+   
+   public static final String USAGE = "Usage: Centrifuge [--baseURI <base-uri>] <filename>";
    
    /**
     * 
@@ -54,58 +154,33 @@ public class Centrifuge {
    public static void main(String args[]) {
       
       if( args.length < 1 ) {
-         System.err.println("Usage: Centrifuge <filename>");
+         System.err.println(USAGE);
          System.exit(1);
       }
       
-      String fileName = args[0];
-      Repository repo = Cat.load(fileName);
-      System.out.println("loaded " + Cat.size(repo) + " triples from " + fileName);
-      LinksetQuerylet querylet = new LinksetQuerylet(Constants.PIPE_CONTEXT);
-      QueryletProcessor.processQuery(repo, querylet);
-      Graph graph = querylet.get();
+      String baseURI = "http://eg.org";
+      int arg = 0;
+      if( "--baseURI".equals(args[arg]) ) {
+         baseURI = args[arg+1];
+         arg += 2;
+      }
       
-      List<Component> components = decompose(graph);
+      if( args.length < 1+arg ) {
+         System.err.println(USAGE);
+         System.exit(1);
+      }
       
-      Repository rep = Cat.load("");
-      RepositoryConnection conn = null;
+      String fileName = args[arg];
       
       try {
-         conn = rep.getConnection();
-         
-         for( int i = 0; i < components.size(); i++ ) {
-            System.out.println("\nComponent "+(i+1)+" of "+ components.size() + ":");
-            components.get(i).describe(System.out,conn,"http://eg.org");
-         }
-      } catch (RepositoryException e) {
+         // TODO: argument for output file.
+         FileOutputStream fos = new FileOutputStream(new File(fileName+".cent.ttl"), false);
+      } catch (FileNotFoundException e) {
          e.printStackTrace();
-      } finally {
-         if( conn != null ) {
-            try {
-               conn.setNamespace("xsd", XMLSchema.NAMESPACE);
-               conn.setNamespace(PROVO.PREFIX,   PROVO.BASE_URI);
-               conn.setNamespace("vsr",          VSR.BASE_URI);
-               conn.setNamespace("dcterms",      DCTerms.BASE_URI);
-               conn.setNamespace(PREFIX,   BASE_URI);
-               FileOutputStream fos = new FileOutputStream(new File(fileName+".cent.ttl"), false);
-               conn.export(Constants.handlerForFileExtension("ttl", fos));
-            } catch (RepositoryException e1) {
-               e1.printStackTrace();
-            } catch (RDFHandlerException e1) {
-               e1.printStackTrace();
-            } catch (FileNotFoundException e) {
-               e.printStackTrace();
-            }
-            try {
-               conn.close();
-            } catch (RepositoryException e) {
-               e.printStackTrace();
-            }
-         }
       }
 
-      graph.shutdown();
-
+      Centrifuge cent = new Centrifuge(baseURI, fileName);
+      cent.layout(System.out);
    }
    
    /**
@@ -126,13 +201,13 @@ public class Centrifuge {
     */
    public static List<Component> decompose(Graph graph, int removalDepth, String previousComponent) {
       
-      System.out.println("\n\\/" + removalDepth + " " + graph + " \"" + previousComponent +"\"");
+      System.err.println("\n\\/" + removalDepth + " " + graph + " \"" + previousComponent +"\"");
       Set<String> paths = findComponents(graph, removalDepth, previousComponent);                   // Updates vertices' "component" attribute e.g. component/1/1/2
       if( paths.size() > 0 ) {                                                                      // The set of unique "component" attribute values
-         System.out.println("\\=> " + paths.size() + " component"+s(paths.size())+" at depth " + removalDepth + " " + previousComponent + " (" + graph + ")");
+         System.err.println("\\=> " + paths.size() + " component"+s(paths.size())+" at depth " + removalDepth + " " + previousComponent + " (" + graph + ")");
       }else {
-         //System.out.println("(0 components) "+graph);
-         System.out.println("---"); // This happens when the component was nothing but a delegate and {cling-ons}.
+         //System.err.println("(0 components) "+graph);
+         System.err.println("---"); // This happens when the component was nothing but a delegate and {cling-ons}.
       }
       
       List<Component> components = new ArrayList<Component>();
@@ -140,7 +215,7 @@ public class Centrifuge {
          if( !path.startsWith(previousComponent) ) {
             System.err.println("component "+ path +" is not the current focus (\""+ previousComponent +"\")");
          }else if( componentSize(graph, path) > 0 ) {               // The count of nodes with the "component" attribute value
-            System.out.println();
+            System.err.println();
             Vertex                                                       delegate = findDelegate(graph, path);
             Component      component = new Component(removalDepth, path, delegate, degree(delegate));
             components.add(component);
@@ -149,13 +224,13 @@ public class Centrifuge {
             int flung = 0;
             for( Vertex vertex : graph.getVertices() ) {
                if( degree(vertex) == 0 ) {
-                  System.out.println("   flung " + vertex.getId() + " (" + vertex.getProperty("component")+")");
+                  System.err.println("   flung " + vertex.getId() + " (" + vertex.getProperty("component")+")");
                   graph.removeVertex(vertex);                                                       // Graph \minus {cling-ons}
                   component.addLeaf(vertex);
                   flung++;
                }
             }
-            System.out.println("   ("+flung+" total)");
+            System.err.println("#   ("+flung+" total)");
          }else {
             System.err.println("component " + path + " is empty");
          }
@@ -165,11 +240,11 @@ public class Centrifuge {
          List<Component> subcomponents = decompose(graph, removalDepth+1, component.getPath());  // RECURSIVE CALL to this method.
          // RECURSIVE CALL to this method. =====================================================/
          Collections.sort(subcomponents);
-         System.out.println("^" + removalDepth +", "+ subcomponents.size() + " subcomponent"+s(subcomponents.size())+" of " + component.getPath() + " (" + component.getDelegate().getId() + ") "+graph);
+         System.err.println("^" + removalDepth +", "+ subcomponents.size() + " subcomponent"+s(subcomponents.size())+" of " + component.getPath() + " (" + component.getDelegate().getId() + ") "+graph);
          if( !subcomponents.isEmpty() ) {
             String bullet = "*";
             for(Component sub : subcomponents) {
-               System.out.println("  "+bullet+" " + sub.getPath() + " (" + sub.getDelegate().getId() + " x "+sub.getDelegateDegree()+")");
+               System.err.println("  "+bullet+" " + sub.getPath() + " (" + sub.getDelegate().getId() + " x "+sub.getDelegateDegree()+")");
                bullet="+";
             }
             component.setPrimarySubcomponent(subcomponents.get(0));
@@ -202,10 +277,10 @@ public class Centrifuge {
             findComponents(vertex, removalDepth, previousComponent, ++component, "");
          }
       }
-      System.out.println();
+      System.err.println();
       Set<String> paths = new HashSet<String>();
       for( Vertex vertex : graph.getVertices() ) {
-         System.out.println(vertex.getProperty("component") + ": " + vertex.getId() + " (with "+degree(vertex)+" connections)");
+         System.err.println(vertex.getProperty("component") + ": " + vertex.getId() + " (with "+degree(vertex)+" connections)");
          paths.add(vertex.getProperty("component").toString());
       }
       return paths;
@@ -251,7 +326,7 @@ public class Centrifuge {
           * "component/2/1/4/2/7/1"  6         T  T  T  T  T 
           */
          boolean visited = vertex.getProperty("component").toString().split("\\/").length - 1 > removalDepth;
-         /*System.out.println("\""+vertex.getProperty("component")+"\""+
+         /*System.err.println("\""+vertex.getProperty("component")+"\""+
                              " length " + (vertex.getProperty("component").toString().split("\\/").length - 1) + 
                              " depth "  + removalDepth + " " + " ==> " + visited);*/
          /*
@@ -281,7 +356,7 @@ public class Centrifuge {
          vertex.removeProperty("component");
          vertex.setProperty("component", next);         
       }
-      System.out.println(vertex.getProperty("component") + ":  " + indent + vertex.getId());
+      System.err.println(vertex.getProperty("component") + ":  " + indent + vertex.getId());
       for( Vertex neighbor : vertex.getVertices(direction) ) {
          if( !visitedAtDepth(neighbor, removalDepth, previousComponent) ) {
             findComponents(neighbor, removalDepth, previousComponent, component, "  "+indent);

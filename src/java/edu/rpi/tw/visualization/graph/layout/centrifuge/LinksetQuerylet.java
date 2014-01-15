@@ -32,34 +32,38 @@ public class LinksetQuerylet extends DefaultQuerylet<Graph> {
       
       graph = new TinkerGraph();
       
-      this.addNamespace("void","tag","datafaqs");
+      // http://www.holygoat.co.uk/owl/redwood/0.1/tags/
+      this.addNamespace("void","hlygt","datafaqs");
 
       //                                  x        x                 x
       String select = "distinct ?linkset ?dataset ?triples ?overlap ?target";
       
       String graphPattern =
          "?dataset\n"+
-         "   a datafaqs:CKANDataset;\n"+
+         //"   a void:Dataset;\n"+ // TODO: was datafaqs:CKANDataset
          "   void:subset ?linkset;\n"+
          ".\n"+
-         "optional{ ?dataset tag:taggedWithTag ?tag     }\n"+
-         "optional{ ?dataset void:triples      ?triples }\n"+
+         "optional{ ?dataset hlygt:taggedWithTag ?tag     }\n"+
+         "optional{ ?dataset void:triples        ?triples }\n"+
          "\n"+
          "?linkset \n"+
+         "   a void:Linkset;\n"+
          "   void:target  ?target;\n"+
          "   void:triples ?overlap;\n"+
          ".\n"+
-         "?target a datafaqs:CKANDataset .\n"+
+         //"?target a void:Dataset .\n"+// TODO: was datafaqs:CKANDataset
          "filter(?dataset != ?target)";
       
       String orderBy = "";
 
-      //System.out.println(this.composeQuery(select, context, graphPattern, orderBy));
+      System.err.println(this.composeQuery(select, context, graphPattern, orderBy));
       return this.composeQuery(select, context, graphPattern, orderBy);
    }
 
    @Override
    public void handleBindingSet(BindingSet bindings) {
+      
+      System.err.println(bindings.getValue("dataset"));
       
       // From
       Vertex dataset = graph.getVertex(bindings.getValue("dataset"));

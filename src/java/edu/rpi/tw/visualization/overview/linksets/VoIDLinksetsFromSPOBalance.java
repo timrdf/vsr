@@ -140,6 +140,7 @@ public class VoIDLinksetsFromSPOBalance {
                   
                   if( intersection.size() > 1 ) {
                      Resource linkset = vf.createBNode();
+                     conn.add(dataset, VoID.subset,  linkset,                               reportR);
                      conn.add(linkset, RDF.type,     VoID.Linkset,                          reportR);
                      conn.add(linkset, VoID.target,  dataset,                               reportR);
                      conn.add(linkset, VoID.target,  dataset2,                              reportR);

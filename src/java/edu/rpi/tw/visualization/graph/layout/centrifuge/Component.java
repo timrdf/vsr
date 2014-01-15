@@ -50,7 +50,7 @@ public class Component implements Comparable<Component> {
       this.delegate       = delegate;
       this.delegateDegree = delegateDegree;
       
-      System.out.println("Snapping " + delegate.getProperty("component") + 
+      System.err.println("Snapping " + delegate.getProperty("component") + 
             " delegate " + delegate.getId().toString() + 
             " (with "    + delegateDegree + " connections)" + 
             " at depth " + removalDepth);
@@ -72,7 +72,7 @@ public class Component implements Comparable<Component> {
       if( null != sub && null != sub.getPath() && null != sub.getDelegate() ) {
          this.primarySubcomponent = sub;
       }
-      //System.out.println(this.getPath()+"("+this.getDelegate().getId()+")'s *primary* subcomponent: "+sub.getPath()+"("+sub.getDelegate().getId()+")");
+      //System.err.println(this.getPath()+"("+this.getDelegate().getId()+")'s *primary* subcomponent: "+sub.getPath()+"("+sub.getDelegate().getId()+")");
    }
    
    public void setSecondarySubcomponent(Collection<Component> subs) {
@@ -80,7 +80,7 @@ public class Component implements Comparable<Component> {
          if( null != sub && null != sub.getPath() && null != sub.getDelegate() ) {
             this.secondarySubcomponents.add(sub);
          }
-         //System.out.println(this.getPath()+"("+this.getDelegate().getId()+")'s secondary subcomponent: "+sub.getPath()+"("+sub.getDelegate().getId()+")");
+         //System.err.println(this.getPath()+"("+this.getDelegate().getId()+")'s secondary subcomponent: "+sub.getPath()+"("+sub.getDelegate().getId()+")");
       }
    }
    
@@ -179,18 +179,30 @@ public class Component implements Comparable<Component> {
       }
    }
    
-   public void describe(PrintStream out, RepositoryConnection conn, String base) {
-      describe(out, "",  conn,  base);
+   /**
+    * 
+    * @param out
+    * @param conn
+    * @param root
+    * @param base
+    */
+   public void describe(String base, RepositoryConnection conn, Resource reportR, PrintStream out) {
+      describe(base, "", conn, reportR, out, null);
    }
    
    /**
     * 
-    * @param out
-    * @param indent
-    * @param conn
-    * @param base
+    * @param base - grows with each call down.
+    * @param indent -
+    * @param conn - 
+    * @param reportR - named graph to write into.
+    * @param out - 
+    * @param root - stays the same, so each node can point to its root.
+    * 
     */
-   private void describe(PrintStream out, String indent, RepositoryConnection conn, String base) {
+   private void describe(String base, String indent,
+                         RepositoryConnection conn, Resource reportR, PrintStream out, 
+                         Resource root) {
 
       out.print("\n"+
          indent+ "When "+getPath()+"'s delegate <"+getDelegate().getId()+"> was removed,\n"+
@@ -199,17 +211,19 @@ public class Component implements Comparable<Component> {
 
       Resource component = vf.createURI(base+"/"+getPath());
       try {
-         conn.add(component, RDF.a, PROVO.Collection);
+         conn.add(component, RDF.a, PROVO.Collection,                                                   reportR);
          if( this.removalDepth == 0 ) {
-            conn.add(component, RDF.a, VSR.Root);
+            conn.add(component, RDF.a, VSR.Root,                                                        reportR);
+            root = component;
          }
-         conn.add(component, DCTerms.identifier,     vf.createLiteral(getPath()));
-         conn.add(component, PROVO.specializationOf, vf.createURI(this.delegate.getId().toString()));
-         conn.add(component, VSR.depth,              vf.createLiteral(this.removalDepth));
+         conn.add(component, Centrifuge.hasRoot,     root,                                              reportR);
+         conn.add(component, DCTerms.identifier,     vf.createLiteral(getPath()),                       reportR);
+         conn.add(component, PROVO.specializationOf, vf.createURI(this.delegate.getId().toString()),    reportR);
+         conn.add(component, VSR.depth,              vf.createLiteral(this.removalDepth),               reportR);
 
          for( Vertex leaf : this.getLeafs() ) {
             Resource leafR = vf.createURI(leaf.getId().toString());
-            conn.add(component, DCTerms.hasPart, leafR);
+            conn.add(component, DCTerms.hasPart, leafR,                                                 reportR);
          }
       } catch (RepositoryException e) {
          e.printStackTrace();
@@ -220,14 +234,14 @@ public class Component implements Comparable<Component> {
          out.print(indent+"       "+getPrimarySubcomponent().getPath());
          try {
             Resource subR = vf.createURI(base+"/"+getPrimarySubcomponent().getPath());
-            conn.add(component, DCTerms.hasPart, subR);
-            conn.add(subR, RDF.a,              Centrifuge.Primary);
-            conn.add(subR, RDF.a,              PROVO.Collection);
-            conn.add(subR, DCTerms.identifier, vf.createLiteral(getPrimarySubcomponent().getPath()));
+            conn.add(component, DCTerms.hasPart, subR,                                                  reportR);
+            conn.add(subR, RDF.a,              Centrifuge.Primary,                                      reportR);
+            conn.add(subR, RDF.a,              PROVO.Collection,                                        reportR);
+            conn.add(subR, DCTerms.identifier, vf.createLiteral(getPrimarySubcomponent().getPath()),    reportR);
          } catch (RepositoryException e) {
             e.printStackTrace();
          }
-         getPrimarySubcomponent().describe(out,indent+"       ",conn,base);
+         getPrimarySubcomponent().describe(base, indent+"       ", conn, reportR, out, root);
       }else {
          //out.println(indent+"      (no primary subcomponent) "+getPrimarySubcomponent());
       }
@@ -237,7 +251,7 @@ public class Component implements Comparable<Component> {
          for( Component sub : getSecondarySubcomponents() ) {
             Resource subR = vf.createURI(base+"/"+sub.getPath());
             try {
-               conn.add(component, DCTerms.hasPart, subR);
+               conn.add(component, DCTerms.hasPart, subR,                                               reportR);
             } catch (RepositoryException e) {
                e.printStackTrace();
             }
@@ -245,9 +259,9 @@ public class Component implements Comparable<Component> {
          for( Component sub : getSecondarySubcomponents() ) {
             Resource subR = vf.createURI(base+"/"+sub.getPath());
             try {
-               conn.add(subR, RDF.a,              Centrifuge.Secondary);
-               conn.add(subR, RDF.a,              PROVO.Collection);
-               conn.add(subR, DCTerms.identifier, vf.createLiteral(getPrimarySubcomponent().getPath()));
+               conn.add(subR, RDF.a,              Centrifuge.Secondary,                                 reportR);
+               conn.add(subR, RDF.a,              PROVO.Collection,                                     reportR);
+               conn.add(subR, DCTerms.identifier, vf.createLiteral(getPrimarySubcomponent().getPath()), reportR);
                conn.commit();
             } catch (RepositoryException e) {
                e.printStackTrace();
@@ -256,7 +270,7 @@ public class Component implements Comparable<Component> {
 
          for( Component sub : getSecondarySubcomponents() ) {
             out.print(indent+"       "+sub.getPath());
-            sub.describe(out,indent+"       ",conn,base);
+            sub.describe(base, indent+"       ", conn, reportR, out, root);
          }
       }else {
          //out.println(indent+"      (no secondary subcomponents) "+getSubcomponents());
