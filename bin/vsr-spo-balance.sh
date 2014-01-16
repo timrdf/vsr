@@ -11,9 +11,9 @@ export CLASSPATH=$CLASSPATH`$VSR_HOME/bin/vsr-situate-classpaths.sh`
 if [[ `which cr-pwd-type.sh` && `cr-pwd-type.sh` == 'cr:conversion-cockpit' ]]; then
    # TODO: source source-me.sh
 
-   baseURI="--baseURI ${CSV2RDF4LOD_BASE_URI:-'http://localhost'}"
-   if [[ "$1" == "--baseURI" ]]; then
-      baseURI="--baseURI $2"
+   baseURI="--cr-base-uri ${CSV2RDF4LOD_BASE_URI:-'http://localhost'}"
+   if [[ "$1" == "--cr-base-uri" || "$1" == '--baseURI' ]]; then
+      baseURI="--cr-base-uri $2"
       shift 2
    fi
 
