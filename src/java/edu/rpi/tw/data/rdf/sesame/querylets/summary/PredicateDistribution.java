@@ -83,7 +83,8 @@ public class PredicateDistribution extends Distribution {
     * @param conn         - the RepositoryConnection to assert into.
     * @param reportR      - the context to assert into (within the Repository).
     */
-   public static void describeDistribution(URI base, HashMap<Resource,Integer> distribution,
+   public static void describeDistribution(URI base,
+                                           HashMap<Resource,Integer> distribution,
                                            RepositoryConnection conn, Resource reportR) {
       describeDistribution(base, RDF.PREDICATE, distribution, conn, reportR);
    }
@@ -96,7 +97,8 @@ public class PredicateDistribution extends Distribution {
     * @param conn         - the RepositoryConnection to assert into.
     * @param reportR      - the context to assert into (within the Repository).
     */
-   public static void describeDistribution(URI base, URI dimensionProperty, HashMap<? extends Value,Integer> distribution,
+   public static void describeDistribution(URI base, URI dimensionProperty,
+                                           HashMap<? extends Value,Integer> distribution,
                                            RepositoryConnection conn, Resource reportR) {
       
       PrefixMappings pmap = new DefaultPrefixMappings();
@@ -198,6 +200,36 @@ public class PredicateDistribution extends Distribution {
       }
    }
    
+   /**
+    * 
+    * @param distribution
+    */
+   public static HashMap<Resource,Integer> aggregateByNS(HashMap<Resource,Integer>... distribution) {
+      
+      ValueFactory vf = ValueFactoryImpl.getInstance();
+      HashMap<Resource,Integer> cumulative = new HashMap<Resource,Integer>();
+      
+      for( HashMap<Resource,Integer> dist : distribution ) {
+         for( Resource resource : dist.keySet() ) {
+            try {
+               // Chose not to use: 
+               // PrefixMappings.bestNamespaceFor(predicate.stringValue()
+               //    NameFactory.uriDomain(predicate.stringValue())
+               //
+               URI namespace = vf.createURI(PrefixMappings.guessNamespaceFor(resource.stringValue()));
+               System.err.println("NS " + namespace + " " + resource.stringValue());
+               if( !cumulative.containsKey(namespace) ) {
+                  cumulative.put(namespace,                             dist.get(resource));
+               }else {
+                  cumulative.put(namespace, cumulative.get(namespace) + dist.get(resource));
+               }
+            }catch(Exception e) {
+               e.printStackTrace();
+            }
+         }
+      }
+      return cumulative;
+   }
    
    public static final String USAGE = "PredicateDistribution {- | serverURL repositoryID [context]*}";
    /**
