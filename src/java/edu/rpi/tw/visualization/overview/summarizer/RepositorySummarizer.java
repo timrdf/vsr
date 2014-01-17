@@ -190,6 +190,8 @@ public class RepositorySummarizer {
 				System.err.println("\n===================================================================================");
 				System.err.println("Summarizing (" +c+ "/"+ specimenContexts.size() +") " + specimenContextR);
 
+	         String nameHash = "";
+	           
 				URI ngR = null;
 				if( specimenEndpoint != null ) {
    				String endpoint = specimenEndpoint.stringValue();
@@ -208,14 +210,16 @@ public class RepositorySummarizer {
    				conn.add(ngR, SD.name,           specimenContextR, reportR);
    				conn.add(ngR, PROVO.hadLocation, endpointR,        reportR);
    				
-               conn.add(ngR, OWL.SAMEAS, ngRLong, reportR);
+               conn.add(ngR, OWL.SAMEAS,        ngRLong,          reportR);
+               nameHash = "/"+NameFactory.getMD5(NameFactory.getSPARQLEndpointGraphName(endpoint,specimenContextL));
 				}
 				
-				 //NameFactory.getMD5(specimenContextR.stringValue());
-				String nameHash = "";
-				/*if( specimenContextR != null && specimenContextR.equals(Constants.PIPE_CONTEXT) ) {
-				   nameHash = "/"+NameFactory.label2URI(specimenContextL);
-				}*/
+				//NameFactory.getMD5(specimenContextR.stringValue());
+
+				if( specimenContextR != null && !specimenContextR.equals(Constants.PIPE_CONTEXT) && nameHash == "") {
+				   //nameHash = "/"+NameFactory.label2URI(specimenContextL);
+				   nameHash = "/"+NameFactory.getMD5(specimenContextL);
+				}
 				URI spoSetR = vf.createURI(reportR.stringValue()+nameHash+"/spo");
 				URI sSetR   = vf.createURI(reportR.stringValue()+nameHash+"/spo/s");
 				URI pSetR   = vf.createURI(reportR.stringValue()+nameHash+"/spo/p");
