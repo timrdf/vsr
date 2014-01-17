@@ -453,6 +453,7 @@ public class RepositorySummarizer {
 
             // Predicate grouped by namespace
             URI pNSBinsR = vf.createURI(pSetR.stringValue()+"/ns");
+            conn.add(pSetR, VoID.subset, pNSBinsR, reportR);
             HashMap<Resource,Integer> cumulative = PredicateDistribution.aggregateByNS(fromSourcesToBridgesQ.get(),
                                                    fromSourcesToSinksQ.get(), amongBridgesQ.get(), toSinksQ.get());
             PredicateDistribution.describeDistribution(pNSBinsR, RDFS.ISDEFINEDBY, cumulative, conn, reportR);
