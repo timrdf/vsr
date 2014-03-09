@@ -187,7 +187,7 @@
 	<xsl:variable name="new_width"  select="if ($width)  then $width  else xfm:graffle-width-of-text( $label,$shape)"/>
 	<xsl:variable name="new_height" select="if ($height) then $height else xfm:graffle-height-of-text($label,$shape)"/>
 
-   <xsl:message select="concat($height, ' ', $width,' -- ',$new_height,' ',$new_width)"/>
+   <xsl:message select="concat('             GRAFFLE node height=',$height, ' width=', $width,' -- new_height=',$new_height,' new_width=',$new_width)"/>
 
    <xsl:variable name="local-path" select="'#visual_form_'"/>
 
@@ -263,7 +263,7 @@
          <shape graffle="Cross"     vsr="Cross"/>
       </xsl:variable>
 		<key>Shape</key>
-		<xsl:message select="concat($shape,' -- ',if ($map/shape[@vsr = $shape]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle')"/>
+		<xsl:message select="concat('             GRAFFLE node shape=',$shape,' -- ',if ($map/shape[@vsr = $shape]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle')"/>
 		<string> <xsl:value-of select="if ($map[shape[@vsr = $shape]]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle'"/> </string>
 
       <!--xsl:message select="concat($depicts,' height ',$height,' new_height ',$new_height)"/-->

@@ -18,14 +18,15 @@ export CLASSPATH=$CLASSPATH`$VSR_HOME/bin/vsr-situate-classpaths.sh`
 #export CLASSPATH=$CLASSPATH`$CSV2RDF4LOD_HOME/bin/util/cr-situate-classpaths.sh`
 
 if [[ $# -lt 1 || "$1" == "--help" ]]; then
-   echo "usage: `basename $0` [-w] [-od <directory>] <graphic-file> [--no-sameness] [--start-to] [--follow <rdf-property>+]"
+   echo "usage: `basename $0` [-w] [-od <directory>] <seed-file> [--no-sameness] [--start-to] [--instances-of <rdfs-class>+]  [--follow <rdf-property>+]"
    echo
-   echo "                      -w : write the output to file."
-   echo "         -od <directory> : write the outputs into the given directory."
-   echo "          <graphic-file> : GRDDL-annotated XML file."
-   echo "           --no-sameness : do not follow owl:sameAs, prov:specialization, or prov:alternateOf on followed objects."
-   echo "              --start-to : clear the visit list."
-   echo " --follow <rdf-property> : after dereferencing the depictions, also resolve all objects of the given RDF property."
+   echo "                           -w : write the output to file."
+   echo "              -od <directory> : write the outputs into the given directory."
+   echo "                  <seed-file> : the RDF file to start augmentation. Can be an RDF file, or a GRDDL-annotated XML file."
+   echo "                --no-sameness : do not follow owl:sameAs, prov:specialization, or prov:alternateOf on followed objects."
+   echo "                   --start-to : clear the visit list before beginning augmentation. Will re-visit everything at least once."
+   echo " --instances-of <rdfs-class>+ : dereference instances of these classes."
+   echo " --follow <rdf-property>+     : after dereferencing the depictions, also resolve all objects of the given RDF property."
    echo
    exit
 fi
@@ -93,7 +94,7 @@ shift
 fi
 
 if [ $# -lt 1 ]; then
-   echo $usage_message 
+   $0 --help
    exit 1
 fi
 
@@ -114,12 +115,12 @@ artifact="$1"
 shift
 
 # --no-sameness
+sames="`prefix.cc owl:sameAs` `prefix.cc prov:alternateOf`"
 fill_sameness="true"
 if [ "$1" == "--no-sameness" ]; then
    fill_sameness="false" 
    shift
 fi
-
 
 # [--start-to]
 visited=".`basename $0`-visit-list"
@@ -129,13 +130,34 @@ if [ "$1" == "--start-to" ]; then
    shift
 fi
 
-# [--follow <rdf-predicate>+]
-if [ "$1" == "--follow" ]; then
+# [--instances-of <rdfs-class>+]
+instances_of=''
+totalC=0
+if [ "$1" == "--instances-of" ]; then
    shift
+   while [[ $# -gt 0 && "$1" != '--follow' ]]; do
+      class="$1"
+      shift
+      instances_of="$instances_of `prefix.cc $class`"
+      let "totalC=totalC+1"
+   done
 fi
 
-if [ $# -lt 1 ]; then
-   echo $usage_message 
+# [--follow <rdf-predicate>+]
+follows=''
+total=0
+if [ "$1" == "--follow" ]; then
+   shift
+   while [[ $# -gt 0 && "$1" != '--follow' ]]; do
+      property="$1"
+      shift
+      follows="$follows `prefix.cc $class`"
+      let "total=total+1"
+   done
+fi
+
+if [[ -z "$instances_of" && -z "$follows" ]]; then
+   $0 --help
    exit 1
 fi
 multiple_files="false"
@@ -164,7 +186,7 @@ errorfile=$output_dir/$base.$output_extension.out
 provenancefile=$output_dir/$base.$output_extension.prov.ttl
 
 if [[ `valid-rdf.sh $artifact` != 'yes' ]]; then
-   # The file isnt' RDF, so GRDDL it.
+   # The file isn't RDF, so GRDDL it.
    cr-default-prefixes.sh --turtle > $outfile
    grddl.sh $artifact >> $outfile
    echo "`void-triples.sh $outfile` < $artifact" >&2
@@ -176,27 +198,34 @@ else
    rdf2nt.sh $artifact > $outfile
 fi
 
-sames="`prefix.cc owl:sameAs` `prefix.cc prov:alternateOf`"
 followed=0
-total=$#
-while [ $# -gt 0 ]; do
+for follow in "bootstrap $follows"; do
 
-   follow=`prefix.cc $1`
-   let "followed=followed+1"
-   shift
-
-   echo "following $follow ($followed / $total) from subjects in $outfile"
-   for object in `o-of-p.sh $follow $outfile | sort -u`; do
-      dereference "$object" "$outfile" "$visited"
+   filledC=0
+   for class in "$instances_of" ; do
+      let "filledC=filledC+1"
+      echo "filling $class (class $filledC / $totalC) from subjects in $outfile"
+      for instance in `o-of-p.sh --instances-of \`prefix.cc $class\` $outfile`; do
+         dereference "$instance" "$outfile" "$visited"
+      done
    done
 
-   if [[ "$fill_sameness" == "true" ]]; then
-      for sameas in $sames; do
-         echo "   filling \"sameness\" relation $sameas for objects of $follow ($followed / $total)"
-         for object in `o-of-p.sh --inverse-of $sameas $outfile | sort -u`; do
-            dereference "$object" "$outfile" "$visited"
-         done
+   if [[ ! "$follow" =~ bootstrap* ]]; then
+      let "followed=followed+1"
+
+      echo "following $follow (property $followed / $total) from subjects in $outfile"
+      for object in `o-of-p.sh $follow $outfile | sort -u`; do
+         dereference "$object" "$outfile" "$visited"
       done
+
+      if [[ "$fill_sameness" == "true" ]]; then
+         for sameas in $sames; do
+            echo "   filling \"sameness\" relation $sameas for objects of $follow ($followed / $total)"
+            for object in `o-of-p.sh --inverse-of $sameas $outfile | sort -u`; do
+               dereference "$object" "$outfile" "$visited"
+            done
+         done
+      fi
    fi
 done
 
