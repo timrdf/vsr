@@ -18,6 +18,7 @@ fi
 
 missing=''
 for jar in \
+   $VSR_HOME/lib/openrdf-sesame/*.jar \
    $VSR_HOME/lib/*.jar
 do
    if [[ $CLASSPATH != *`basename $jar`* ]]; then
