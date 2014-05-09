@@ -8,6 +8,7 @@
    xmlns:owl="http://www.w3.org/2002/07/owl#"
    xmlns:con="http://www.w3.org/2000/10/swap/pim/contact#"
    xmlns:frbr="http://purl.org/vocab/frbr/core#"
+   xmlns:ov="http://open.vocab.org/terms/"
    xmlns:dcterms="http://purl.org/dc/terms/"
    xmlns:dce="http://purl.org/dc/elements/1.1/"
    xmlns:foaf="http://xmlns.com/foaf/0.1/"
@@ -141,11 +142,12 @@
      * Does NOT render visual edges for which it is the subject of a triple.
    Note that an instance of a blacklisted subject classes will still render visual edges for which it is the object of a triple.
    To exclude this, make add the calss to TEMPLATE-blacklisted-object-classes.
+
+   $bibo:Document,
 -->
 <xsl:variable name="TEMPLATE-blacklisted-subject-classes" select="(
    $sio:Attribute,
    'http://openprovenance.org/ontology#WasControlledBy',
-   $bibo:Document,
    $skos:Concept,
    $frbr:Expression,
    $rev:Review,
@@ -183,7 +185,7 @@
 -->
 <xsl:variable name="TEMPLATE-class-strategy">
    <visual-form fill-color="1 0.98823529411 0.5294117647">       <!-- Yellow -->
-      <class><xsl:value-of select="'http://purl.org/vocommons/voaf#Vocabulary'"/></class>
+      <class><xsl:value-of select="'http://dbpedia.org/class/yago/Employee-ownedCompanies'"/></class>
    </visual-form>
    <visual-form fill-color="0.62352941176 0.69411764705 0.98823529411"> <!-- Blue -->
       <class><xsl:value-of select="'http://dbpedia.org/class/yago/Employee-ownedCompanies'"/></class>
@@ -376,7 +378,9 @@
    $owl:versionInfo,
    $tag:name,
    $ov:shortName,
-   $void:uriSpace
+   $void:uriSpace,
+   $dce:creator,
+   $dce:date
 )"/>
 
 <!--
