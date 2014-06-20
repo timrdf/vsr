@@ -9,6 +9,7 @@
    xmlns:con="http://www.w3.org/2000/10/swap/pim/contact#"
    xmlns:frbr="http://purl.org/vocab/frbr/core#"
    xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:ov="http://open.vocab.org/terms/"
    xmlns:dce="http://purl.org/dc/elements/1.1/"
    xmlns:foaf="http://xmlns.com/foaf/0.1/"
    xmlns:dcat="http://www.w3.org/ns/dcat#"
@@ -183,11 +184,11 @@
 -->
 <xsl:variable name="TEMPLATE-class-strategy">
    <visual-form fill-color="1 0.98823529411 0.5294117647">       <!-- Yellow -->
-      <class><xsl:value-of select="'http://purl.org/vocommons/voaf#Vocabulary'"/></class>
+      <class><xsl:value-of select="'http://purl.org/spar/fabio/WikiEntry'"/></class>
    </visual-form>
    <visual-form fill-color="0.62352941176 0.69411764705 0.98823529411"> <!-- Blue -->
-      <class><xsl:value-of select="'http://dbpedia.org/class/yago/Employee-ownedCompanies'"/></class>
-      <class><xsl:value-of select="''"/></class>
+      <class><xsl:value-of select="$prov:Activity"/></class>
+      <class><xsl:value-of select="'http://ieeevis.tw.rpi.edu/source/hcil-cs-umd-edu/dataset/IEEE-VAST-Challenge-2008-mc2/vocab/Commit'"/></class>
    </visual-form>
    <visual-form fill-color="0.99607843137 0.82745098039 0.49803921568">       <!-- Orange -->
       <class><xsl:value-of select="'http://moat-project.org/ns#Tag'"/></class>
@@ -329,6 +330,9 @@
 -->
 <xsl:variable name="TEMPLATE-in-label-predicates" select="(
    $rdfs:label,
+   $rdfs:comment,
+   $prov:endedAtTime,
+   'http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#byteSize',
    $sio:count,
    $dcterms:description,
    $dcterms:title,
@@ -394,7 +398,9 @@
    attribute can be an effective strategy.
 -->
 <xsl:variable name="TEMPLATE-notes-predicates" select="(
-   $dcterms:description
+   $dcterms:description,
+   $prov:endedAtTime,
+   $prov:wasAssociatedWith
 )"/>
 
 
@@ -489,7 +495,8 @@
    $dcterms:publisher,
    $rdfs:isDefinedBy,
    $rdfs:seeAlso,
-   $frbr:embodiment
+   $frbr:embodiment,
+   $prov:generated
 )"/>
 
 <xsl:variable name="TEMPLATE-blacklisted-predicate-namespaces" select="(
