@@ -84,10 +84,10 @@ fi
 
 ################################# owl, rdf, rdf-literal, or full path to vsr.
 
-# TODO: https://github.com/timrdf/vsr/issues/10
 
 vsr="$1"                                   
-if [ $vsr == "rdf-literal" ]; then
+if [[ $vsr == "rdf-literal" || "$vsr" == "uri-list" ]]; then
+   # A uri-list is just a one-URI-per-line file; we'll convert it to a turtle.
    vis_strat_full="$VSR_HOME/src/xsl/from/rdf2.xsl"
    vis_strat=`basename $vis_strat_full`
 elif [ $vsr == "rdf" ]; then
@@ -100,17 +100,37 @@ elif [ $vsr == "pml" ]; then
    vis_strat_full="$VSR_HOME/src/xsl/from/pml.vsr.xsl"
    vis_strat=`basename $vis_strat_full`
 else
-   # TODO: check if absolute.
+   echo "[INFO] Search for visual strategy by keyword failed, attempting as file path..." >&2
 
+   # Check if absolute.
    vis_strat=`basename $1`
    vis_strat_full="$1"                 # Try it as absolute path
    checkAbs=`echo $1 | sed 's/^\/.*$/__/g'`
    if [ $checkAbs != $vis_strat_full ]; then
-      #echo vis strat is absolute
+      echo "[INFO]    Visual strategy is an absoluate file path." >&2
       vis_strat_full="$1"
    else
-      #echo vis strat is relative
-      vis_strat_full=`pwd`/"$1"        # Try it as relative path
+      echo "[INFO]    Visual strategy is a relative file path." >&2
+
+      # https://github.com/timrdf/vsr/issues/10
+      if [[ ${VSR_PATH/$VSR_HOME/} == "$VSR_PATH" ]]; then
+         VSR_PATH="$VSR_PATH:$VSR_HOME/src/xsl/from/"
+         echo "[INFO]       Added VSR_HOME to VSR_PATH: $VSR_PATH" >&2
+      fi
+
+      vis_strat_full=''
+      if [[ -e "`pwd`/$1" ]]; then
+         vis_strat_full="`pwd`/$1"        # Try it as relative path
+      else
+         for try_path in `echo $VSR_PATH | sed 's/:/ /g'`; do
+            if [[ -e "$try_path/$1" && -z "$vis_strat_full" ]]; then
+               vis_strat_full="$try_path/$1"        # Try it as relative path
+               echo "[INFO]       Visual strategy found at $vis_strat_full" >&2
+            else
+               echo "[INFO]       Visual strategy not found in $try_path ..." >&2
+            fi
+         done
+      fi
    fi 
 fi
 # TODO: just let them give the base, fill in the file pattern.
@@ -118,8 +138,13 @@ fi
 shift
 
 ################################# graffle, graphml
-graphical_format=$1                          
-output_extension=$graphical_format
+graphical_format=$1 # Could be 'graffle', or an absolute path '/Users/lebot/.../from/template.vsr.xsl'
+if [[ -e "$graphical_format" ]]; then
+   output_extension=`basename $graphical_format` 
+   output_extension=${output_extension%.vsr.xsl}
+else
+   output_extension=$graphical_format
+fi
 shift
 
 overwrite="no"
@@ -167,7 +192,7 @@ intermediate_file="_`basename $0`_pid$$.date`date +%s`.tmp"
 
 # TODO: https://github.com/timrdf/vsr/issues/10
 
-XSL=$intermediate_file.${vis_strat}2${graphical_format}_$$.xsl
+XSL=$intermediate_file.${vis_strat}2`basename ${graphical_format}`_$$.xsl
 echo '<xsl:transform version="2.0"'                                               > $XSL
 echo '   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'                      >> $XSL
 echo "   <xsl:include href=\"$vis_strat_full\"/>"                                >> $XSL
@@ -180,7 +205,7 @@ else
 fi
 echo '</xsl:transform>'                                                          >> $XSL
 
-if [ $debug = "true" ]; then
+if [[ "$debug" == "true" ]]; then
    echo "-----------------"
    echo "input_extension   = $input_extension"
    echo "output_extension  = $output_extension"
@@ -193,6 +218,7 @@ if [ $debug = "true" ]; then
    echo "multiple_files    = $multiple_files"
    echo "-----------------"
    echo "script_home       = $script_home"
+   echo "vsr               = $vsr"
    echo "vis_strat         = $vis_strat"
    echo "vis_strat_full    = $vis_strat_full"
    echo "----------------------------------"
@@ -211,8 +237,8 @@ while [ $# -gt 0 ]; do
 		# The extension was not $input_extension OR extention should be appended (i.e. not replaced)
 		base=`basename $artifact`
 	fi
-	if [[ $output_dir_set == "false" && -e $artifact ]]; then
-		# If output directory not provided, write to file at same location as artifact
+	if [[ "$output_dir_set" == "false" && -e "$artifact" ]]; then
+		# If output directory not provided, write to file at same location as artifact.
 		output_dir=`dirname $artifact` 
 	fi
 	outfile=$output_dir/$base.$output_extension
@@ -224,7 +250,12 @@ while [ $# -gt 0 ]; do
    if [[ ! -e "$artifact" && "$artifact" =~ http.* ]]; then
       $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I       $artifact - > $rdf
    else
-      $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
+      if [[ "$vsr" == 'uri-list' ]]; then
+         cat "$artifact" | sed 's/^ *<//;s/> *$//g' | awk 'BEGIN{print "@prefix owl: <http://www.w3.org/2002/07/owl#> ."}\
+                        {print "<"$1"> a owl:Thing ."}' | rapper -q -i turtle   -o rdfxml -I `pwd`/$artifact - > $rdf
+      else
+         $CSV2RDF4LOD_HOME/bin/util/rdf2nt.sh $artifact | rapper -q -i ntriples -o rdfxml -I `pwd`/$artifact - > $rdf
+      fi
    fi
 
    graphicURI=""
@@ -244,7 +275,7 @@ while [ $# -gt 0 ]; do
    fi
    if [[ -n "$params" ]]; then
       params="-v $params -in"
-      echo $params
+      echo "[INFO] Saxon parameters: $params"
    fi
 
    # Convert file at 'artifact' into file 'outfile', depending on how many files are being processed.
@@ -273,7 +304,9 @@ while [ $# -gt 0 ]; do
 		# Only one file was given
 		if [ $overwrite = "yes" ]; then
          # EXECUTE CONVERSION ($artifact to $outfile via $intermediate_file)
-         echo "Transforming $base to $outfile"
+         echo "[INFO] Transforming $base to $outfile"
+         echo "[INFO] with $XSL"
+         echo $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $params $rdf $outfile $errorfile
          $CSV2RDF4LOD_HOME/bin/dup/saxon.sh $XSL $input_extension $output_extension $params $rdf > $outfile 2> $errorfile
          perl -pi -e 's/SLF4J:.*//' $errorfile
          if [[ -e "$errorfile" && "$VSR_PROVENANCE" == "true" ]]; then
