@@ -103,7 +103,9 @@
       <xsl:variable name="value" select="./following-sibling::*[1]"/>
       <xsl:choose>
          <xsl:when test="starts-with($value,'http:')">
-            <xsl:value-of select="concat('   &lt;',.,'&gt; &lt;',$value,'&gt;;',$NL)"/>
+            <!-- Multi-URI values that are delimited with ', ' need to become '>, <', e.g. curieTypeList's value:
+                 http://ieeevis.tw.rpi.edu/.../vocab/Commit, http://ieeevis.tw.rpi.edu/../vocab/Minor -->
+            <xsl:value-of select="concat('   &lt;',.,'&gt; &lt;',replace($value,', http','&gt;, &lt;http'),'&gt;;',$NL)"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="concat('   &lt;',.,'&gt; ',$DQ,replace($value,$DQ,''),$DQ,';',$NL)"/>
