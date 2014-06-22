@@ -265,7 +265,8 @@ while [ $# -gt 0 ]; do
       situated="yes"
       # visual-artifact-uri
       # [-v a=1 b=2 ... -in]
-      graphicURI="`cr-dataset-uri.sh --uri`/visualization/$next"
+      #graphicURI="`cr-dataset-uri.sh --uri`/visualization/$next"
+      graphicURI="`cr-dataset-uri.sh --uri`/visualization/`date +%Y/%m/%d/T/%H/%M/%S%z`"
       params="visual-artifact-uri=$graphicURI"
       # ^^ e.g. http://ieeevis.tw.rpi.edu/source/datahub.io/dataset/vis-seven-scenarios-codings/version/2013-Mar-08
    fi
