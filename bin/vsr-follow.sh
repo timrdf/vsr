@@ -142,6 +142,7 @@ if [ "$1" == "--instances-of" ]; then
       let "totalC=totalC+1"
    done
 fi
+#echo instances of : $instances_of >&2
 
 # [--follow <rdf-predicate>+]
 follows=''
@@ -151,10 +152,11 @@ if [ "$1" == "--follow" ]; then
    while [[ $# -gt 0 && "$1" != '--follow' ]]; do
       property="$1"
       shift
-      follows="$follows `prefix.cc $class`"
+      follows="$follows `prefix.cc $property`"
       let "total=total+1"
    done
 fi
+#echo follows: $follows >&2
 
 if [[ -z "$instances_of" && -z "$follows" ]]; then
    $0 --help
@@ -199,16 +201,18 @@ else
 fi
 
 followed=0
-for follow in "bootstrap $follows"; do
+for follow in bootstrap $follows; do
 
-   filledC=0
-   for class in "$instances_of" ; do
-      let "filledC=filledC+1"
-      echo "filling $class (class $filledC / $totalC) from subjects in $outfile"
-      for instance in `o-of-p.sh --instances-of \`prefix.cc $class\` $outfile`; do
-         dereference "$instance" "$outfile" "$visited"
+   if [[ -n "$instances_of" ]]; then
+      filledC=0
+      for class in "$instances_of" ; do
+         let "filledC=filledC+1"
+         echo "filling $class (class $filledC / $totalC) from subjects in $outfile"
+         for instance in `o-of-p.sh --instances-of \`prefix.cc $class\` $outfile`; do
+            dereference "$instance" "$outfile" "$visited"
+         done
       done
-   done
+   fi
 
    if [[ ! "$follow" =~ bootstrap* ]]; then
       let "followed=followed+1"
