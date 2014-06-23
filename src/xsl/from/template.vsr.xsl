@@ -91,6 +91,8 @@
 <xsl:include href="../ns/tag-ns.xsl"/>
 <xsl:include href="../util/string-chomp.xsl"/>
 
+<xsl:variable name="visual-strategy-base-uri" select="'https://github.com/timrdf/vsr/blob/master/src/xsl/from/template.vsr.xsl'"/>
+
 <!-- 
    These are the properties and classes that appear in the domain graph.
    The visual design process involves deciding what should be done with
@@ -183,6 +185,9 @@
    uniquely determined just be observing their visual node's color.
 -->
 <xsl:variable name="TEMPLATE-class-strategy">
+   <visual-form fill-color="1 0 0 .7">       <!-- Red -->
+      <class><xsl:value-of select="'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/Against'"/></class>
+   </visual-form>
    <visual-form fill-color="1 0.98823529411 0.5294117647">       <!-- Yellow -->
       <class><xsl:value-of select="'http://purl.org/spar/fabio/WikiEntry'"/></class>
    </visual-form>
@@ -201,7 +206,7 @@
       <class><xsl:value-of select="''"/></class>
    </visual-form>
    <visual-form fill-color=".25 .5 0 .45">       <!-- Green -->
-      <class><xsl:value-of select="'http://xmlns.com/foaf/0.1/Organization'"/></class>
+      <class><xsl:value-of select="'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/Supports'"/></class>
    </visual-form>
    <visual-form fill-color=".8392 .9882 .8000">       <!-- Green -->
       <class><xsl:value-of select="$foaf:Person"/></class>
@@ -441,7 +446,9 @@
    $prov:qualifiedAssociation,
    $prov:qualifiedGeneration,
    $prov:qualifiedCommunication,
-   $prov:qualifiedInfluence
+   $prov:qualifiedInfluence,
+   'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/qualifiedAgainst',
+   'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/qualifiedSupports'
 )"/>
 <xsl:variable name="TEMPLATE-qualification-classes" select="(
    $prov:Influence,
@@ -463,7 +470,10 @@
 
    $prov:AgentInfluence,
    $prov:Association,
-   $prov:Delegation
+   $prov:Delegation,
+
+   'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/Against',
+   'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/Supports'
 )"/>
 <xsl:variable name="TEMPLATE-qualified-object-predicates" select="(
    $sio:refers-to,
@@ -547,7 +557,8 @@
    $pmlj:InferenceStep,
    $pmlj:NodeSet,
    $pmlp:InferenceEngine,
-   $nfo:FileDataObject
+   $nfo:FileDataObject,
+   $prov:EntityInfluence
 )"/>
 
 <!-- 
@@ -781,7 +792,7 @@
    <xsl:param    name="deferrer"   select="''"/>
 
    <!-- The URI for _this_ template, and its type. -->
-   <xsl:variable name="owl:sameAs" select="'TEMPLATE_Cleanup_crew_824'"/>
+   <xsl:variable name="owl:sameAs" select="concat($visual-strategy-base-uri,'#TEMPLATE_Cleanup_crew_795')"/>
    <xsl:variable name="rdf:type"   select="$vsr:CleanupCrew"/>
 
    <!-- Orient with the triple that we're considering to render, and log it. -->
@@ -809,6 +820,11 @@
    <xsl:variable name="q-ps"       select="key('descriptions-by-subject',$q-parents/@rdf:about)"/>
    <xsl:variable name="q-object"   select="$o/*[xfm:uri(.) = $TEMPLATE-qualified-object-predicates]/(@rdf:resource | */rdf:about)[1]"/>
    <xsl:variable name="q-o"        select="key('descriptions-by-subject',$q-object)"/>
+
+
+
+   <!-- NOTE: the following commented-out statements are an example of how to use contextualized views. 
+        Keep it until we have a firm description of how to do it. -->
 
    <!--xsl:for-each select="$:TaskTypes">
       <xsl:message select="concat('task types     ',.)"/>
@@ -854,6 +870,9 @@
       <xsl:message select="concat('q-object a ',current-grouping-key())"/>
    </xsl:for-each-group-->
 
+   <!-- NOTE: the following commented-out statements are an example of how to use contextualized views. 
+        Keep it until we have a firm description of how to do it. -->
+
    <!--xsl:variable name="parent-a-task"      select="$q-ps/rdf:type[@rdf:resource = $:TaskTypes]"/>
    <xsl:variable name="subject-a-task"     select="$s/rdf:type[@rdf:resource = $:TaskTypes]"/>
    <xsl:variable name="subject-a-resource" select="$s[rdf:type[@rdf:resource = $:ResourceTypes]]"/>
@@ -881,15 +900,21 @@
          </xsl:apply-templates>
       </xsl:for-each-group>
    </xsl:if>
+
+        NOTE: this if statement is an example of how to use contextualized views. 
+        Keep it until we have a firm description of how to do it.
+
    <xsl:if test="$subject-a-task and $object-a-task"-->
-      <xsl:apply-templates select="." mode="view-contextualized"/>
+      <xsl:apply-templates select="." mode="view-contextualized">
+         <xsl:with-param name="deferrer" select="$owl:sameAs"/> <!-- "global context" -->
+      </xsl:apply-templates>
    <!--/xsl:if-->
 </xsl:template>
 
 <xsl:template match="rdf:Description/*" priority="-.25" mode="view-contextualized">
    <xsl:param    name="deferrer"   select="''"/>
    <!-- The URI for _this_ template, and its type. -->
-   <xsl:variable name="owl:sameAs" select="'TEMPLATE_view-contextualized_950'"/>
+   <xsl:variable name="owl:sameAs" select="concat($visual-strategy-base-uri,'#TEMPLATE_view-contextualized_903')"/>
    <xsl:variable name="rdf:type"   select="'blah'"/>
 
    <!-- Orient with the triple that we're considering to render, and log it. -->
@@ -901,6 +926,7 @@
    <!-- We don't apply any logic in this default template, 
         but we pass down the visual strategy parameters to the core RDF templates. -->
    <xsl:apply-templates select="." mode="blacklist_checker">
+      <xsl:with-param name="deferrer" select="$owl:sameAs"/>
 
       <!-- Predicates in these lists are rendered in forms other than visual edges -->
       <xsl:with-param name="anonymous-instance-classes"       select="$TEMPLATE-anonymous-instance-classes"     tunnel="yes"/>
