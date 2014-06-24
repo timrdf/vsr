@@ -184,7 +184,7 @@
    If there are few enough classes, the type of the instances can be 
    uniquely determined just be observing their visual node's color.
 -->
-<xsl:variable name="TEMPLATE-class-strategy">
+<xsl:variable name="TEMPLATE-class-strategy"> <!-- mappings -->
    <visual-form fill-color="1 0 0 .7">       <!-- Red -->
       <class><xsl:value-of select="'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/Against'"/></class>
    </visual-form>
@@ -260,7 +260,7 @@
    Sometimes it is important to distinguish instances by the namespace
    of their URIs.
 -->
-<xsl:variable name="TEMPLATE-namespace-strategy">
+<xsl:variable name="TEMPLATE-namespace-strategy"> <!-- mappings -->
    <visual-form fill-color=".77 .79 1"> <!-- Purple -->
       <namespace>http://inference-web.org/registry/</namespace>
    </visual-form>
@@ -275,6 +275,9 @@
    </visual-form>
    <visual-form fill-color="1 .6491 .6980">
       <namespace>c</namespace>
+   </visual-form>
+   <visual-form prefix="user">
+      <namespace>http://ieeevis.tw.rpi.edu/source/hcil-cs-umd-edu/dataset/IEEE-VAST-Challenge-2008-mc2/version/2008-Mar-15/user/</namespace>
    </visual-form>
 </xsl:variable>
 
@@ -426,6 +429,27 @@
 <!-- - - - - - - - - - - -->
 
 <!--
+-->
+<xsl:variable name="TEMPLATE-predicate-color-strategy"> <!-- mappings -->
+   <visual-form stroke-color="1 0 0"> <!-- Red -->
+      <predicate>http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/qualifiedAgainst</predicate>
+   </visual-form>
+   <visual-form stroke-color="0 .5 0"> <!-- Green -->
+      <predicate>http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/qualifiedSupports</predicate>
+   </visual-form>
+   <visual-form stroke-color="1 1 .77">   <!-- Yellow -->
+      <predicate>a</predicate>
+   </visual-form>
+   <visual-form stroke-color=".8901 .9019 1">
+      <predicate>b</predicate>
+   </visual-form>
+   <visual-form stroke-color="1 .6491 .6980">
+      <predicate>c</predicate>
+   </visual-form>
+</xsl:variable>
+
+
+<!--
    These properties follow the qualification pattern, c.f. PROV-O and SIO
    sio:has-attribute   [ a sio:Attribute, ?other ] is the qualifying property for the binary property ?other.
    prov:qualifiedUsage [ a prov:Usage ]            is the qualifying property for the binary property prov:used.
@@ -447,6 +471,7 @@
    $prov:qualifiedGeneration,
    $prov:qualifiedCommunication,
    $prov:qualifiedInfluence,
+
    'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/qualifiedAgainst',
    'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/qualifiedSupports'
 )"/>
@@ -482,6 +507,15 @@
    $prov:agent,
    $prov:activity
 )"/>
+<!--
+   These predicates should not be shown b/c they are redundant with their inverses.
+   This list can include binary predicates or their qualification classes.
+-->
+<xsl:variable name="TEMPLATE-qualification-pairs"> <!-- mappings -->
+   <qualifying-predicate        about="{$prov:qualifiedUsage}">
+      <prov:unqualifiedForm  resource="{$prov:used}"/>
+   </qualifying-predicate>
+</xsl:variable>
 
 
 <!-- SUB-SURFACING STRATEGIES -->
@@ -516,13 +550,20 @@
    These predicates should not be shown b/c they are redundant with their inverses.
    This list can include binary predicates or their qualification classes.
 -->
-<xsl:variable name="TEMPLATE-preferred-inverses">
+<xsl:variable name="TEMPLATE-preferred-inverses"> <!-- mappings -->
    <undesirable-inverse     about="{$prov:hadDelegate}">
       <preferred-inverse resource="{$prov:actedOnBehalfOf}"/>
    </undesirable-inverse>
 </xsl:variable>
 
 <!-- SURFACE STRATEGIES -->
+
+<!-- 
+-->
+<xsl:variable name="TEMPLATE-edge-thickness-predicates" select="(
+   $void:triples,
+   $sio:count
+)"/>
 
 <!--
    Although a visual edge may have arrow heads to indicate direction,
@@ -541,7 +582,8 @@
    $pmlj:hasConclusion,
    $nfo:hasHash,
    $skos:broader,
-   $dcterms:subject
+   $dcterms:subject,
+   'http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc2-reverts-social-tally/vocab/qualifiedAgainst'
 )"/>
 
 <!-- - - - - - - - - - - -->
@@ -754,26 +796,26 @@
    </xsl:variable-->
 
    <!-- Invoke the core template with the visual properties determined by this template. -->
-   <xsl:apply-templates select="../dot" mode="default">
+   <xsl:apply-templates select="../dot" mode="default"> <!-- WHAT is a dot? -->
       <xsl:with-param name="deferrer"                      select="$owl:sameAs"/>
 
       <xsl:with-param name="blacklisted-subject-classes"   select="$TEMPLATE-blacklisted-subject-classes" tunnel="yes"/>
-      <!--xsl:with-param name="view-context"                  select="$TEMPLATE-view-context" tunnel="yes"/-->
-      <xsl:with-param name="namespaces-to-relax"           select="$TEMPLATE-namespaces-to-relax" tunnel="yes"/>
+      <!--xsl:with-param name="view-context"                  select="$TEMPLATE-view-context"             tunnel="yes"/-->
+      <xsl:with-param name="namespaces-to-relax"           select="$TEMPLATE-namespaces-to-relax"         tunnel="yes"/>
       <!--xsl:with-param name="namespaces-to-relax-in-ranges" select=""/-->
 
-      <xsl:with-param name="class-strategy"                select="$TEMPLATE-class-strategy"      tunnel="yes"/>
-      <xsl:with-param name="namespace-strategy"            select="$TEMPLATE-namespace-strategy"  tunnel="yes"/>
+      <xsl:with-param name="class-strategy"                select="$TEMPLATE-class-strategy"              tunnel="yes"/>
+      <xsl:with-param name="namespace-strategy"            select="$TEMPLATE-namespace-strategy"          tunnel="yes"/>
 
-      <xsl:with-param name="anonymous-instance-classes"    select="$TEMPLATE-anonymous-instance-classes" tunnel="yes"/>
-      <xsl:with-param name="label-predicates"              select="$TEMPLATE-label-predicates"    tunnel="yes"/>
-      <xsl:with-param name="in-label-predicates"           select="$TEMPLATE-in-label-predicates" tunnel="yes"/>
+      <xsl:with-param name="anonymous-instance-classes"    select="$TEMPLATE-anonymous-instance-classes"  tunnel="yes"/>
+      <xsl:with-param name="label-predicates"              select="$TEMPLATE-label-predicates"            tunnel="yes"/>
+      <xsl:with-param name="in-label-predicates"           select="$TEMPLATE-in-label-predicates"         tunnel="yes"/>
       <!--xsl:with-param name="show-bnode-IDs" select="true()"/-->
 
-      <xsl:with-param name="notes-predicates"              select="$TEMPLATE-notes-predicates"    tunnel="yes"/>
+      <xsl:with-param name="notes-predicates"              select="$TEMPLATE-notes-predicates"            tunnel="yes"/>
 
-      <xsl:with-param name="tooltip-predicates"            select="$TEMPLATE-tooltip-predicates"  tunnel="yes"/>
-      <xsl:with-param name="rooted-classes"                select="$TEMPLATE-rooted-classes"      tunnel="yes"/>
+      <xsl:with-param name="tooltip-predicates"            select="$TEMPLATE-tooltip-predicates"          tunnel="yes"/>
+      <xsl:with-param name="rooted-classes"                select="$TEMPLATE-rooted-classes"              tunnel="yes"/>
 
       <!-- a-root  tunnel="yes"-->
       <!--xsl:with-param name="label"       select="$label"       tunnel="yes"/>
@@ -931,7 +973,9 @@
       <!-- Predicates in these lists are rendered in forms other than visual edges -->
       <xsl:with-param name="anonymous-instance-classes"       select="$TEMPLATE-anonymous-instance-classes"     tunnel="yes"/>
       <xsl:with-param name="class-strategy"                   select="$TEMPLATE-class-strategy"                 tunnel="yes"/>
-      <xsl:with-param name="namespace-strategy"               select="$TEMPLATE-namespace-strategy"/>
+      <xsl:with-param name="namespace-strategy"               select="$TEMPLATE-namespace-strategy"             tunnel="yes"/> <!-- tunneled Jun 2014 -->
+      <xsl:with-param name="predicate-color-strategy"         select="$TEMPLATE-predicate-color-strategy"       tunnel="yes"/>
+      <xsl:with-param name="edge-thickness-predicates"        select="$TEMPLATE-edge-thickness-predicates"      tunnel="yes"/>
       <xsl:with-param name="label-predicates"                 select="$TEMPLATE-label-predicates"               tunnel="yes"/>
       <xsl:with-param name="in-label-predicates"              select="$TEMPLATE-in-label-predicates"            tunnel="yes"/>
       <xsl:with-param name="notes-predicates"                 select="$TEMPLATE-notes-predicates"               tunnel="yes"/>
@@ -946,6 +990,7 @@
       <xsl:with-param name="qualifying-predicates"            select="$TEMPLATE-qualifying-predicates"          tunnel="yes"/>
       <xsl:with-param name="qualification-classes"            select="$TEMPLATE-qualification-classes"          tunnel="yes"/>
       <xsl:with-param name="qualified-object-predicates"      select="$TEMPLATE-qualified-object-predicates"    tunnel="yes"/>
+      <xsl:with-param name="qualification-pairs"              select="$TEMPLATE-qualification-pairs"            tunnel="yes"/>
       <xsl:with-param name="blacklisted-predicates"           select="$TEMPLATE-blacklisted-predicates"/>
       <xsl:with-param name="preferred-inverses"               select="$TEMPLATE-preferred-inverses"                         />
       <xsl:with-param name="blacklisted-predicate-namespaces" select="$TEMPLATE-blacklisted-subject-namespaces"             />

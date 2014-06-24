@@ -5,7 +5,7 @@
 VSR_HOME=$(cd ${0%/*} && echo ${PWD%/*})
 me=$(cd ${0%/*} && echo ${PWD})/`basename $0`
 
-export CLASSPATH=''
+#export CLASSPATH=''
 export CLASSPATH=$CLASSPATH`$VSR_HOME/bin/vsr-situate-classpaths.sh`
 
 if [[ `which cr-pwd-type.sh` && `cr-pwd-type.sh` == 'cr:conversion-cockpit' ]]; then
@@ -33,7 +33,8 @@ if [[ `which cr-pwd-type.sh` && `cr-pwd-type.sh` == 'cr:conversion-cockpit' ]]; 
          echo "NOTE: --derivedFrom not being used because no provenance available at source/$file.pml.ttl" >&2
       fi
 
-      java -xmx8000m edu.rpi.tw.visualization.overview.summarizer.RepositorySummarizer $baseURI -f $file $derivedFrom `cr-dataset-uri.sh --uri`
+      #java -xmx8000m edu.rpi.tw.visualization.overview.summarizer.RepositorySummarizer $baseURI -f $file $derivedFrom `cr-dataset-uri.sh --uri`
+      java edu.rpi.tw.visualization.overview.summarizer.RepositorySummarizer $baseURI -f $file $derivedFrom `cr-dataset-uri.sh --uri`
       # vsr-spo-balance.sh --baseURI ${CSV2RDF4LOD_BASE_URI:-'http://localhost'} -f source/ieeevis-tw-rpi-edu.nt --derivedFrom http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/file/cr-full-dump/version/latest/conversion/ieeevis-tw-rpi-edu.nt.gz `cr-dataset-uri.sh --uri`
    else
       # vsr-spo-balance.sh --baseURI ${CSV2RDF4LOD_BASE_URI:-'http://localhost'} -s http://ieeevis.tw.rpi.edu/sparql `cr-dataset-uri.sh --uri` http://ieeevis.tw.rpi.edu/source/vis-stanford-edu/dataset/revision-image-corpus/version/2013-Mar-08

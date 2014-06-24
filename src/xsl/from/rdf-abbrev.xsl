@@ -12,6 +12,7 @@
    xmlns:p="http://purl.org/twc/vocab/vsr/"
    xmlns:prov="http://www.w3.org/ns/prov#"
 
+   xmlns:math="java:java.lang.Math"
    xmlns:jvr="jvr"
    xmlns:nmf="java:edu.rpi.tw.string.NameFactory"
    xmlns:idm="java:edu.rpi.tw.string.IDManager"
@@ -571,6 +572,9 @@ $rdf:type
    <xd:param name="qualified-object-predicates">
       e.g. sio:refers-to, prov:entity
    </xd:param>
+   <xd:param name="qualification-pairs">
+      e.g. prov:Usage,prov:used
+   </xd:param>
    <xd:param name="relaxed-object-classes">
       Instances of the following classes render a distinct visual element
       for each of its occurrences as an object of a data triple.
@@ -581,9 +585,11 @@ $rdf:type
    <xsl:param name="qualifying-predicates"          select="()"                                      tunnel="yes"/>
    <xsl:param name="qualification-classes"          select="()"                                      tunnel="yes"/>
    <xsl:param name="qualified-object-predicates"    select="()"                                      tunnel="yes"/>
+   <xsl:param name="qualification-pairs"            select="()"                                      tunnel="yes"/>
    <xsl:param name="swap-directionality-predicates" select="$rdfabbr-swap-directionality-predicates" tunnel="yes"/>
    <!-- TODO: parameterize distinction between 'swap-visual-directionality-predicates' and 'swap-force-directionality-predicates'-->
    <xsl:param name="predicate-color-strategy"       select="()"                                      tunnel="yes"/>
+   <xsl:param name="edge-thickness-predicates"      select="()"                                      tunnel="yes"/>
    <xsl:param name="label"                                                                           tunnel="yes"/>
    <xsl:param name="namespaces-to-relax"            select="()"                                      tunnel="yes"/>
    <xsl:param name="relax-identical-literals"       select="true()"                                  tunnel="yes"/>
@@ -621,6 +627,7 @@ $rdf:type
    <xsl:variable name="p"                             select="key('descriptions-by-subject',$subject)"/> <!-- TODO: rename p to s -->
    <xsl:variable name="o"                             select="key('descriptions-by-subject',$object)"/>
 
+   <!--                                                e.g. sio:refers-to, prov:entity -->
    <xsl:variable name="q-object" select="$o/*[xfm:uri(.) = $qualified-object-predicates]/(@rdf:resource | */rdf:about)[1]"/>
    <xsl:variable name="q-o"      select="key('descriptions-by-subject',$q-object)"/>
 
@@ -631,33 +638,75 @@ $rdf:type
    <xsl:variable name="set-operand-a-list"            select="key('descriptions-by-subject',$set-operand)/rdf:first"/>
    <xsl:variable name="object-is-qualification-and-should-be-swapped" select="$o/rdf:type[@rdf:resource = $qualification-classes and 
                                                                                           @rdf:resource = $swap-directionality-predicates]"/>
+
    <!--xsl:message select="concat('BLAH: ',$object,' ',$object-is-bnode,' ',count($object-is-set-operation),' ',$set-operand,' ',$set-operand-a-list)"/-->
 
-   <!--xsl:message select="concat('size of q-object ',$q-object,' = ',count($q-o))"/-->
+   <!--xsl:message select="concat('size of q-object ',$q-object,' = ',count($q-o))"/>
+   <xsl:message select="concat('true-object ',$true-object)"/>
+
+    debugging print-lines...
+   <xsl:for-each-group select="$o/rdf:type/(@rdf:resource | */@rdf:about)" group-by="."> 
+      <xsl:message select="concat('o type:            ',.)"/>
+   </xsl:for-each-group>
+   <xsl:for-each-group select="$q-o/rdf:type/(@rdf:resource | */@rdf:about)" group-by=".">
+      <xsl:message select="concat('q-o type:          ',.)"/>
+   </xsl:for-each-group>
+   <xsl:for-each-group select="$relaxed-object-classes" group-by=".">
+      <xsl:message select="concat(count($relaxed-object-classes),' relaxed classes: ',.)"/>
+   </xsl:for-each-group-->
+
+   <!-- If the predicate of this triple is an unqualified form of a qualification that is also asserted,       e.g. /- - - prov:used - - \  prov:qualifiedUsage -->
+   <xsl:variable name="qualifying-predicate" select="$qualification-pairs/qualifying-predicate[prov:unqualifiedForm[@resource = $predicate]]/@about"/>
+   <xsl:variable name="qualification"  select="$p/*[xfm:uri(.) = $qualifying-predicate]/(@rdf:resource | @rdf:nodeID)"/>
+   <!--xsl:message select="concat($qualifying-predicate,' ',count($qualification),' qualifications')"/-->
+   <xsl:variable name="qualification-ps" select="key('descriptions-by-subject',$qualification)"/>
+   <xsl:variable name="predicate-is-unqualified-form-of-qualified-form-that-exists" select="$qualification-ps/*[xfm:uri(.) = $qualified-object-predicates and (@rdf:resource | @rdf:nodeID) = $true-object]"/>
+
+   <xsl:variable name="qualified-thickness" select="$o/*[xfm:uri(.) = $edge-thickness-predicates][1]/text()"/>
+   <!--xsl:message select="concat('qualified thickness: ',$qualified-thickness)"/-->
 
    <xsl:variable name="gedge-id" select="nmf:getUUIDName('gedge')"/> <!-- TODO: Just concat spo -->
    <!--xsl:variable name="gedge-id" select="concat($subject,' ',$predicate,' ',$object)"/-->
    <xsl:variable name="visualFormURI" select="concat($visual-artifact-uri,'/graphic/edge/',vsr:view-id($gedge-id))"/>
 
+   <!-- 
+     subject-vnode and object-vnode are optionally contextualized by some scope, defined by a URI. 
+     If they are not contextualized, the have a global context.
+     The contextualized view and the subject/object are phrased using the DOMAIN terminology.
+
+     For example, if :Tim is drawn using two visual nodes, the view context could be from the perspective of two people that know Tim.
+     In that case, the view context is the person knowing :Tim.
+
+     Or, in OWL if a owl:Class is depicted using two visual nodes, 
+     the view context could be from the perspective of the class that is referring to it as part of its restriction.
+     Or, use a global context so that all classes point to the same class every time it is mentioned. This draws identity, but gets cluttered.
+
+     It's all a tradeoff and an important part of the visual strategy to determine how it should be done.
+   -->
    <xsl:variable name="subject-vnode">
+      <!-- We are given the subject-view-context by our deferrer, as opposed to the object-view-context which we determine ourselves (below) for this particular triple. -->
       <xsl:choose>
          <xsl:when test="string-length($subject-view-context)">
             <xsl:variable name="value" select="concat($subject-view-context,' ',$subject)"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','subject-vnode',$value,'subject-view-context given')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','subject-vnode',$value,'subject view is contextualized')"/>
             <xsl:value-of select="$value"/>
+            <!-- TODO assert prov:specializationOf from this contextualized view to the global view -->
          </xsl:when>
          <xsl:otherwise>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','subject-vnode',$subject,'subject view context is global')"/>
             <xsl:value-of select="$subject"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','subject-vnode',$subject,'otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
 
    <xsl:variable name="object-view-context">
+      <!-- We determine the object-view-context ourselves for this particular triple.
+           This view context is used to determine the 'object-vnode' below, 
+           just like we did for 'subject-vnode' above using the subject view context provided by our deferrer. -->
       <xsl:choose>
          <xsl:when test="string-length($object-view-context)">
             <xsl:variable name="value" select="$object-view-context"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri',$vsr:from_context,$value,'object-view-context given')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri',$vsr:from_context,$value,'object view is contextualized')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$q-o/rdf:type/(@rdf:resource | */@rdf:about) = $relaxed-object-classes">
@@ -672,24 +721,14 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="''"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri',$vsr:from_context,'','otherwise')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri',$vsr:from_context,'','object view context is global')"/> <!-- 8 -->
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
 
-   <!--xsl:for-each-group select="$o/rdf:type/(@rdf:resource | */@rdf:about)" group-by=".">
-      <xsl:message select="concat('o type:            ',.)"/>
-   </xsl:for-each-group>
-   <xsl:for-each-group select="$q-o/rdf:type/(@rdf:resource | */@rdf:about)" group-by=".">
-      <xsl:message select="concat('q-o type:          ',.)"/>
-   </xsl:for-each-group>
-   <xsl:for-each-group select="$relaxed-object-classes" group-by=".">
-      <xsl:message select="concat(count($relaxed-object-classes),' relaxed classes: ',.)"/>
-   </xsl:for-each-group-->
-
-   <xsl:variable name="unique-literal-vnode" select="concat($subject,'_',$predicate,'_',$object,'_',@rdf:datatype,@xml:lang,'_value')"/>
-   <!-- Determine if new vnode should be created to depict object -->
+   <!-- Determine if a new vnode should be created to depict the object of this triple. -->
    <xsl:variable name="object-vnode">
+      <xsl:variable name="unique-literal-vnode" select="concat($subject,'_',$predicate,'_',$object,'_',@rdf:datatype,@xml:lang,'_value')"/>
       <xsl:choose>
          <xsl:when test="string-length($object-view-context) and $q-object">
             <xsl:variable name="value" select="concat($object-view-context,' ',$q-object)"/>
@@ -711,7 +750,7 @@ $rdf:type
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','object-vnode',$value,'object is in relaxed namespace')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
-         <!--xsl:when test="matches($object,'^http://inference-web.org/registry/*')"> <!- TODO: ->
+         <!--xsl:when test="matches($object,'^http://inference-web.org/registry/*')">  TODO: make sure this is handled by TEMPLATE-namespaces-to-relax or similar.
             <- All resources within this namespace should be relaxed ->
             <xsl:value-of select="$unique-literal-vnode"/>
             <xsl:message select="concat('explain object vnode: ',pmm:bestQName($object),'relaxed b/c in relaxed namespace')"/>
@@ -750,7 +789,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="$unique-literal-vnode"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','object-vnode',$unique-literal-vnode,'otherwise')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','object-vnode',$unique-literal-vnode,'object vnode otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -772,28 +811,44 @@ $rdf:type
          </xsl:when>
          <xsl:when test="$predicate = $swap-directionality-predicates">
             <xsl:variable name="value" select="$object-vnode"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,vsr:view-id($value),'$swap-directionality-predicates')"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,$value,'$swap-directionality-predicates')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,       vsr:view-id($value),'$swap-directionality-predicates')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,            $value, '$swap-directionality-predicates')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$object-is-qualification-and-should-be-swapped">
             <xsl:variable name="value" select="$q-object"/>
             <xsl:variable name="justification" select="'qualification class is a $swap-directionality-predicates'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,vsr:view-id($value),$justification)"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,$value,$justification)"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,       vsr:view-id($value),$justification)"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,            $value, $justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$predicate = $rdfs:subClassOf and $object-is-bnode">
             <!-- TODO: this should be pushed up to owl and it should call down with 'swap-directionality-predicates' -->
             <xsl:variable name="value" select="$subject-vnode"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,vsr:view-id($value),'subclassof of object is bnode')"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,$value,'subclassof of object is bnode')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,       vsr:view-id($value),'subclassof of object is bnode')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,            $value, 'subclassof of object is bnode')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="$subject-vnode"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,vsr:view-id($value),'otherwise')"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,$value,'otherwise')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,       vsr:view-id($value),'no need to force edge to opposite direction of underlying data')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from_domain,            $value, 'no need to force edge to opposite direction of underlying data')"/>
+            <xsl:value-of select="$value"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:variable>
+   <xsl:variable name="depicts">
+      <xsl:choose>
+         <xsl:when test="$predicate = $qualifying-predicates">
+            <xsl:variable name="value" select="$object"/>
+            <xsl:variable name="justification" select="'property is a qualification'"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:depicts,$value,$justification)"/>
+            <xsl:value-of select="$value"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:variable name="value" select="$predicate"/>
+            <xsl:variable name="justification" select="'property is not a qualification'"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:depicts,$value,$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
       </xsl:choose>
@@ -845,7 +900,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="'0.701961'"/> <!-- gray -->
-            <xsl:variable name="justification" select="'otherwise'"/>
+            <xsl:variable name="justification" select="'stroke color otherwise'"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:stroke,string($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
@@ -885,7 +940,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="''"/>
-            <xsl:variable name="justification" select="'otherwise'"/>
+            <xsl:variable name="justification" select="'tail style otherwise'"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'tail-style',string($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
@@ -907,7 +962,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise> <!-- - - - - - - -->
             <xsl:value-of select="'2'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'line-style','2','otherwise')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'line-style','2','line style otherwise')"/>
          </xsl:otherwise> <!-- dotted -->
       </xsl:choose>
    </xsl:variable>
@@ -925,9 +980,17 @@ $rdf:type
             <xsl:value-of select="'2'"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'line-width','2','not($object-is-subject) and $object-is-resource')"/>
          </xsl:when> <!-- was 3, but it's over the top -->
+         <xsl:when test="$predicate = $qualifying-predicates and string-length($qualified-thickness)">
+            <!--xsl:message select="concat('YES edge thickness is ',$qualified-thickness,' - ',math:log(xs:double($qualified-thickness)))"/-->
+            <!--xsl:variable name ="value" select="math:max(xs:integer(math:log(xs:double($qualified-thickness))),
+                                                         1)"/-->
+            <xsl:variable name ="value" select="$qualified-thickness"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'line-width','20','i say so')"/>
+            <xsl:value-of select="$value"/>
+         </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="''"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'line-width','','otherwise')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'line-width','','line width otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -944,7 +1007,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="'NO'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'draw-shadow','NO','otherwise')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'draw-shadow','NO','draw shadow otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -960,36 +1023,36 @@ $rdf:type
             <xsl:variable name="value">
                <xsl:for-each-group select="$o/rdf:type" group-by="@rdf:resource">
                   <xsl:if test="@rdf:resource = $qualification-classes">
-                     <xsl:value-of select="replace(pmm:bestLabelFor(vsr:getObject(.)),'^.*\.','')"/>
+                     <xsl:value-of select="concat(replace(pmm:bestLabelFor(vsr:getObject(.)),'^.*\.',''),' ')"/>
                   </xsl:if>
                </xsl:for-each-group>
             </xsl:variable>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$label param')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$predicate = $qualifying-predicates')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$draw-literal-rdf">
             <xsl:variable name="value" select="pmm:bestQName($predicate)"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$label param')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$draw-literal-rdf')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$predicate = $owl:onProperty">
             <xsl:variable name="value" select="''"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$label param')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$predicate = $owl:onProperty')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$subject-has-same-domain-and-range">
             <xsl:variable name="value" select="'rdfs:domain and rdfs:range'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$label param')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$subject-has-same-domain-and-range')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:when test="$subject-has-same-range-and-domain">
             <xsl:variable name="value" select="'rdfs:range and rdfs:domain'"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$label param')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$subject-has-same-range-and-domain')"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="pmm:tryQName($predicate)"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'$label param')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$rdfs:label,$value,'label o/w')"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
       </xsl:choose>
@@ -1010,7 +1073,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="pmm:tryQName($predicate)"/>
-            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'edge-notes',pmm:tryQName($predicate),'otherwise')"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'edge-notes',pmm:tryQName($predicate),'edge notes otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -1030,7 +1093,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="'0.701961'"/>
-            <xsl:variable name="justification" select="'otherwise'"/>
+            <xsl:variable name="justification" select="'font color otherwise'"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'font-color',string($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
@@ -1071,7 +1134,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="'FilledArrow'"/> <!-- classic arrow head -->
-            <xsl:variable name="justification" select="'otherwise'"/>
+            <xsl:variable name="justification" select="'head style otherwise'"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,'head-style',string($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
@@ -1109,7 +1172,7 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="value" select="$object-vnode"/>
-            <xsl:variable name="justification" select="'otherwise'"/>
+            <xsl:variable name="justification" select="'to otherwise'"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:from,$value,vsr:view-id($from),vsr:view-id($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
@@ -1173,7 +1236,7 @@ $rdf:type
          <xsl:otherwise></xsl:otherwise>                                    <!-- wrap to shape - could be wide -->
       </xsl:choose>
    </xsl:variable>
-   <xsl:variable name="wrap-text">
+   <xsl:variable name="object-wrap-text">
       <xsl:choose>
          <xsl:when test="string-length($object-label) gt 45">true</xsl:when> <!-- Avoid wide comments -->
          <xsl:otherwise>false</xsl:otherwise>                                <!-- wrap to shape - could be wide -->
@@ -1187,23 +1250,23 @@ $rdf:type
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="'5'"/>
-            <xsl:message select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','h-text-pad','5','otherwise')"/>
+            <xsl:message select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','h-text-pad','5','h-text-pad otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
-   <xsl:variable name="draw-fill">
+   <xsl:variable name="object-draw-fill">
       <xsl:choose>
          <xsl:when test="$draw-literal-rdf">
             <xsl:value-of select="'YES'"/>
-            <xsl:message select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','draw-fill','YES','draw-literal-rdf')"/>
+            <xsl:message select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','object-draw-fill','YES','draw-literal-rdf')"/>
          </xsl:when>
          <xsl:when test="$predicate = ($rdfs:label, $rdfs:comment)">
             <xsl:value-of select="'NO'"/>
-            <xsl:message select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','draw-fill','NO','$predicate = ($rdfs:label, $rdfs:comment)')"/>
+            <xsl:message select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','object-draw-fill','NO','$predicate = ($rdfs:label, $rdfs:comment)')"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="'YES'"/>
-            <xsl:message select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','draw-fill','YES','otherwise')"/>
+            <xsl:message select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','object-draw-fill','YES','object draw fill otherwise')"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
@@ -1226,7 +1289,7 @@ $rdf:type
       </xsl:choose>
    </xsl:variable>
 
-   <xsl:variable name="should-depict">
+   <xsl:variable name="should-depict"> <!-- a triple -->
       <xsl:choose>
          <xsl:when test="string-length($from) = 0 or string-length($to) = 0">
             <xsl:variable name="value" select="'false'"/>
@@ -1246,6 +1309,24 @@ $rdf:type
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','should-depict',string($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:when>
+         <xsl:when test="$subject-is-bnode and $p/rdf:type">
+            <xsl:variable name="value" select="'false'"/>
+            <xsl:variable name="justification" select="'type of bnode subject is given in label'"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','should-depict',string($value),$justification)"/>
+            <xsl:value-of select="$value"/>
+         </xsl:when>
+         <xsl:when test="$predicate-is-unqualified-form-of-qualified-form-that-exists">
+            <xsl:variable name="value" select="'false'"/>
+            <xsl:variable name="justification" select="'qualified form of unqualified triple is present'"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','should-depict',string($value),$justification)"/>
+            <xsl:value-of select="$value"/>
+         </xsl:when>
+         <xsl:when test="$predicate = $qualified-object-predicates">
+            <xsl:variable name="value" select="'false'"/>
+            <xsl:variable name="justification" select="'predicate is redundant part of a qualified form'"/>
+            <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','should-depict',string($value),$justification)"/>
+            <xsl:value-of select="$value"/>
+         </xsl:when>
          <xsl:when test="@rdf:resource | @rdf:nodeID | @rdf:datatype | @xml:lang | text()">
             <xsl:variable name="value" select="'true'"/>
             <xsl:variable name="justification" select="'known structure'"/>
@@ -1259,7 +1340,7 @@ $rdf:type
             </xsl:for-each>
 
             <xsl:variable name="value" select="'false'"/>
-            <xsl:variable name="justification" select="'otherwise'"/>
+            <xsl:variable name="justification" select="'should depict otherwise'"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,'vis-art-uri','should-depict',string($value),$justification)"/>
             <xsl:value-of select="$value"/>
          </xsl:otherwise>
@@ -1271,11 +1352,14 @@ $rdf:type
    <xsl:if test="$should-depict = 'true'">
 
       <xsl:if test="not(idm:hasIdentified($visual-element-hash,$subject-vnode))">
-         <xsl:message select="concat('          ( = = Drawing subject ',$subject,' )')"/>
+         <xsl:message select="concat('          ® ® ®','')"/>
+         <xsl:message select="concat('          ® ® ® drawing subject ',$subject)"/>
+         <xsl:message select="concat('          ® ® ®','')"/>
          <!-- A bit of a hack to provide a context node for the template's key -->
          <!--xsl:for-each-group select="key('descriptions-by-subject',$subject)
                                       /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)" group-by="."-->
          <xsl:apply-templates select="$subject" mode="default">
+            <!-- Will typically defer to RDF-ABBREV_resource_visual_form_factory_1387 below -->
             <xsl:with-param name="deferrer"     select="$owl:sameAs"/>
             <xsl:with-param name="view-context" select="$subject-view-context"/>
          </xsl:apply-templates>
@@ -1286,21 +1370,26 @@ $rdf:type
       <xsl:if test="not(idm:hasIdentified($visual-element-hash,$object-vnode))">
          <xsl:choose>
             <xsl:when test="$object-is-resource">
-               <xsl:message select="concat('          ( = = Drawing object ',$true-object,' ',$object,' ) ',count(key('descriptions-by-subject',$true-object)),' references',count(//*[@rdf:resource | @rdf:nodeID | @rdf:ID = $object]/@rdf:resource))"/>
+               <xsl:message select="concat('          ®   o','')"/>
+               <xsl:message select="concat('          ®   o drawing true object ',$true-object,' ',
+                                                                   'orig object ',$object,' ',
+                                                           'true object described ',count(key('descriptions-by-subject',$true-object)),' times; ',
+                                                           'references: ',count(//*[@rdf:resource | @rdf:nodeID | @rdf:ID = $object]/@rdf:resource),' ',
+                                                           'in context ',$object-view-context)"/>
+               <xsl:message select="concat('          ®   o','')"/>
                <!-- A bit of a hack to provide a context node for the template's key -->
-               <xsl:for-each-group select="if (count(key('descriptions-by-subject',if ($q-object) then $q-object else $object)
-                                                       /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)))
-                                              then  key('descriptions-by-subject',if ($q-object) then $q-object else $object)
-                                                       /(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)
-                                              else //*[@rdf:resource | @rdf:nodeID | @rdf:ID = $object]/(@rdf:resource | @rdf:nodeID | @rdf:ID)" group-by="."> <!-- second condition for 'sinks' -->
+               <xsl:for-each-group select="if (count(key('descriptions-by-subject', $true-object)/(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)))
+                                              then   key('descriptions-by-subject', $true-object)/(@rdf:about | @rdf:resource | @rdf:nodeID | @rdf:ID)
+                                           else //*[@rdf:resource | @rdf:nodeID | @rdf:ID = $true-object]/(@rdf:resource | @rdf:nodeID | @rdf:ID)" group-by="."> <!-- second condition for 'sinks' -->
                   <xsl:apply-templates select="current-group()[1]" mode="default">
+                     <!-- Typically defers to RDF-ABBREV_resource_visual_form_factory_1387 -->
                      <xsl:with-param name="deferrer"     select="$owl:sameAs"/>
                      <xsl:with-param name="view-context" select="$object-view-context"/>
                   </xsl:apply-templates>
                </xsl:for-each-group>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:message select="'          ( = = Drawing object with old, bad way = = = = = = = = = = = = = = = = = = = = = )'"/>
+               <xsl:message select="'          ( = = Drawing object with old, BAD WAY = = = = = = = = = = = = = = = = = = = = = )'"/>
                <!-- Mint the object-vnode for the literal -->
                <!-- This should be done by calling the original visual-element template, 
                     given a new context (as is done above). -->
@@ -1318,8 +1407,8 @@ $rdf:type
                   <xsl:with-param name="font-color"          select="$object-font-color"/>
                   <xsl:with-param name="width"               select="$object-width"/>
                   <xsl:with-param name="h-text-pad"          select="$h-text-pad"/>
-                  <xsl:with-param name="draw-fill"           select="$draw-fill"/>
-                  <xsl:with-param name="wrap-text"           select="$wrap-text"/>
+                  <xsl:with-param name="draw-fill"           select="$object-draw-fill"/>
+                  <xsl:with-param name="wrap-text"           select="$object-wrap-text"/>
                   <xsl:with-param name="ignore"              select="idm:getIdentifier($visual-element-hash, $object-vnode)"/>
                </xsl:call-template>
             </xsl:otherwise>
@@ -1330,14 +1419,16 @@ $rdf:type
       </xsl:if>
 
       <!-- Make the edge from the resource to the object-vnode -->
-      <xsl:message select="'          ( = Drawing edge = = = = = = = )'"/>
+      <xsl:message select="'          ® ~ o'"/>
+      <xsl:message select="'          ® ~ o drawing edge'"/>
+      <xsl:message select="'          ® ~ o'"/>
       <xsl:call-template name="edge">
          <xsl:with-param name="id"           select="$gedge-id"/>
 
          <xsl:with-param name="from"         select="$from"/> <!-- Encodes *force* directionality; not necessarily _visual_ directionality. -->
          <xsl:with-param name="to"           select="$to"/>   <!-- Encodes *force* directionality; not necessarily _visual_ directionality. -->
 
-         <xsl:with-param name="depicts"      select="$predicate"/>
+         <xsl:with-param name="depicts"      select="$depicts"/>
 
          <xsl:with-param name="line-style"   select="$line-style"/>
          <xsl:with-param name="line-width"   select="$line-width"/>
@@ -1547,6 +1638,7 @@ $rdf:type
                                                             <xsl:message select="concat('class-fill: ',.)"/>
                                                          </xsl:for-each-->
       <!--xsl:message select="concat('CC: ',$rdf-types-as-string,' ',$class-fill)"/-->
+      <!--xsl:message select="concat('HERE: ',pmm:tryQName($resource))"/-->
 
 
 
@@ -1571,7 +1663,7 @@ $rdf:type
                <xsl:message select="acv:explainResource($resource,$owl:sameAs,
                                                         'vnode id',$resource,
                                                         $value,
-                                                        'otherwise',$defin)"/>
+                                                        'id otherwise',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
@@ -1581,7 +1673,7 @@ $rdf:type
 
       <!-- Sub-surfacing variables -->
 
-      <xsl:variable name="should-depict">
+      <xsl:variable name="should-depict"> <!-- a node -->
          <xsl:choose>
             <xsl:when test="$rdf-types = $blacklisted-subject-classes">
                <xsl:copy-of select="'false'"/>
@@ -1681,7 +1773,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="'1 1 1'"/> <!-- white -->
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$vsr:fill,$value,$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$vsr:fill,$value,$visualFormURI,'fill color otherwise',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
@@ -1700,7 +1792,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="''"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape','',$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'shape','',$visualFormURI,'shape otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -1732,7 +1824,7 @@ $rdf:type
             <xsl:when test="$draw-literal-rdf">NO</xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="'NO'"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'draw-stroke',$value,$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'draw-stroke',$value,$visualFormURI,'draw stroke otherwise',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
@@ -1761,12 +1853,31 @@ $rdf:type
          </xsl:choose>
       </xsl:variable>
 
+      <xsl:variable name="namespace-abbreviation-labels">
+         <xsl:for-each select="$namespace-strategy/visual-form[@prefix]">
+            <!-- Essentially a re-implementation of edu.rpi.tw.string.pmm.PrefixMappings -->
+            <!--xsl:message  select="concat($resource,' ',@prefix)"/-->
+            <xsl:if test="starts-with($resource,namespace)">
+               <!--xsl:message  select="concat(@prefix,':',substring-after($resource,namespace))"/-->
+               <abbreviation length="{string-length(substring-after($resource,namespace))}">
+                  <xsl:value-of select="concat(@prefix,':',substring-after($resource,namespace))"/>
+               </abbreviation>
+            </xsl:if>
+         </xsl:for-each>
+      </xsl:variable>
+      <!--xsl:message  select="concat('NUM PREFIXES: ',count($namespace-strategy/visual-form[@prefix]))"/>
+      <xsl:message  select="concat('NUM PREFIXES: ',$namespace-abbreviation-labels/abbreviation[@length = min($namespace-abbreviation-labels/abbreviation/@length)][1],' of ',count($namespace-abbreviation-labels))"/-->
+
       <xsl:variable name="label">
          <xsl:choose>
             <!--xsl:when test="true()">
                <xsl:value-of select="$resource"/>
                <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$rdfs:label,$resource,$visualFormURI,'debug',$defin)"/>
             </xsl:when-->
+            <xsl:when test="$namespace-abbreviation-labels/abbreviation[@length = min($namespace-abbreviation-labels/abbreviation/@length)][1]">
+               <xsl:value-of select="$namespace-abbreviation-labels/abbreviation[@length = min($namespace-abbreviation-labels/abbreviation/@length)][1]"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$rdfs:label,pmm:tryQName($resource),$visualFormURI,'vsr prefix mapping',$defin)"/>
+            </xsl:when>
             <xsl:when test="$sink">
                <xsl:variable name="value" select="pmm:tryQName($resource)"/>
                <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$rdfs:label,$value,$visualFormURI,'sink',$defin)"/>
@@ -1820,7 +1931,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="$resource"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$rdfs:label,$resource,$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,$rdfs:label,$resource,$visualFormURI,'label otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -1832,7 +1943,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="''"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text','',$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'fit-text','',$visualFormURI,'fit text otherwise',$defin)"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -1845,7 +1956,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="'5'"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad',$value,$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'h-text-pad',$value,$visualFormURI,'h text pad otherwise',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
@@ -1864,7 +1975,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="''"/>
-               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'h-align-text',string($value),$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message  select="acv:explainResource($resource,$owl:sameAs,'h-align-text',string($value),$visualFormURI,'h align text otherwise',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
@@ -1895,7 +2006,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="''"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'notes',$value,$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'notes',$value,$visualFormURI,'notes otherwise',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
@@ -1923,7 +2034,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="''"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,$vsr:tooltip,$value,$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,$vsr:tooltip,$value,$visualFormURI,'tooltip otherwise',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
@@ -1953,7 +2064,7 @@ $rdf:type
             </xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="false()"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'a-root',string($value),$visualFormURI,'otherwise',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'a-root',string($value),$visualFormURI,'a root otherwise',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>

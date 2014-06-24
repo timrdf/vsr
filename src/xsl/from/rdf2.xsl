@@ -160,12 +160,16 @@
    <xsl:if test="string-length($prefix-mappings)">
       <xsl:call-template name="node">
          <xsl:with-param name="id"                  select="'--PREFIX MAPPINGS USED--'"/>
-         <xsl:with-param name="depicts"             select="'prefix mappings for'"/>
+         <xsl:with-param name="depicts"             select="concat($visual-artifact-uri,'/prefix-mappings')"/>
+         <xsl:with-param name="context"             select="''"/>
          <xsl:with-param name="visual-artifact-uri" select="$visual-artifact-uri"/>
          <xsl:with-param name="label"               select="$prefix-mappings"/>
-         <xsl:with-param name="url"                 select="'TODO'"/>
-         <xsl:with-param name="x"                   select="$separation[1]"/>
-         <xsl:with-param name="y"                   select="$separation[2]"/>
+         <xsl:with-param name="url"                 select="concat($visual-artifact-uri,'/prefix-mappings')"/>
+         <!--xsl:with-param name="x"                   select="$separation[1]"/>
+         <xsl:with-param name="y"                   select="$separation[2]"/-->
+         <xsl:with-param name="x"                   select="0"/>
+         <xsl:with-param name="y"                   select="0"/>
+         <xsl:with-param name="lock"                select="true()"/>
          <xsl:with-param name="h-align-text"        select="'0'"/>  <!-- left (TODO: $graffle.h-align-text.left and ont modeling of it.) -->
          <xsl:with-param name="fit-text"            select="'Vertical'"/>
       </xsl:call-template>
@@ -1000,6 +1004,9 @@
    <xd:param name="qualified-object-predicates">
       By default, an empty list. e.g. sio:refers-to, prov:entity
    </xd:param>
+   <xd:param name="qualification-pairs">
+      By default, an empty list. e.g. prov:Usage,prov:used 
+   </xd:param>
    <xd:param name="blacklisted-predicates">
       By default, an empty list.
    </xd:param>
@@ -1041,6 +1048,7 @@
 
    <xsl:param name="qualifying-predicates"            select="()" tunnel="yes"/>
    <xsl:param name="qualified-object-predicates"      select="()" tunnel="yes"/>
+   <xsl:param name="qualification-pairs"              select="()" tunnel="yes"/>
 
    <xsl:param name="blacklisted-predicates"           select="()"             />
    <xsl:param name="blacklisted-predicate-namespaces" select="()"             />

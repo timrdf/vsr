@@ -69,6 +69,9 @@
    <xd:param name="resource" type="xs:string">
       The URI of the Resource being visited.
    </xd:param>
+   <xd:param name="deferrer" type="xs:string">
+      The handler that called this handler.
+   </xd:param>
    <xd:param name="indent">
    </xd:param>
 </xd:doc>
@@ -89,7 +92,7 @@
       </xsl:choose>
    </xsl:variable>
 
-   <xsl:value-of select="concat($indent,pmm:tryQName($resource),' ( ® ',pmm:bestLocalName($actor),' ) ',$visitToken)"/>
+   <xsl:value-of select="concat($indent,pmm:tryQName($resource),' ( ® ',pmm:bestLocalName($actor),' o.b.o. ',pmm:bestLocalName($deferrer),') ',$visitToken)"/>
 </xsl:function>
 
 
@@ -339,7 +342,7 @@
       The reason that <span class="paramName">actor</span> took the <span class="paramName">action</span>.
    </xd:param>
 </xd:doc>
-<xsl:function name="acv:explainTriple">
+<xsl:function name="acv:explainTriple"> <!-- 6 -->
    <xsl:param name="subject"       as="xs:string"/>
    <xsl:param name="predicate"     as="xs:string"/>
    <xsl:param name="object"        as="xs:string"/>
@@ -354,7 +357,7 @@
       pmm:tryQName($justification),'] ( x®~oA ',pmm:bestLocalName($actor),' )')"/>
    <xsl:variable name="decisionURI">
       <xsl:choose>
-         <xsl:when test="$log-visual-decisions">
+         <xsl:when test="$log-visual-decisions"> <!-- TODO: calling the 8 param with empties on 2 -->
             <xsl:value-of select="log:explainTriple($log,$subject,$predicate,$object,
                                                          $actor,
                                                          '',$action,'',
@@ -399,14 +402,14 @@
       visual <span class="paramName">property</span>=<span class="paramName">value</span>.
    </xd:param>
 </xd:doc>
-<xsl:function name="acv:explainTriple">
+<xsl:function name="acv:explainTriple"> <!-- 8 -->
    <xsl:param name="subject"       as="xs:string"/>
    <xsl:param name="predicate"     as="xs:string"/>
    <xsl:param name="object"        as="xs:string"/>
    <xsl:param name="actor"         as="xs:string"/>
-   <xsl:param name="visualForm"    as="xs:string"/>
-   <xsl:param name="property"      as="xs:string"/>
-   <xsl:param name="value"         as="xs:string"/>
+   <xsl:param name="visualForm"    as="xs:string"/> <!-- \            -->
+   <xsl:param name="property"      as="xs:string"/> <!--  |> "action" -->
+   <xsl:param name="value"         as="xs:string"/> <!-- /            -->
    <xsl:param name="justification" as="xs:string"/>
 
    <xsl:variable name="description" select="concat(
@@ -430,7 +433,44 @@
    <xsl:value-of select="concat($description,', decision # ',pmm:bestLocalName($decisionURI))"/>
 </xsl:function>
 
-<xsl:function name="acv:explainTriple">
+<xd:doc>
+   <xd:short>Report a justification for an actor performing a visual mapping decision for a domain relation.</xd:short>
+   <xd:detail><b></b></xd:detail>
+   <xd:param name="subject" type="xs:string">
+      The subject of the relation whose visual mapping is being considered.
+   </xd:param>
+   <xd:param name="predicate" type="xs:string">
+      The predicate of the relation whose visual mapping is being considered.
+   </xd:param>
+   <xd:param name="object" type="xs:string">
+      The object of the relation whose visual mapping is being considered.
+   </xd:param>
+   <xd:param name="actor" type="xs:string">
+      The URI of the template that determined the visual mapping 
+      <span class="paramName">action</span> for the domain relation.
+   </xd:param>
+   <xd:param name="visualForm" type="xs:string">
+      The visual property of the domain relation.
+   </xd:param>
+   <xd:param name="from_domain" type="xs:string">
+      ??? <span class="paramName">property</span>
+   </xd:param>
+   <xd:param name="to_domain" type="xs:string">
+      ??? <span class="paramName">property</span>
+   </xd:param>
+   <xd:param name="from" type="xs:string">
+      ??? <span class="paramName">property</span>
+   </xd:param>
+   <xd:param name="to" type="xs:string">
+      ???? <span class="paramName">property</span>.
+   </xd:param>
+   <xd:param name="justification" type="xs:string">
+      The reason that <span class="paramName">actor</span> determined that the 
+      domain relation should be shown with 
+      visual <span class="paramName">property</span>=<span class="paramName">value</span>.
+   </xd:param>
+</xd:doc>
+<xsl:function name="acv:explainTriple"> <!-- 10 -->
    <xsl:param name="subject"       as="xs:string"/>
    <xsl:param name="predicate"     as="xs:string"/>
    <xsl:param name="object"        as="xs:string"/>
@@ -450,17 +490,16 @@
    <xsl:param name="justification" as="xs:string"/>
 
    <xsl:variable name="description" select="concat(
-      $in,$in, 
-      'from_domain = ',$from_domain,
-      'from        = ',$from,
-      'to_domain   = ',$to_domain,
-      'to          = ',$to,
+      $in,$in,'from_domain = ',$from_domain,' (and) ',$NL,
+      $in,$in,'from        = ',$from,' (and) ',$NL,
+      $in,$in,'to_domain   = ',$to_domain,' (and) ',$NL,
+      $in,$in,'to          = ',$to,
       ' [b/c ',pmm:tryQName($justification),'] ',
       '( x®~o^_ ',pmm:bestLocalName($actor),' )')"/>
 
    <xsl:variable name="decisionURI">
       <xsl:choose>
-         <xsl:when test="$log-visual-decisions">
+         <xsl:when test="$log-visual-decisions"> <!-- TODO: make the $from and $to be graphic URIs? -->
             <xsl:value-of select="log:explainTriple($log,
                                                     $subject, $predicate, $object,
                                                     $actor, 

@@ -28,7 +28,7 @@
    <xsl:param name="id"/>
 	<!-- xsl:value-of select="if (false()) then xfm:atoid($id) else $id"/-->
 	<xsl:variable name="value" select="1000 + xfm:atoid-smaller($id)"/>
-   <xsl:message select="concat('             GRAFFLE view-id ',$value,' from ',$id)"/>
+   <xsl:message select="concat('               vsr:view-id ',$value,' from ',$id,' (@ graffle.xsl)')"/>
    <xsl:value-of select="$value"/>
 </xsl:function>
 
@@ -94,13 +94,13 @@
                             property when it was mentioned by multiple local restrictions.
    </xd:param>
    <xd:param name="id">Unique string within this current Visualization process that identifies the :Visual_form
-                                                created by calling this template. 
-                                                URI of the :Visual_form created will be ~ concat($visual-artifact-uri,'...',hash($id).
-                                                This parameter is provided for a :Visual_strategy author that does not care about
-                                                naming the :Visual_forms with URIs but can provide strings unique enough to identify them. 
-                                                For example, concatenating the sorted URIs of a list into a single string can be an identifier
-                                                for a bnode list of classes.
-                        Deprecated? Client-side?
+                       created by calling this template. 
+                       URI of the :Visual_form created will be ~ concat($visual-artifact-uri,'...',hash($id).
+                       This parameter is provided for a :Visual_strategy author that does not care about
+                       naming the :Visual_forms with URIs but can provide strings unique enough to identify them. 
+                       For example, concatenating the sorted URIs of a list into a single string can be an identifier
+                       for a bnode list of classes.
+                       Deprecated? Client-side?
    </xd:param>
    <xd:param name="uri">URI of this :Visual_form. TODO: deprecate in favor of 'context' and 'id'.</xd:param>
    <xd:param name="isDefinedBy">rdfs:isDefinedBy of the <tt>depicts</tt> -- if the latter is a vocabulary term. (A bit special case at this generic level...).</xd:param>
@@ -108,6 +108,7 @@
    <xd:param name="shape">The shape of the visual node to create. 'Rectangle', 'Circle', 'Cross'.</xd:param>
    <xd:param name="x">The position of the visual node, from upper left 0,0.</xd:param>
    <xd:param name="y">The position of the visual node, from upper left 0,0.</xd:param>
+   <xd:param name="lock">Lock the position and sizing of the shape.</xd:param>
    <xd:param name="rotation">Angle to rotate the visual node. Degrees; -90 = 270.</xd:param>
    <xd:param name="width">If undefined, fits to text label</xd:param>
    <xd:param name="height"></xd:param>
@@ -156,6 +157,7 @@
 	<xsl:param name="rotation"/>
 	<xsl:param name="width"/>
 	<xsl:param name="height"/>
+	<xsl:param name="lock" select="false()"/>
 
 	<xsl:param name="magnets"/>
 
@@ -182,14 +184,14 @@
 	<xsl:param name="a-root"/>
 	<xsl:param name="ignore"/>
 
-   <xsl:message select="concat('             GRAFFLE node given vid ',$id)"/>
+   <xsl:message select="concat('                    2y:node vid ',$id)"/>
 
 	<xsl:variable name="new_width"  select="if ($width)  then $width  else xfm:graffle-width-of-text( $label,$shape)"/>
 	<xsl:variable name="new_height" select="if ($height) then $height else xfm:graffle-height-of-text($label,$shape)"/>
 
-   <xsl:message select="concat('             GRAFFLE node height=',$height, ' width=', $width,' -- new_height=',$new_height,' new_width=',$new_width)"/>
+   <xsl:message select="concat('                    2y:node height=',$height, ' width=', $width,' -- new_height=',$new_height,' new_width=',$new_width)"/>
 
-   <xsl:variable name="local-path" select="'#visual_form_'"/>
+   <xsl:variable name="local-path" select="'/graphic/'"/>
 
    <xsl:variable name="vid">
        <xsl:choose>
@@ -213,6 +215,11 @@
 	<dict>
 		<key>ID</key>
 		<integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
+
+      <xsl:if test="$lock">
+         <key>IsLocked</key>
+         <string>YES</string>
+      </xsl:if>
 
 		<key>Class</key>
 		<string>ShapedGraphic</string>
@@ -263,7 +270,7 @@
          <shape graffle="Cross"     vsr="Cross"/>
       </xsl:variable>
 		<key>Shape</key>
-		<xsl:message select="concat('             GRAFFLE node shape=',$shape,' -- ',if ($map/shape[@vsr = $shape]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle')"/>
+		<xsl:message select="concat('               node shape=',$shape,' -- ',if ($map/shape[@vsr = $shape]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle')"/>
 		<string> <xsl:value-of select="if ($map[shape[@vsr = $shape]]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle'"/> </string>
 
       <!--xsl:message select="concat($depicts,' height ',$height,' new_height ',$new_height)"/-->
@@ -529,9 +536,10 @@
 	<xsl:param name="line-style"/>
 	<xsl:param name="stroke-color">0.701961</xsl:param>
 
-   <xsl:message select="concat('             GRAFFLE edge given id       ',$id)"/>
-   <xsl:message select="concat('             GRAFFLE edge given from vid ',$from)"/>
-   <xsl:message select="concat('             GRAFFLE edge given to   vid ',$to)"/>
+   <xsl:message select="concat('               2y:edge given id       ',$id)"/>
+   <xsl:message select="concat('               2y:edge given depicts  ',$depicts)"/>
+   <xsl:message select="concat('               2y:edge given from vid ',$from)"/>
+   <xsl:message select="concat('               2y:edge given to   vid ',$to)"/>
 
 	<dict>
 		<key>ID</key>
@@ -544,7 +552,7 @@
                <key>http://www.w3.org/2002/07/owl#sameAs</key>
                <string> <xsl:value-of select="$uri"/> </string>
             </xsl:if>
-            <xsl:if test="string-length($uri)">
+            <xsl:if test="string-length($depicts)">
                <key>http://open.vocab.org/terms/depicts</key>
                <string> <xsl:value-of select="$depicts"/> </string>
             </xsl:if>
