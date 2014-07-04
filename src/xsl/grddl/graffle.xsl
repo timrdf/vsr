@@ -54,6 +54,15 @@
             '@prefix graffle: &lt;http://purl.org/twc/vocab/vsr/graffle#&gt; .',$NL
          )"/>
 
+      <!--
+         <key>GraphicsList</key>
+         <array>
+           <dict>
+             <key>Bounds</key>
+             <string>{{0, 0}, {10, 10}}</string>
+             <key>Class</key>
+             <string>ShapedGraphic</string>
+      -->
       <xsl:apply-templates select="//key[.='GraphicsList']/following-sibling::array[1]/dict" mode="turtle"/>
    <!--/rdf:RDF-->
 </xsl:template>
