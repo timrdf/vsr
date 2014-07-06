@@ -115,8 +115,9 @@
       <xsl:number select="." count="svg:*" level="any"/>
    </xsl:variable>
 
+   <!-- if (@id) then sof:checksum(@id) else $number -->
    <xsl:value-of select="concat($NL,
-      '&lt;graphic/',if (@id) then sof:checksum(@id) else $number,'&gt;',$NL,
+      '&lt;graphic/',$number,'&gt;',$NL,
       '   a vsr:Graphic, svg:',local-name((svg:circle | svg:g | svg:rect)[1]),';',$NL,
       if (@id) 
          then concat('   dcterms:identifier ',$DQ,@id,$DQ,';',$NL) 
