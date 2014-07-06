@@ -143,7 +143,6 @@
 </xsl:variable>
 
 <xsl:variable name="LINKSETS-anonymous-instance-classes" select="(
-   $datafaqs:CKANDataset
 )"/>
 
 <!--
@@ -256,10 +255,13 @@
    $dcat:Distribution,
    'http://purl.org/dc/terms/IMT',
    $tag:Tag,
-   $sd:NamedGraph
+   $sd:NamedGraph,
+   $vsr:Graphic,
+   'http://purl.org/twc/vocab/vsr/svg#circle'
 )"/>
 
 <xsl:variable name="LINKSETS-blacklisted-predicates" select="(
+   'http://www.holygoat.co.uk/owl/redwood/0.1/tags/taggedWithTag',
    $rdfabbr-blacklisted-predicates,
    $void:subset,
    $dcterms:title,
@@ -288,7 +290,8 @@
    $LINKSETS-class-strategy/visual-form/class/text(),
    $owl:Thing,
    $dcat:Dataset,
-   $sd:Service
+   $sd:Service,
+   $datafaqs:CKANDataset
 )"/>
 
 <xsl:variable name="LINKSETS-blacklisted-object-classes" select="(
@@ -326,16 +329,31 @@
 
    <!-- Gather certain properties -->
    <xsl:variable name="rdf-types"     select="$s/rdf:type/@rdf:resource"/>
+   <xsl:variable name="a-dataset"     select="$dcat:Dataset = $rdf-types or $datafaqs:CKANDataset"/>
    <xsl:variable name="void-triples"  select="$s/void:triples/text()"/>
    <xsl:variable name="void-triplesL">
       <xsl:number value="$void-triples"/>
    </xsl:variable>
-   <xsl:variable name="tags"          select="$s/tag:taggedWithTag/@rdf:resource"/>
-   <xsl:variable name="lodcloud-tags" select="'http://datahub.io/tag/crossdomain', 'http://datahub.io/tag/lifesciences',
-                                              'http://datahub.io/tag/publications','http://datahub.io/tag/usergeneratedcontent',
-                                              'http://datahub.io/tag/media',       'http://datahub.io/tag/government',
-                                              'http://datahub.io/tag/geographic'"/>
+   <xsl:variable name="tags"            select="$s/tag:taggedWithTag/@rdf:resource"/>
+
    <!-- Classify domain form -->
+
+   <!-- Inherit from previous view -->
+   <!-- <file:///localhost/80b4f060-7174-44a3-960f-057f5f4592aa/automatic/graphic/21908>
+           a vsr:Graphic , <http://purl.org/twc/vocab/vsr/svg#circle> ;
+           dcterms:identifier "dataset-eurostat-rdf" ;
+           vsr:depicts <http://datahub.io/dataset/eurostat-rdf> ;
+           rdfs:label "Eurostat" ;
+           vsr:x 591.221649 ;
+           vsr:y 923.862269 .
+   -->
+   <xsl:variable name="sp"                   select="key('descriptions-by-object',$subject)"/>
+   <xsl:for-each select="$sp/*[xfm:uri(.)=$vsr:depicts]">
+      <xsl:message select="concat(@rdf:about,' ',xfm:uri(.))"/>
+   </xsl:for-each>
+   <xsl:variable name="previous-graphic-ref" select="$sp/*[xfm:uri(.)=$vsr:depicts][1]/../(@rdf:about|@rdf:resource|rdf:nodeID)"/>
+   <xsl:variable name="previous-graphic"     select="key('descriptions-by-subject',$previous-graphic-ref)"/>
+   <xsl:message select="concat(' previous graphic of ',$subject,': ',$previous-graphic-ref,' ',count($previous-graphic/vsr:x))"/>
 
    <!-- Determine visual properties based on classifications -->
    <xsl:variable name="label">
@@ -363,9 +381,9 @@
 
    <xsl:variable name="shape">
       <xsl:choose>
-      <xsl:when test="false() and $dcat:Dataset = $rdf-types">    
+      <xsl:when test="$a-dataset">    
          <xsl:value-of select="'Circle'"/> 
-         <xsl:message select="acv:explainResource($subject,$owl:sameAs,'shape','Circle','$visual-form-uri','a dcat:Dataset')"/>
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,'shape','Circle','$visual-form-uri','a dcat:Dataset or datafaqs:CKANDataset')"/>
       </xsl:when>
       <xsl:otherwise>
          <xsl:value-of select="''"/> 
@@ -374,9 +392,37 @@
       </xsl:choose>
    </xsl:variable>
 
+   <xsl:variable name="x">
+      <xsl:choose>
+      <xsl:when test="$previous-graphic/vsr:x">    
+         <xsl:variable name="value" select="$previous-graphic/vsr:x[1]/text()"/>
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,$vsr:x,string($value),'$visual-form-uri','previous graphic')"/>
+         <xsl:value-of select="$value"/> 
+      </xsl:when>
+      <xsl:otherwise>
+         <xsl:value-of select="''"/> 
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,$vsr:x,'','$visual-form-uri','xsl:otherwise')"/>
+      </xsl:otherwise>
+      </xsl:choose>
+   </xsl:variable>
+
+   <xsl:variable name="y">
+      <xsl:choose>
+      <xsl:when test="$previous-graphic/vsr:y">    
+         <xsl:variable name="value" select="$previous-graphic/vsr:y[1]/text()"/>
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,$vsr:y,string($value),'$visual-form-uri','previous graphic')"/>
+         <xsl:value-of select="$value"/> 
+      </xsl:when>
+      <xsl:otherwise>
+         <xsl:value-of select="''"/> 
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,$vsr:x,'','$visual-form-uri','xsl:otherwise')"/>
+      </xsl:otherwise>
+      </xsl:choose>
+   </xsl:variable>
+
    <xsl:variable name="height">
       <xsl:choose>
-      <xsl:when test="$dcat:Dataset = $rdf-types and string-length($void-triples)">    
+      <xsl:when test="$a-dataset and string-length($void-triples)">    
          <xsl:variable name="value" select="50 * 2 * math:sqrt(math:log(xs:double($void-triples)) div 3.14159)"/>
          <xsl:value-of select="$value"/> 
          <xsl:message select="acv:explainResource($subject,$owl:sameAs,'height',string($value),'$visual-form-uri','a dcat:Dataset')"/>
@@ -390,7 +436,7 @@
 
    <xsl:variable name="width">
       <xsl:choose>
-      <xsl:when test="$dcat:Dataset = $rdf-types and string-length($void-triples)">    
+      <xsl:when test="$a-dataset and string-length($void-triples)">    
          <xsl:variable name="value" select="50 * 2 * math:sqrt(math:log(xs:double($void-triples)) div 3.14159)"/>
          <xsl:message select="acv:explainResource($subject,$owl:sameAs,'height',string($value),'$visual-form-uri','a dcat:Dataset')"/>
          <xsl:value-of select="$value"/> 
@@ -404,7 +450,7 @@
 
    <xsl:variable name="fit-text">
       <xsl:choose>
-      <xsl:when test="$dcat:Dataset = $rdf-types and string-length($void-triples)">    
+      <xsl:when test="$a-dataset and string-length($void-triples)">    
          <xsl:variable name="value" select="'Overflow'"/>
          <xsl:value-of select="$value"/> 
          <xsl:message select="acv:explainResource($subject,$owl:sameAs,'fit-text',$value,'$visual-form-uri','a dcat:Dataset')"/>
@@ -506,7 +552,7 @@
 
    <xsl:variable name="draw-stroke">
       <xsl:choose>
-      <xsl:when test="$dcat:Dataset = $rdf-types and string-length($void-triples)">    
+      <xsl:when test="$a-dataset and string-length($void-triples)">    
          <xsl:variable name="value" select="true()"/>
          <xsl:value-of select="$value"/> 
          <xsl:message select="acv:explainResource($subject,$owl:sameAs,'draw-stroke','true','$visual-form-uri','a dcat:Dataset')"/>
@@ -552,6 +598,8 @@
 
       <xsl:with-param name="label"                         select="$label"                                tunnel="yes"/>
       <xsl:with-param name="shape"                         select="$shape"                                tunnel="yes"/>
+      <xsl:with-param name="x"                             select="$x"                                    tunnel="yes"/>
+      <xsl:with-param name="y"                             select="$y"                                    tunnel="yes"/>
       <xsl:with-param name="height"                        select="$height"                               tunnel="yes"/>
       <xsl:with-param name="width"                         select="$width"                                tunnel="yes"/>
       <xsl:with-param name="fit-text"                      select="$fit-text"                             tunnel="yes"/>
@@ -631,6 +679,7 @@
             <xsl:with-param name="id"           select="concat($subject,$predicate,$object)"/>
             <xsl:with-param name="from"         select="$void-targets[1]"/>
             <xsl:with-param name="to"           select="$void-targets[2]"/>
+            <xsl:with-param name="depicts"      select="$subject"/>
             <xsl:with-param name="label"        select="$object"/>
             <xsl:with-param name="notes"        select="$void-triples"/>
             <!--xsl:with-param name="font-color" select=""/>
@@ -664,21 +713,22 @@
 
    <!-- We don't apply any logic in this default template,
         but we pass down the visual strategy parameters to the core RDF templates. -->
-   <!--xsl:apply-templates select="." mode="blacklist_checker">
+   <xsl:apply-templates select="." mode="blacklist_checker">
       <xsl:with-param name="deferrer" select="$owl:sameAs"/>
 
-      <!- Predicates in these lists are rendered in forms other than visual edges ->
+      <!-- Predicates in these lists are rendered in forms other than visual edges -->
       <xsl:with-param name="anonymous-instance-classes"       select="$LINKSETS-anonymous-instance-classes"     tunnel="yes"/>
-      <xsl:with-param name="class-strategy"                   select="$LINKSETS-class-strategy" tunnel="yes"/>
+      <xsl:with-param name="class-strategy"                   select="$LINKSETS-class-strategy"      tunnel="yes"/>
       <xsl:with-param name="namespace-strategy"               select="$LINKSETS-namespace-strategy"/>
       <xsl:with-param name="label-predicates"                 select="$LINKSETS-label-predicates"    tunnel="yes"/>
       <xsl:with-param name="in-label-predicates"              select="$LINKSETS-in-label-predicates" tunnel="yes"/>
       <xsl:with-param name="notes-predicates"                 select="$LINKSETS-notes-predicates"/>
+      <xsl:with-param name="tooltip-predicates"               select="$LINKSETS-tooltip-predicates"  tunnel="yes"/>
 
-      <!- Alter the characteristics of the visual edges that remain. ->
+      <!-- Alter the characteristics of the visual edges that remain. -->
       <xsl:with-param name="swap-directionality-predicates"   select="$LINKSETS-swap-directionality-predicates"/>
 
-      <!- Predicates in these lists are rendered in forms other than visual edges, or are simply excluded. ->
+      <!-- Predicates in these lists are rendered in forms other than visual edges, or are simply excluded. -->
       <xsl:with-param name="blacklisted-subjects"             select="$LINKSETS-blacklisted-subjects"/>
       <xsl:with-param name="blacklisted-subject-namespaces"   select="$LINKSETS-blacklisted-subject-namespaces"/>
       <xsl:with-param name="blacklisted-subject-classes"      select="$LINKSETS-blacklisted-subject-classes"/>
@@ -687,7 +737,7 @@
       <xsl:with-param name="blacklisted-objects"              select="$LINKSETS-blacklisted-objects"/>
       <xsl:with-param name="blacklisted-object-classes"       select="$LINKSETS-blacklisted-object-classes"/>
       <xsl:with-param name="blacklisted-object-namespaces"    select="()"/>
-   </xsl:apply-templates-->
+   </xsl:apply-templates>
 </xsl:template>
 
 </xsl:transform>
