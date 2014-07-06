@@ -553,7 +553,7 @@
                <string> <xsl:value-of select="$uri"/> </string>
             </xsl:if>
             <xsl:if test="string-length($depicts)">
-               <key>http://open.vocab.org/terms/depicts</key>
+               <key>http://purl.org/twc/vocab/vsr#depicts</key>
                <string> <xsl:value-of select="$depicts"/> </string>
             </xsl:if>
       </dict>
