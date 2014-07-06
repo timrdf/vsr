@@ -45,10 +45,12 @@
 <xsl:variable name="vsr:Prevent_default_processing"      select="concat($vsr,'Prevent_default_processing')"/>
 
 <!-- Abstract Visual Representation -->
-<xsl:variable name="vsr:Root"                         select="concat($vsr,'Root')"/>
-<xsl:variable name="vsr:Leaf"                         select="concat($vsr,'Leaf')"/>
+<xsl:variable name="vsr:Root"                            select="concat($vsr,'Root')"/>
+<xsl:variable name="vsr:Leaf"                            select="concat($vsr,'Leaf')"/>
 <xsl:variable name="vsr:depicts"                         select="concat($vsr,'depicts')"/>
 <xsl:variable name="vsr:fill"                            select="concat($vsr,'fill')"/>
+<xsl:variable name="vsr:x"                               select="concat($vsr,'x')"/>
+<xsl:variable name="vsr:y"                               select="concat($vsr,'y')"/>
 <xsl:variable name="vsr:stroke"                          select="concat($vsr,'stroke')"/>
 <xsl:variable name="vsr:from"                            select="concat($vsr,'from')"/>
 <xsl:variable name="vsr:from_domain"                     select="concat($vsr,'from_domain')"/>
@@ -57,8 +59,9 @@
 <xsl:variable name="vsr:to_domain"                       select="concat($vsr,'to_domain')"/>
 <xsl:variable name="vsr:tooltip"                         select="concat($vsr,'tooltip')"/>
 
-<xsl:variable name="vsr:shape"                          select="concat($vsr,'shape')"/>
-<xsl:variable name="vsr:Circle"                         select="concat($vsr,'Circle')"/>
+<xsl:variable name="vsr:shape"                           select="concat($vsr,'shape')"/>
+<xsl:variable name="vsr:Graphic"                         select="concat($vsr,'Graphic')"/>
+<xsl:variable name="vsr:Circle"                          select="concat($vsr,'Circle')"/>
 
 <xsl:variable name="vsr:ALL" select="(
    $vsr:VisualElementFactory,
@@ -71,7 +74,8 @@
    $vsr:Bin,
    $vsr:TypedLiteralObjectsValueDataset,
    $vsr:PredicateOccurrenceDataset,
-   $vsr:Prevent_default_processing
+   $vsr:Prevent_default_processing,
+   $vsr:Graphic
 )"/>
 
 </xsl:transform>
