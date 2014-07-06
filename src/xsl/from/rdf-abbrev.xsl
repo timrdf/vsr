@@ -846,7 +846,7 @@ $rdf:type
             <xsl:value-of select="$value"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:variable name="value" select="$predicate"/>
+            <xsl:variable name="value" select="concat(' ',$predicate)"/>
             <xsl:variable name="justification" select="'property is not a qualification'"/>
             <xsl:message  select="acv:explainTriple($subject,$predicate,$object,$owl:sameAs,$visualFormURI,$vsr:depicts,$value,$justification)"/>
             <xsl:value-of select="$value"/>
@@ -1502,6 +1502,8 @@ $rdf:type
    <xsl:param name="fill-color"                                     tunnel="yes"/>
    <xsl:param name="stroke-color2"                                  tunnel="yes"/>
    <xsl:param name="shape"                                          tunnel="yes"/>
+   <xsl:param name="x"                                              tunnel="yes"/>
+   <xsl:param name="y"                                              tunnel="yes"/>
    <xsl:param name="height"                                         tunnel="yes"/>
    <xsl:param name="width"                                          tunnel="yes"/>
    <xsl:param name="fit-text"                                       tunnel="yes"/>
@@ -1698,9 +1700,14 @@ $rdf:type
 
       <xsl:variable name="x">
          <xsl:choose>
+            <xsl:when test="$x">
+               <xsl:variable name="value" select="$x"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,$vsr:x,string($value),$visualFormURI,'provided by deferrer.',$defin)"/>
+               <xsl:value-of select="$value"/>
+            </xsl:when>
             <xsl:when test="$sink">
                <xsl:variable name="value" select="$separation[1]"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'x',string($value),$visualFormURI,'$sink',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,$vsr:x,string($value),$visualFormURI,'$sink',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:when test="$draw-literal-rdf">
@@ -1711,12 +1718,20 @@ $rdf:type
       </xsl:variable>
       <xsl:variable name="y">
          <xsl:choose>
+            <xsl:when test="$y">
+               <xsl:variable name="value" select="$y"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,$vsr:y,string($value),$visualFormURI,'provided by deferrer.',$defin)"/>
+               <xsl:value-of select="$value"/>
+            </xsl:when>
             <xsl:when test="$sink">
                <xsl:variable name="value" select="$separation[2] * (1 + position())"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,'y',string($value),$visualFormURI,'$sink',$defin)"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,$vsr:y,string($value),$visualFormURI,'$sink',$defin)"/>
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:otherwise>
+               <xsl:variable name="value" select="$separation[2] * (1 + position())"/>
+               <xsl:message select="acv:explainResource($resource,$owl:sameAs,$vsr:y,string($value),$visualFormURI,'$sink',$defin)"/>
+               <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -2081,7 +2096,7 @@ $rdf:type
             <xsl:with-param name="id"                  select="$id"/>
 
             <xsl:with-param name="x"                   select="$x"/>
-            <xsl:with-param name="y"                   select="$separation[2] * (1 + position())"/>
+            <xsl:with-param name="y"                   select="$y"/>
             <xsl:with-param name="fill-color"          select="$fill-color"/>
             <xsl:with-param name="shape"               select="$shape"/>
             <xsl:with-param name="height"              select="$height"/>
