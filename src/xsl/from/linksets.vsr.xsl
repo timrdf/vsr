@@ -392,10 +392,12 @@
       </xsl:choose>
    </xsl:variable>
 
+   <xsl:variable name="position-scale" select="4"/>
+
    <xsl:variable name="x">
       <xsl:choose>
       <xsl:when test="$previous-graphic/vsr:x">    
-         <xsl:variable name="value" select="$previous-graphic/vsr:x[1]/text()"/>
+         <xsl:variable name="value" select="$position-scale * ($previous-graphic/vsr:x[1] - 1070) + $position-scale * 1070"/> <!-- DBPedia's center -->
          <xsl:message select="acv:explainResource($subject,$owl:sameAs,$vsr:x,string($value),'$visual-form-uri','previous graphic')"/>
          <xsl:value-of select="$value"/> 
       </xsl:when>
@@ -409,7 +411,7 @@
    <xsl:variable name="y">
       <xsl:choose>
       <xsl:when test="$previous-graphic/vsr:y">    
-         <xsl:variable name="value" select="$previous-graphic/vsr:y[1]/text()"/>
+         <xsl:variable name="value" select="$position-scale * ($previous-graphic/vsr:y[1] - 845) + $position-scale * 845"/> <!-- DBPedia's center -->
          <xsl:message select="acv:explainResource($subject,$owl:sameAs,$vsr:y,string($value),'$visual-form-uri','previous graphic')"/>
          <xsl:value-of select="$value"/> 
       </xsl:when>
