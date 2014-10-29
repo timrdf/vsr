@@ -132,9 +132,12 @@
    "/>
 
    <xsl:for-each select="g:value-of('UserInfo',.)/key">
+      <!-- e.g. keys :
+         vid_given
+      -->
       <xsl:variable name="value" select="./following-sibling::*[1]"/>
       <xsl:choose>
-         <xsl:when test="starts-with($value,'http:')">
+         <xsl:when test="xfm:isURI($value)">
             <!-- Multi-URI values that are delimited with ', ' need to become '>, <', e.g. curieTypeList's value:
                  http://ieeevis.tw.rpi.edu/.../vocab/Commit, http://ieeevis.tw.rpi.edu/../vocab/Minor -->
             <xsl:value-of select="concat('   &lt;',.,'&gt; &lt;',replace($value,', http','&gt;, &lt;http'),'&gt;;',$NL)"/>
@@ -178,6 +181,12 @@
 
 <xsl:variable name="NL" select="'&#xa;'"/>
 <xsl:variable name="DQ">"</xsl:variable>
+
+<xsl:function name="xfm:isURI" as="xs:boolean">
+   <xsl:param name="str" as="xs:string"/>
+   <xsl:variable name="codepoints" select="string-to-codepoints($str)"/>
+   <xsl:sequence select="starts-with($str,'http:') and not(matches($str,'^http.*http:'))"/>
+</xsl:function>
 
 <xsl:function name="sof:checksum" as="xs:integer">
    <xsl:param name="str" as="xs:string"/>
