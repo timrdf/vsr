@@ -55,6 +55,8 @@
          )"/>
 
       <!--
+         Graphics that are *not* grouped appear directly under:
+
          <key>GraphicsList</key>
          <array>
            <dict>
@@ -62,8 +64,29 @@
              <string>{{0, 0}, {10, 10}}</string>
              <key>Class</key>
              <string>ShapedGraphic</string>
+
+
+         Graphics that *are* grouped appear one level deeper:
+
+            <dict>
+               <key>Class</key>
+               <string>Group</string>
+               <key>Graphics</key>
+               <array>
+                  <dict>
+                     <key>Bounds</key>
+                     <string>{{1709.125, 417.52705879661335}, {77, 18}}</string>
+                     <key>Class</key>
+                     <string>ShapedGraphic</string>
+                     <key>FitText</key>
+                     <string>YES</string>
+                     <key>Flow</key>
+                     <string>Resize</string>
+                     <key>ID</key>
+                     <integer>1306</integer>
       -->
-      <xsl:apply-templates select="//key[.='GraphicsList']/following-sibling::array[1]/dict" mode="turtle"/>
+      <!--xsl:apply-templates select="//key[.='GraphicsList']/following-sibling::array[1]/dict" mode="turtle"/> was used before handling grouping -->
+      <xsl:apply-templates select="//dict[g:value-of('Class',.) = 'ShapedGraphic']" mode="turtle"/> <!-- Added to handle grouped graphics Oct 2014 -->
    <!--/rdf:RDF-->
 </xsl:template>
 
