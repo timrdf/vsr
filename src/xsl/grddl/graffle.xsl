@@ -109,7 +109,7 @@
          then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Name',g:value-of('Name',.))),'\\','\\\\'),$DQ,';',$NL) 
    -->
    <xsl:value-of select="concat($NL,
-      '&lt;layer/',position(),'&gt;',$NL,
+      '&lt;layer/',position() - 1,'&gt;',$NL,
       '   a vsr:Graphic, graffle:Layer;',$NL,
       if( 'YES' = g:value-of('Lock',.) ) 
          then concat('   a graffle:Locked;',  $NL) 
