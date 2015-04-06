@@ -50,6 +50,7 @@
    <!--rdf:RDF-->
    <xsl:value-of select="concat(
             '@prefix rdfs:    &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .',$NL,
+            '@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .',$NL,
             '@prefix vsr:     &lt;http://purl.org/twc/vocab/vsr#&gt; .',$NL,
             '@prefix graffle: &lt;http://purl.org/twc/vocab/vsr/graffle#&gt; .',$NL
          )"/>
@@ -86,11 +87,45 @@
                      <integer>1306</integer>
       -->
       <!--xsl:apply-templates select="//key[.='GraphicsList']/following-sibling::array[1]/dict" mode="turtle"/> was used before handling grouping -->
-      <xsl:apply-templates select="//dict[g:value-of('Class',.) = 'ShapedGraphic']" mode="turtle"/> <!-- Added to handle grouped graphics Oct 2014 -->
+      <xsl:apply-templates select="//dict[g:value-of('Class',.) = 'ShapedGraphic']"    mode="turtle"/> <!-- Added to handle grouped graphics Oct 2014 -->
+      <xsl:apply-templates select="//key[.='Layers']/following-sibling::array[1]/dict" mode="layer"/>  <!-- Added to handle layers           Apr 2015 -->
    <!--/rdf:RDF-->
 </xsl:template>
 
+<xsl:template match="dict" mode="layer">
+   <!--
+        <dict>
+           <key>Lock</key>
+           <string>NO</string>
+           <key>Name</key>
+           <string>equiv</string>
+           <key>Print</key>
+           <string>YES</string>
+           <key>View</key>
+           <string>NO</string>
+        </dict>
+   -->
+   <!--
+         then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Name',g:value-of('Name',.))),'\\','\\\\'),$DQ,';',$NL) 
+   -->
+   <xsl:value-of select="concat($NL,
+      '&lt;layer/',position(),'&gt;',$NL,
+      '   a vsr:Graphic, graffle:Layer;',$NL,
+      if( 'YES' = g:value-of('Lock',.) ) 
+         then concat('   a graffle:Locked;',  $NL) 
+         else concat('   a graffle:Unlocked;',$NL),
+      if( string-length(g:value-of('Name',.)) )
+         then concat('   rdfs:label ',$DQ,g:value-of('Name',.),$DQ,';',$NL) 
+         else '',
+      if( 'NO' = g:value-of('View',.) )
+         then concat('   a graffle:Invisible;', $NL) 
+         else concat('   a graffle:Visible;',   $NL),
+      '.',$NL
+   )"/>
+</xsl:template>
+
 <xsl:template match="dict" mode="turtle">
+
    <xsl:value-of select="concat($NL,
       '&lt;',g:value-of('ID',.),'&gt;',$NL,
       '   a vsr:Graphic, graffle:',g:value-of('Class',.),';',$NL,
@@ -104,6 +139,45 @@
          then concat('   rdfs:seeAlso &lt;',g:value-of('url',g:value-of('Link',.)),'&gt;;',$NL) 
          else ''
    )"/>
+
+   <!--
+       <key>GraphicsList</key>
+       <array>
+          <dict>
+             <key>Bounds</key>
+             <string>{{31.625, 548.47413487900235}, {238, 41}}</string>
+             <key>Class</key>
+             <string>ShapedGraphic</string>
+             <key>Layer</key>
+             <integer>3</integer>
+           ...
+       </array>
+       ...
+       <key>Layers</key>
+       <array>
+          <dict>
+             <key>Lock</key>
+             <string>NO</string>
+             <key>Name</key>
+             <string>equiv</string>
+             <key>Print</key>
+             <string>YES</string>
+             <key>View</key>
+             <string>NO</string>
+          </dict>
+          <dict>
+             <key>Lock</key>
+             <string>NO</string>
+             <key>Name</key>
+             <string>restriction</string>
+          ...
+       </array>
+       ...
+   -->
+   <xsl:variable name="layer" select="g:value-of('Layer',.)"/>
+   <xsl:if test="string-length($layer)">
+      <xsl:value-of select="concat('   dcterms:isPartOf &lt;layer/',$layer,'&gt;;',$NL)"/>
+   </xsl:if>
 
    <xsl:variable name="rgb" select="
       if (g:value-of('Style',.) and 
