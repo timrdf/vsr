@@ -14,6 +14,7 @@
    xmlns:xfm="transform namespace"
    xmlns:pmm="edu.rpi.tw.string.pmm"
    xmlns:sof="http://stackoverflow.com/questions/6753343/using-xsl-to-make-a-hash-of-xml-file"
+   xmlns:msg20090200215="http://www.oxygenxml.com/archives/xsl-list/200902/msg00215.html"
    exclude-result-prefixes="g xfm">
 <!--xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/-->
 <xsl:output method="text"/>
@@ -47,87 +48,113 @@
 <xsl:template match="/">
    <!-- TODO: use the modification date to create alternates of those that were minted during the visualization process.
       the latest alternate can be found, and the series of alternates can be clustered into "no change" -->
-   <!--rdf:RDF-->
    <xsl:value-of select="concat(
             '@prefix rdfs:    &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .',$NL,
+            '@prefix owl:     &lt;http://www.w3.org/2002/07/owl#&gt; .',$NL,
             '@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .',$NL,
+            '@prefix foaf:    &lt;http://xmlns.com/foaf/0.1/&gt; .',$NL,
+            '@prefix prov:    &lt;http://www.w3.org/ns/prov#&gt; .',$NL,
             '@prefix vsr:     &lt;http://purl.org/twc/vocab/vsr#&gt; .',$NL,
-            '@prefix graffle: &lt;http://purl.org/twc/vocab/vsr/graffle#&gt; .',$NL
+            '@prefix graffle: &lt;http://purl.org/twc/vocab/vsr/graffle#&gt; .',$NL,
+            '@prefix dbpo:    &lt;http://dbpedia.org/ontology/&gt; .',$NL,
+            '@prefix dbpp:    &lt;http://dbpedia.org/property/&gt; .',$NL,
+            '@prefix cv:      &lt;http://ontologi.es/colour/vocab#&gt; .',$NL,
+            '@prefix colour:  &lt;http://data.colourphon.co.uk/def/colour-ontology#&gt; .',$NL
          )"/>
 
-      <!--
-         Graphics that are *not* grouped appear directly under:
+   <!--xsl:value-of select="concat('COUNT ',count(//key[.='Color']/following-sibling::dict),$NL)"/-->
+   <xsl:for-each-group select="//key[.='Color']/following-sibling::dict" group-by="g:value-of('r',.)">
+      <!--xsl:value-of select="concat('   R COUNT ',current-grouping-key(),' : ',count(current-group()),$NL)"/-->
+      <xsl:for-each-group select="current-group()" group-by="g:value-of('g',.)">
+         <!--xsl:value-of select="concat('       G COUNT ',current-grouping-key(),' : ',count(current-group()),$NL)"/-->
+         <xsl:for-each-group select="current-group()" group-by="g:value-of('b',.)">
+            <xsl:variable name="rx" select="g:percentRGB2hex(g:value-of('r',current-group()[1]))"/>
+            <xsl:variable name="gx" select="g:percentRGB2hex(g:value-of('g',current-group()[1]))"/>
+            <xsl:variable name="bx" select="g:percentRGB2hex(g:value-of('b',current-group()[1]))"/>
+            <xsl:variable name="ax" select="g:percentRGB2hex(g:value-of('a',current-group()[1]))"/>
+            <xsl:variable name="r"  select="g:percent2_0_255(g:value-of('r',current-group()[1]))"/>
+            <xsl:variable name="g"  select="g:percent2_0_255(g:value-of('g',current-group()[1]))"/>
+            <xsl:variable name="b"  select="g:percent2_0_255(g:value-of('b',current-group()[1]))"/>
+            <xsl:variable name="a"  select="g:percent2_0_255(g:value-of('a',current-group()[1]))"/>
+            <xsl:if test="$r and $g and $b">
+               <xsl:value-of select="concat($NL,
+                  '&lt;http://purl.org/colors/rgb/',$rx,$gx,$bx,'&gt;',$NL,
+                  '  a dbpo:Colour, vsr:Color, vsr:Graphic;',$NL,
+                  '  dbpp:hex    ',$DQ,$rx,$gx,$bx,$DQ,';',$NL,
+                  '  cv:hex_code ',$DQ,$rx,$gx,$bx,$DQ,';',$NL,
+                  '  dbpp:rgbCoordinateRed   ',$DQ,$r,$DQ,';',$NL,
+                  '  dbpp:rgbCoordinateGreen ',$DQ,$g,$DQ,';',$NL,
+                  '  dbpp:rgbCoordinateBlue  ',$DQ,$b,$DQ,';',$NL,
+                  '  colour:red   ',$DQ,$r,$DQ,';',$NL,
+                  '  colour:green ',$DQ,$g,$DQ,';',$NL,
+                  '  colour:blue  ',$DQ,$b,$DQ,';',$NL,
+                  '  vsr:rgb  ',$DQ,$r,' ',$g,' ',$b,$DQ,';',$NL,
+                  '  owl:sameAs &lt;http://ontologi.es/colour/',$rx,$gx,$bx,'&gt;;',$NL,
+                  '.',$NL)"/>
+                   <!--'     &lt;http://data.colourphon.co.uk/id/colour/',$rx,$gx,$bx,'&gt;, ',$NL,-->
+            </xsl:if>
+         </xsl:for-each-group>
+      </xsl:for-each-group>
+   </xsl:for-each-group>
 
-         <key>GraphicsList</key>
-         <array>
-           <dict>
-             <key>Bounds</key>
-             <string>{{0, 0}, {10, 10}}</string>
-             <key>Class</key>
-             <string>ShapedGraphic</string>
-
-
-         Graphics that *are* grouped appear one level deeper:
-
-            <dict>
-               <key>Class</key>
-               <string>Group</string>
-               <key>Graphics</key>
-               <array>
-                  <dict>
-                     <key>Bounds</key>
-                     <string>{{1709.125, 417.52705879661335}, {77, 18}}</string>
-                     <key>Class</key>
-                     <string>ShapedGraphic</string>
-                     <key>FitText</key>
-                     <string>YES</string>
-                     <key>Flow</key>
-                     <string>Resize</string>
-                     <key>ID</key>
-                     <integer>1306</integer>
-      -->
-      <!--xsl:apply-templates select="//key[.='GraphicsList']/following-sibling::array[1]/dict" mode="turtle"/> was used before handling grouping -->
-      <xsl:apply-templates select="//dict[g:value-of('Class',.) = 'ShapedGraphic']"    mode="turtle"/> <!-- Added to handle grouped graphics Oct 2014 -->
-      <xsl:apply-templates select="//key[.='Layers']/following-sibling::array[1]/dict" mode="layer"/>  <!-- Added to handle layers           Apr 2015 -->
-   <!--/rdf:RDF-->
-</xsl:template>
-
-<xsl:template match="dict" mode="layer">
    <!--
+      Graphics that are *not* grouped appear directly under:
+
+      <key>GraphicsList</key>
+      <array>
         <dict>
-           <key>Lock</key>
-           <string>NO</string>
-           <key>Name</key>
-           <string>equiv</string>
-           <key>Print</key>
-           <string>YES</string>
-           <key>View</key>
-           <string>NO</string>
-        </dict>
+          <key>Bounds</key>
+          <string>{{0, 0}, {10, 10}}</string>
+          <key>Class</key>
+          <string>ShapedGraphic</string>
+
+
+      Graphics that *are* grouped appear one level deeper:
+
+         <dict>
+            <key>Class</key>
+            <string>Group</string>
+            <key>Graphics</key>
+            <array>
+               <dict>
+                  <key>Bounds</key>
+                  <string>{{1709.125, 417.52705879661335}, {77, 18}}</string>
+                  <key>Class</key>
+                  <string>ShapedGraphic</string>
+                  <key>FitText</key>
+                  <string>YES</string>
+                  <key>Flow</key>
+                  <string>Resize</string>
+                  <key>ID</key>
+                  <integer>1306</integer>
    -->
-   <!--
-         then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Name',g:value-of('Name',.))),'\\','\\\\'),$DQ,';',$NL) 
-   -->
-   <xsl:value-of select="concat($NL,
-      '&lt;layer/',position() - 1,'&gt;',$NL,
-      '   a vsr:Graphic, graffle:Layer;',$NL,
-      if( 'YES' = g:value-of('Lock',.) ) 
-         then concat('   a graffle:Locked;',  $NL) 
-         else concat('   a graffle:Unlocked;',$NL),
-      if( string-length(g:value-of('Name',.)) )
-         then concat('   rdfs:label ',$DQ,g:value-of('Name',.),$DQ,';',$NL) 
-         else '',
-      if( 'NO' = g:value-of('View',.) )
-         then concat('   a graffle:Invisible;', $NL) 
-         else concat('   a graffle:Visible;',   $NL),
-      '.',$NL
-   )"/>
+   <!--xsl:apply-templates select="//key[.='GraphicsList']/following-sibling::array[1]/dict" mode="turtle"/> was used before handling grouping -->
+   <xsl:apply-templates select="//dict[g:value-of('Class',.) = 'ShapedGraphic']"    mode="turtle"/> <!-- Added to handle grouped graphics Oct 2014 -->
+   <xsl:apply-templates select="//key[.='Layers']/following-sibling::array[1]/dict" mode="layer"/>  <!-- Added to handle layers           Apr 2015 -->
+   <xsl:apply-templates select="//dict[g:value-of('Class',.) = 'LineGraphic']"      mode="turtle"/> <!-- Added to handle grouped graphics Oct 2014 -->
 </xsl:template>
 
 <xsl:template match="dict" mode="turtle">
 
+   <!--
+         <dict>
+         <key>Bounds</key>
+         <string>{{2474.5614858691711, 2260.4238326323234}, {66, 34}}</string>
+         <key>Class</key>
+         <string>ShapedGraphic</string>
+         <key>FontInfo</key>
+         <dict>
+            <key>Font</key>
+            <string>LucidaGrande</string>
+            <key>Size</key>
+            <real>24</real>
+         </dict>
+         <key>ID</key>
+         <integer>1765</integer>
+   -->
+   <xsl:variable name="graphic" select="g:value-of('ID',.)"/>
    <xsl:value-of select="concat($NL,
-      '&lt;',g:value-of('ID',.),'&gt;',$NL,
+      '&lt;',$graphic,'&gt;',$NL,
       '   a vsr:Graphic, graffle:',g:value-of('Class',.),';',$NL,
       if (string-length(g:value-of('Shape',.))) 
          then concat('   a graffle:',g:value-of('Shape',.),';',$NL) 
@@ -139,6 +166,140 @@
          then concat('   rdfs:seeAlso &lt;',g:value-of('url',g:value-of('Link',.)),'&gt;;',$NL) 
          else ''
    )"/>
+
+
+   <xsl:variable name="rgb" select="
+      if(                                        g:value-of('Style',.)  and 
+                              g:value-of('fill', g:value-of('Style',.)) and
+          g:value-of('Color', g:value-of('fill', g:value-of('Style',.)))
+        )
+         then concat( g:value-of('r',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))),' ',
+                      g:value-of('g',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))),' ',
+                      g:value-of('b',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))),
+                      if (g:value-of('a',g:value-of('Color',g:value-of('fill',g:value-of('Style',.))))) 
+                      then concat(' ',g:value-of('a',g:value-of('Color',g:value-of('fill',g:value-of('Style',.))))) else ''
+                    ) 
+         else ''"/>
+   <xsl:if test="string-length($rgb)">
+      <xsl:variable name="rx" select="g:percentRGB2hex(g:value-of('r',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))))"/>
+      <xsl:variable name="gx" select="g:percentRGB2hex(g:value-of('g',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))))"/>
+      <xsl:variable name="bx" select="g:percentRGB2hex(g:value-of('b',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))))"/>
+      <xsl:variable name="ax" select="g:percentRGB2hex(g:value-of('a',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))))"/>
+      <xsl:value-of select="concat('   vsr:fill &lt;http://purl.org/colors/rgb/',$rx,$gx,$bx,'&gt;;',$NL)"/>
+   </xsl:if>
+
+   <!--
+         <dict>
+            <key>Bounds</key>
+            <string>{{67.5, 421.00800000000072}, {72, 30}}</string>
+            <key>Class</key>
+            <string>ShapedGraphic</string>
+   -->
+   <xsl:variable name="bounds" select="tokenize(translate(g:value-of('Bounds',.),',{}',''),' ')"/>
+   <xsl:value-of select="
+      if (count($bounds) = 4) 
+         then concat('   vsr:x      ',$bounds[1],';',$NL,
+                     '   vsr:y      ',$bounds[2],';',$NL,
+                     '   vsr:width  ',$bounds[3],';',$NL,
+                     '   vsr:height ',$bounds[4],';',$NL)
+         else ''
+   "/>
+
+   <!--
+         rgb: 200, 20, 2
+         hex: C81402
+
+         <key>Style</key>
+         <dict>
+            <key>shadow</key>
+            <dict>
+               <key>Draws</key>
+               <string>NO</string>
+            </dict>
+            <key>stroke</key>
+            <dict>
+               <key>Color</key>
+               <dict>
+                  <key>b</key>
+                  <string>0.00784314</string>
+                  <key>g</key>
+                  <string>0.0784314</string>
+                  <key>r</key>
+                  <string>0.784314</string>
+               </dict>
+               <key>HeadArrow</key>
+               <string>0</string>
+               <key>Legacy</key>
+               <true/>
+               <key>LineType</key>
+               <integer>1</integer>
+               <key>TailArrow</key>
+               <string>FilledArrow</string>
+               <key>Width</key>
+               <real>4</real>
+            </dict>
+         </dict>
+   -->
+   <xsl:for-each select="g:value-of('Style',.)/key">
+      <!-- e.g. keys : shadow, stroke, fill -->
+      <xsl:if test="not(. = 'fill')">
+         <xsl:value-of select="concat('   vsr:',.,' &lt;',$graphic,'/',.,'&gt;;',$NL)"/>
+      </xsl:if>
+   </xsl:for-each>
+
+   <xsl:for-each select="g:value-of('UserInfo',.)/key">
+      <!-- e.g. keys :
+         vid_given
+      -->
+      <xsl:variable name="value" select="./following-sibling::*[1]"/>
+      <xsl:choose>
+         <xsl:when test="xfm:isURI($value)">
+            <!-- Multi-URI values that are delimited with ', ' need to become '>, <', e.g. curieTypeList's value:
+                 http://ieeevis.tw.rpi.edu/.../vocab/Commit, http://ieeevis.tw.rpi.edu/../vocab/Minor -->
+            <xsl:value-of select="concat('   &lt;',.,'&gt; &lt;',replace($value,', http','&gt;, &lt;http'),'&gt;;',$NL)"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="concat('   &lt;',.,'&gt; ',$DQ,replace($value,$DQ,''),$DQ,';',$NL)"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:for-each>
+
+   <!-- 
+         - - - 5 - - >
+                     | 51.52
+                    \x/
+         - - - - - - - - - - - 103.5 - - - - - - > 
+                                                 | 436.08
+                                                \x/
+         <key>Points</key>
+         <array>
+            <string>{5, 51.523809523808495}</string>
+            <string>{103.5, 436.00800000000072}</string>
+         </array>
+   -->
+   <xsl:if test="g:value-of('Points',.)/string">
+      <xsl:for-each select="g:value-of('Points',.)/string">
+         <xsl:variable name="points" select="tokenize(translate(.,',{}',''),' ')"/>
+         <xsl:value-of select="concat('   vsr:point ',$DQ,$points[1],' ',$points[2],$DQ,';',$NL)"/>
+      </xsl:for-each>
+   </xsl:if>
+
+   <!--
+         <key>ID</key>
+         <integer>1765</integer>
+         <key>Line</key>
+         <dict>
+            <key>ID</key>
+            <integer>1764</integer>
+            <key>Position</key>
+            <real>0.54379593861090036</real>
+            <key>RotationType</key>
+            <integer>0</integer>
+         </dict>
+   -->
+   <xsl:if test="g:value-of('Line',.)">
+      <xsl:value-of select="concat('   foaf:based_near &lt;',g:value-of('ID',g:value-of('Line',.)),'&gt;;',$NL)"/>
+   </xsl:if>
 
    <!--
        <key>GraphicsList</key>
@@ -179,72 +340,168 @@
       <xsl:value-of select="concat('   dcterms:isPartOf &lt;layer/',$layer,'&gt;;',$NL)"/>
    </xsl:if>
 
-   <xsl:variable name="rgb" select="
-      if (g:value-of('Style',.) and 
-          g:value-of('fill',g:value-of('Style',.)) and
-          g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))
-         )
-         then concat( g:value-of('r',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))),' ',
-                      g:value-of('g',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))),' ',
-                      g:value-of('b',g:value-of('Color',g:value-of('fill',g:value-of('Style',.)))),
-                      if (g:value-of('a',g:value-of('Color',g:value-of('fill',g:value-of('Style',.))))) 
-                      then concat(' ',g:value-of('a',g:value-of('Color',g:value-of('fill',g:value-of('Style',.))))) else ''
-                    ) 
-         else ''"/>
-   <xsl:if test="string-length($rgb)">
-      <xsl:value-of select="concat('   vsr:fill &lt;color/',sof:checksum($rgb),'&gt;;',$NL)"/>
+   <!--
+         <dict>
+         <key>AllowLabelDrop</key>
+         <false/>
+         <key>Class</key>
+         <string>LineGraphic</string>
+         <key>Head</key>
+         <dict>
+            <key>ID</key>
+            <integer>1762</integer>
+         </dict>
+         <key>ID</key>
+         <integer>1764</integer>
+         ...
+         <key>Tail</key>
+         <dict>
+            <key>ID</key>
+            <integer>1007</integer>
+         </dict>
+   -->
+   <xsl:if test="g:value-of('Head',.) and g:value-of('ID',g:value-of('Head',.))">
+      <!-- a.k.a "to" -->
+      <xsl:value-of select="concat('   a vsr:Connection;',$NL)"/>
+      <xsl:value-of select="concat('   prov:entity &lt;',g:value-of('ID',g:value-of('Head',.)),'&gt;;',$NL)"/>
    </xsl:if>
 
-   <xsl:variable name="bounds" select="tokenize(translate(g:value-of('Bounds',.),',{}',''),' ')"/>
-   <xsl:value-of select="
-      if (count($bounds) = 4) 
-         then concat('   vsr:x      ',$bounds[1],';',$NL,
-                     '   vsr:y      ',$bounds[2],';',$NL,
-                     '   vsr:width  ',$bounds[3],';',$NL,
-                     '   vsr:height ',$bounds[4],';',$NL)
-         else ''
-   "/>
+   <xsl:value-of select="concat('.',$NL)"/> 
+   <!-- End of vsr:Graphic -->
 
-   <xsl:for-each select="g:value-of('UserInfo',.)/key">
-      <!-- e.g. keys :
-         vid_given
-      -->
-      <xsl:variable name="value" select="./following-sibling::*[1]"/>
-      <xsl:choose>
-         <xsl:when test="xfm:isURI($value)">
-            <!-- Multi-URI values that are delimited with ', ' need to become '>, <', e.g. curieTypeList's value:
-                 http://ieeevis.tw.rpi.edu/.../vocab/Commit, http://ieeevis.tw.rpi.edu/../vocab/Minor -->
-            <xsl:value-of select="concat('   &lt;',.,'&gt; &lt;',replace($value,', http','&gt;, &lt;http'),'&gt;;',$NL)"/>
-         </xsl:when>
-         <xsl:otherwise>
-            <xsl:value-of select="concat('   &lt;',.,'&gt; ',$DQ,replace($value,$DQ,''),$DQ,';',$NL)"/>
-         </xsl:otherwise>
-      </xsl:choose>
+   <!--
+         rgb % of 255:   0.00784314,  0.0784314, 0.784314
+         rgb         : 200,          20,         2
+         hex         :  C8           14         02
+
+         <key>Style</key>
+         <dict>
+            <key>shadow</key>
+            <dict>
+               <key>Draws</key>
+               <string>NO</string>
+            </dict>
+            <key>stroke</key>
+            <dict>
+               <key>Color</key>
+               <dict>
+                  <key>b</key>
+                  <string>0.00784314</string>
+                  <key>g</key>
+                  <string>0.0784314</string>
+                  <key>r</key>
+                  <string>0.784314</string>
+               </dict>
+               <key>HeadArrow</key>
+               <string>0</string>
+               <key>Legacy</key>
+               <true/>
+               <key>LineType</key>
+               <integer>1</integer>
+               <key>TailArrow</key>
+               <string>FilledArrow</string>
+               <key>Width</key>
+               <real>4</real>
+            </dict>
+         </dict>
+   -->
+   <xsl:for-each select="g:value-of('Style',.)/key">
+      <!-- ^^ e.g. keys : shadow, stroke, fill -->
+
+      <xsl:if test="not(. = 'fill')">
+      
+         <xsl:variable name="value" select="g:value-of(., ..)"/>
+         <!-- ^^ e.g. Draws, Color, Width, LineType, Pattern, TailArrow -->
+
+         <xsl:value-of select="concat('&lt;',$graphic,'/',.,'&gt;',$NL,
+                                      '   a vsr:',upper-case(substring(.,1,1)),substring(., 2),', vsr:Graphic;',$NL)"/>
+
+         <xsl:if test="g:value-of('Draws',$value) = 'NO'">
+            <xsl:value-of select="concat('   a vsr:Invisible;',$NL)"/>
+         </xsl:if>
+
+         <xsl:if test="g:value-of('TailArrow',$value)">
+            <xsl:variable name="head" select="g:value-of('TailArrow',$value)"/>
+            <xsl:if test="not( '0' = g:value-of('TailArrow',$value))">
+               <xsl:value-of select="concat('   vsr:tail graffle:',upper-case(substring($head,1,1)),substring($head, 2),';',$NL)"/>
+            </xsl:if>
+         </xsl:if>
+
+         <xsl:if test="g:value-of('Color',$value)">
+            <xsl:variable name="r" select="g:percentRGB2hex(g:value-of('r',g:value-of('Color',$value)))"/>
+            <xsl:variable name="g" select="g:percentRGB2hex(g:value-of('g',g:value-of('Color',$value)))"/>
+            <xsl:variable name="b" select="g:percentRGB2hex(g:value-of('b',g:value-of('Color',$value)))"/>
+            <xsl:variable name="a" select="g:percentRGB2hex(g:value-of('a',g:value-of('Color',$value)))"/>
+            <xsl:if test="$r and $g and $b">
+               <xsl:value-of select="concat('   vsr:fill &lt;http://purl.org/colors/rgb/',$r,$g,$b,'&gt;;',$NL)"/>
+            </xsl:if>
+         </xsl:if>
+
+         <xsl:if test="g:value-of('Width',$value)">
+            <xsl:value-of select="concat('   vsr:width ',g:value-of('Width',$value),';',$NL)"/>
+         </xsl:if>
+
+         <xsl:if test="g:value-of('HeadArrow',$value)">
+            <xsl:variable name="head" select="g:value-of('HeadArrow',$value)"/>
+            <xsl:value-of select="concat('   vsr:head graffle:',upper-case(substring($head,1,1)),substring($head, 2),';',$NL)"/>
+         </xsl:if>
+
+         <!-- Punt -->
+         <xsl:if test="not(g:value-of('Color',$value) | g:value-of('Width',$value) | g:value-of('Draws',$value))">
+            <xsl:value-of select="concat('   vsr:todo &lt;',$value/key[1],'&gt;;',$NL)"/>
+         </xsl:if>
+         <xsl:value-of select="concat('.',$NL)"/>
+         <!-- end of Styles -->
+
+      </xsl:if>
+
    </xsl:for-each>
-   <xsl:value-of select="concat('.',$NL)"/>
 
-   <xsl:if test="string-length($rgb)">
-      <xsl:value-of select="concat($NL,'&lt;color/',sof:checksum($rgb),'&gt; a vsr:Color; vsr:rgb ',$DQ,$rgb,$DQ,' .',$NL)"/>
+   <xsl:if test="g:value-of('Tail',.) and g:value-of('ID',g:value-of('Tail',.))">
+      <!-- a.k.a "from" -->
+      <xsl:value-of select="concat('&lt;',g:value-of('ID',g:value-of('Tail',.)),'&gt;',$NL)"/>
+      <xsl:value-of select="concat('   a vsr:Graphic;',$NL)"/>
+      <xsl:value-of select="concat('   vsr:qualifiedConnection &lt;',g:value-of('ID',.),'&gt;;',$NL)"/>
+      <xsl:value-of select="concat('.',$NL)"/> 
    </xsl:if>
+
+   <!--xsl:if test="string-length($rgb)">
+      <xsl:value-of select="concat($NL,'&lt;color/',sof:checksum($rgb),'&gt; a vsr:Color; vsr:rgb ',$DQ,$rgb,$DQ,' .',$NL)"/>
+   </xsl:if-->
 
 </xsl:template>
 
-<!--xsl:template match="dict" mode="application/rdf+xml">
-   <rdf:Description rdf:about="{g:value-of('ID',.)}">
-      <rdf:type rdf:resource="{g:value-of('Class',.)}"/>
-      <xsl:if test="string-length(g:value-of('Shape',.))">
-         <rdf:type rdf:resource="{g:value-of('Shape',.)}"/>
-      </xsl:if>
-      <xsl:if test="g:value-of('Text',.)">
-         <rdfs:label><xsl:value-of select="xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.)))"/></rdfs:label>
-      </xsl:if>
-      <xsl:for-each select="g:value-of('UserInfo',.)/key">
-         <xsl:element name="{pmm:bestQName(.)}">
-           <xsl:value-of select="./following-sibling::*[1]"/>
-         </xsl:element>
-      </xsl:for-each>
-   </rdf:Description>
-</xsl:template-->
+<xsl:template match="dict" mode="layer">
+   <!--
+     <dict>
+        <key>Lock</key>
+           <string>NO</string>
+           <key>Name</key>
+           <string>equiv</string>
+           <key>Print</key>
+           <string>YES</string>
+           <key>View</key>
+           <string>NO</string>
+        </dict>
+   -->
+   <!--
+         then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Name',g:value-of('Name',.))),'\\','\\\\'),$DQ,';',$NL) 
+   -->
+   <xsl:value-of select="concat($NL,
+      '&lt;layer/',position() - 1,'&gt;',$NL,
+      '   a vsr:Graphic, graffle:Layer;',$NL,
+      if( 'YES' = g:value-of('Lock',.) ) 
+         then concat('   a graffle:Locked;',  $NL) 
+         else concat('   a graffle:Unlocked;',$NL),
+      if( string-length(g:value-of('Name',.)) )
+         then concat('   rdfs:label ',$DQ,g:value-of('Name',.),$DQ,';',$NL) 
+         else '',
+      if( 'NO' = g:value-of('View',.) )
+         then concat('   a graffle:Invisible;', $NL) 
+         else concat('   a graffle:Visible;',   $NL),
+      '.',$NL
+   )"/>
+</xsl:template>
 
 <xsl:template match="@*|node()">
   <xsl:copy>
@@ -289,4 +546,31 @@
    </xsl:choose>
 </xsl:function>
 
+<xsl:function name="g:percentRGB2hex" as="xs:string">
+   <xsl:param name="percentage"/> <!-- as="xs:double"/-->
+   <xsl:variable name="hex" select="msg20090200215:int-to-hex(xs:integer(floor($percentage * 255)))"/>
+   <xsl:value-of select="if( string-length($hex) lt 2 ) then concat('0',$hex) else $hex"/>
+</xsl:function>
+
+<xsl:function name="g:percent2_0_255" as="xs:string">
+   <xsl:param name="percentage"/> <!-- as="xs:double"/-->
+   <xsl:variable name="dec" select="xs:integer(floor($percentage * 255))"/>
+   <xsl:value-of select="$dec"/>
+</xsl:function>
+
+<!--
+#3> <> prov:wasDerivedFrom [ prov:wasQuotedFrom <http://www.oxygenxml.com/archives/xsl-list/200902/msg00215.html> ] .
+-->
+<xsl:function name="msg20090200215:int-to-hex" as="xs:string">
+  <xsl:param name="in" as="xs:integer"/>
+  <xsl:sequence
+    select="if ($in eq 0)
+            then '0'
+            else
+              concat(if ($in gt 16)
+                     then msg20090200215:int-to-hex($in idiv 16)
+                     else '',
+                     substring('0123456789ABCDEF',
+                               ($in mod 16) + 1, 1))"/>
+</xsl:function>
 </xsl:transform>
