@@ -76,6 +76,10 @@
             <xsl:variable name="g"  select="g:percent2_0_255(g:value-of('g',current-group()[1]))"/>
             <xsl:variable name="b"  select="g:percent2_0_255(g:value-of('b',current-group()[1]))"/>
             <xsl:variable name="a"  select="g:percent2_0_255(g:value-of('a',current-group()[1]))"/>
+            <xsl:variable name="r1" select="g:value-of('r',current-group()[1])"/>
+            <xsl:variable name="g1" select="g:value-of('g',current-group()[1])"/>
+            <xsl:variable name="b1" select="g:value-of('b',current-group()[1])"/>
+            <xsl:variable name="a1" select="g:value-of('a',current-group()[1])"/>
             <xsl:if test="$r and $g and $b">
                <xsl:value-of select="concat($NL,
                   '&lt;http://purl.org/colors/rgb/',$rx,$gx,$bx,'&gt;',$NL,
@@ -88,7 +92,7 @@
                   '  colour:red   ',$DQ,$r,$DQ,';',$NL,
                   '  colour:green ',$DQ,$g,$DQ,';',$NL,
                   '  colour:blue  ',$DQ,$b,$DQ,';',$NL,
-                  '  vsr:rgb  ',$DQ,$r,' ',$g,' ',$b,$DQ,';',$NL,
+                  '  vsr:rgb  ',$DQ,$r1,' ',$g1,' ',$b1,$DQ,';',$NL,
                   '  owl:sameAs &lt;http://ontologi.es/colour/',$rx,$gx,$bx,'&gt;;',$NL,
                   '.',$NL)"/>
                    <!--'     &lt;http://data.colourphon.co.uk/id/colour/',$rx,$gx,$bx,'&gt;, ',$NL,-->
@@ -494,7 +498,7 @@
          then concat('   a graffle:Locked;',  $NL) 
          else concat('   a graffle:Unlocked;',$NL),
       if( string-length(g:value-of('Name',.)) )
-         then concat('   rdfs:label ',$DQ,g:value-of('Name',.),$DQ,';',$NL) 
+         then concat('   rdfs:label ',$DQ,replace(g:value-of('Name',.),$DQ,concat('\\',$DQ)),$DQ,';',$NL) 
          else '',
       if( 'NO' = g:value-of('View',.) )
          then concat('   a graffle:Invisible;', $NL) 
