@@ -232,7 +232,7 @@
    <!-- fill -->
    <xsl:choose>
       <xsl:when test="svg:rect[@fill]"> <!-- Graffle's export -->
-         <xsl:value-of select="concat('   vsr:fill  ',svg:rect/@width,';',$NL)"/>
+         <xsl:value-of select="concat('   vsr:fill  ',svg:rect/@fill,';',$NL)"/>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
