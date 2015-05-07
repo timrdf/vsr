@@ -1656,21 +1656,22 @@ $rdf:type
                <xsl:variable name="value" select="concat($view-context,' ',$resource)"/>
                <xsl:message select="acv:explainResource($resource,$owl:sameAs,
                                                         'vnode id',string($value),
-                                                        $value,
-                                                        'view-context given',$defin)"/>
+                                                        concat($visual-artifact-uri,'/graphic/',vsr:view-id($value)),
+                                                        'view-context given',$defin)"/> <!-- 5th arg visual-form-uri changed from $value to $visualFormURI May 2015 -->
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="$resource"/>
                <xsl:message select="acv:explainResource($resource,$owl:sameAs,
                                                         'vnode id',$resource,
-                                                        $value,
-                                                        'id otherwise',$defin)"/>
+                                                        concat($visual-artifact-uri,'/graphic/',vsr:view-id($value)),
+                                                        'id otherwise',$defin)"/> <!-- 5th arg visual-form-uri changed from $value to $visualFormURI May 2015 -->
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
 
+      <!-- note this value copied above to avoid chicken-and-egg -->
       <xsl:variable name="visualFormURI" select="concat($visual-artifact-uri,'/graphic/',vsr:view-id($id))"/>
 
       <!-- Sub-surfacing variables -->
