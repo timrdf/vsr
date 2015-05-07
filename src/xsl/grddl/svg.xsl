@@ -232,7 +232,7 @@
    <!-- fill -->
    <xsl:choose>
       <xsl:when test="svg:rect[@fill]"> <!-- Graffle's export -->
-         <xsl:value-of select="concat('   vsr:fill  &lt;',svg:rect/@fill,'&gt;;',$NL)"/>
+         <xsl:value-of select="concat('   vsr:fill  &lt;',svg:rect/@fill,'&gt;;',$NL)"/> <!-- TODO: use http://purl.org/colors/css/red -->
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
