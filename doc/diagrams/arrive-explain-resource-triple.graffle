@@ -6,8 +6,8 @@
 	<integer>0</integer>
 	<key>ApplicationVersion</key>
 	<array>
-		<string>com.omnigroup.OmniGrafflePro</string>
-		<string>139.16.0.171715</string>
+		<string>com.omnigroup.OmniGraffle6</string>
+		<string>161.5.0.232794</string>
 	</array>
 	<key>AutoAdjust</key>
 	<true/>
@@ -21,11 +21,6 @@
 		<integer>2</integer>
 		<key>Style</key>
 		<dict>
-			<key>shadow</key>
-			<dict>
-				<key>Draws</key>
-				<string>NO</string>
-			</dict>
 			<key>stroke</key>
 			<dict>
 				<key>Draws</key>
@@ -46,9 +41,9 @@
 	<key>Creator</key>
 	<string>lebot</string>
 	<key>DisplayScale</key>
-	<string>1 0/72 in = 1.0000 in</string>
+	<string>1 in = 1.00000 in</string>
 	<key>GraphDocumentVersion</key>
-	<integer>8</integer>
+	<integer>12</integer>
 	<key>GraphicsList</key>
 	<array>
 		<dict>
@@ -62,22 +57,13 @@
 			<string>Clip</string>
 			<key>FontInfo</key>
 			<dict>
-				<key>Color</key>
-				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
 				<key>Font</key>
 				<string>Courier-Bold</string>
 				<key>NSKern</key>
 				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
 			</dict>
 			<key>ID</key>
 			<integer>121</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
 			<key>Style</key>
 			<dict>
 				<key>fill</key>
@@ -101,8 +87,8 @@
 				<key>Align</key>
 				<integer>0</integer>
 				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -125,22 +111,13 @@
 			<string>Clip</string>
 			<key>FontInfo</key>
 			<dict>
-				<key>Color</key>
-				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
 				<key>Font</key>
 				<string>Courier-Bold</string>
 				<key>NSKern</key>
 				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
 			</dict>
 			<key>ID</key>
 			<integer>122</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
 			<key>Style</key>
 			<dict>
 				<key>fill</key>
@@ -164,8 +141,8 @@
 				<key>Align</key>
 				<integer>0</integer>
 				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -190,22 +167,13 @@ A}</string>
 			<string>Clip</string>
 			<key>FontInfo</key>
 			<dict>
-				<key>Color</key>
-				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
 				<key>Font</key>
 				<string>Courier-Bold</string>
 				<key>NSKern</key>
 				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
 			</dict>
 			<key>ID</key>
 			<integer>123</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
 			<key>Style</key>
 			<dict>
 				<key>fill</key>
@@ -229,8 +197,8 @@ A}</string>
 				<key>Align</key>
 				<integer>0</integer>
 				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -253,22 +221,13 @@ x
 			<string>Clip</string>
 			<key>FontInfo</key>
 			<dict>
-				<key>Color</key>
-				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
 				<key>Font</key>
 				<string>Courier-Bold</string>
 				<key>NSKern</key>
 				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
 			</dict>
 			<key>ID</key>
 			<integer>124</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
 			<key>Style</key>
 			<dict>
 				<key>fill</key>
@@ -292,8 +251,8 @@ x
 				<key>Align</key>
 				<integer>0</integer>
 				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -314,22 +273,13 @@ x
 			<string>Clip</string>
 			<key>FontInfo</key>
 			<dict>
-				<key>Color</key>
-				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
 				<key>Font</key>
 				<string>Courier-Bold</string>
 				<key>NSKern</key>
 				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
 			</dict>
 			<key>ID</key>
 			<integer>125</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
 			<key>Style</key>
 			<dict>
 				<key>fill</key>
@@ -353,8 +303,8 @@ x
 				<key>Align</key>
 				<integer>0</integer>
 				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -377,22 +327,13 @@ o}</string>
 			<string>Clip</string>
 			<key>FontInfo</key>
 			<dict>
-				<key>Color</key>
-				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
 				<key>Font</key>
 				<string>Courier-Bold</string>
 				<key>NSKern</key>
 				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
 			</dict>
 			<key>ID</key>
 			<integer>126</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
 			<key>Style</key>
 			<dict>
 				<key>fill</key>
@@ -416,8 +357,8 @@ o}</string>
 				<key>Align</key>
 				<integer>0</integer>
 				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -444,22 +385,13 @@ oA}</string>
 			<string>Clip</string>
 			<key>FontInfo</key>
 			<dict>
-				<key>Color</key>
-				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
 				<key>Font</key>
 				<string>Courier-Bold</string>
 				<key>NSKern</key>
 				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
 			</dict>
 			<key>ID</key>
 			<integer>127</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
 			<key>Style</key>
 			<dict>
 				<key>fill</key>
@@ -483,8 +415,8 @@ oA}</string>
 				<key>Align</key>
 				<integer>0</integer>
 				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -501,57 +433,58 @@ o
 			</dict>
 		</dict>
 		<dict>
-			<key>Bounds</key>
-			<string>{{133.5, 238}, {579.5, 19}}</string>
 			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>FitText</key>
-			<string>Vertical</string>
-			<key>Flow</key>
-			<string>Resize</string>
-			<key>FontInfo</key>
-			<dict>
-				<key>Color</key>
+			<string>TableGroup</string>
+			<key>Graphics</key>
+			<array>
 				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
-				<key>Font</key>
-				<string>Georgia</string>
-				<key>NSKern</key>
-				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
-			</dict>
-			<key>ID</key>
-			<integer>128</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>stroke</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-			<key>Text</key>
-			<dict>
-				<key>Align</key>
-				<integer>0</integer>
-				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+					<key>Bounds</key>
+					<string>{{133.5, 238}, {678.65998184680939, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>154</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/xsl/util/explain.xsl#L405</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>0</integer>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;\red255\green0\blue0;\red255\green128\blue0;\red0\green0\blue255;
 }
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
@@ -566,65 +499,178 @@ subject
 \b \cf3 \expnd0\expndtw0\kerning0
 actor
 \b0 \cf0 \expnd0\expndtw0\kerning0
-, \cf4 \expnd0\expndtw0\kerning0
+, visualForm, \cf4 \expnd0\expndtw0\kerning0
 property, value\cf0 \expnd0\expndtw0\kerning0
 , justification) **}</string>
-				<key>VerticalPad</key>
-				<integer>0</integer>
-			</dict>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{812.15998184680939, 238}, {322.55999279022217, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>155</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/java/edu/rpi/tw/visualization/log/VisualizationDecisions.java#L544</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>2</integer>
+						<key>Pad</key>
+						<integer>15</integer>
+						<key>RTFD</key>
+						<data>
+						BAtzdHJlYW10eXBlZIHoA4QBQISE
+						hBJOU0F0dHJpYnV0ZWRTdHJpbmcA
+						hIQITlNPYmplY3QAhZKEhIQITlNT
+						dHJpbmcBlIQBKyRwdWJsaWMgU3Ry
+						aW5nIGV4cGxhaW5UcmlwbGUo4oCm
+						OeKApimGhAJpSQEGkoSEhAxOU0Rp
+						Y3Rpb25hcnkAlIQBaQeShJaWB05T
+						Q29sb3KGkoSEhAdOU0NvbG9yAJSE
+						AWMChARmZmZmg6inJz+D6ejoPYO7
+						uro+AYaShJaWDU5TU3Ryb2tlV2lk
+						dGiGkoSEhAhOU051bWJlcgCEhAdO
+						U1ZhbHVlAJSEASqEhAFkoACGkoSW
+						lg1OU1N0cm9rZUNvbG9yhpKakoSW
+						lhBOU1BhcmFncmFwaFN0eWxlhpKE
+						hIQXTlNNdXRhYmxlUGFyYWdyYXBo
+						U3R5bGUAhIQQTlNQYXJhZ3JhcGhT
+						dHlsZQCUhARDQ0BTAQCEhIQOTlNN
+						dXRhYmxlQXJyYXkAhIQHTlNBcnJh
+						eQCUmQCGgSAKhARbM2Zdg2ZmhkEk
+						g83MTD2GkoSWlhFOU0JhY2tncm91
+						bmRDb2xvcoaShJubApwBAQEBhpKE
+						lpYGTlNGb250hpKEhIQGTlNGb250
+						HpSZHIQFWzI4Y10GAAAAEgAAAP/+
+						QwBvAG4AcwBvAGwAYQBzAAAAhAFm
+						EJsAmwGbAJsAhpKElpYGTlNLZXJu
+						hpKEnp+goACGhpcCCJKEmJkHkpmS
+						hJubApyDzcxMPoPNzEw+g83MTD4B
+						hpKckoSen6CgAIaSoZKxkqKShKSj
+						AQCEp5kAhoEgCqaDZmaGQSSDzcxM
+						PYaSqZKqkquSrJKukoSen6CgAIaG
+						lwMNkoSYmQeSmZKEm5sCnIPz8vI+
+						g7u6uj6DpKMjPwGGkpyShJ6foKAA
+						hpKhkreSopKEpKMBAISnmQCGgSAK
+						poNmZoZBJIPNzEw9hpKpkqqSq5Ks
+						kq6ShJ6foKAAhoaXAgWG
+						</data>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Consolas;}
+{\colortbl;\red255\green255\blue255;\red148\green6\blue75;\red255\green255\blue255;\red38\green38\blue38;
+\red101\green71\blue146;}
+\deftab720
+\pard\pardeftab720\sl336\qr
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 public\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4  String \cf5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec5 explainTriple\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 (\'859\'85)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+			</array>
+			<key>GridV</key>
+			<array>
+				<integer>154</integer>
+				<integer>155</integer>
+				<array/>
+			</array>
+			<key>ID</key>
+			<integer>153</integer>
 		</dict>
 		<dict>
-			<key>Bounds</key>
-			<string>{{133.5, 201}, {524.5, 19}}</string>
 			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>FitText</key>
-			<string>Vertical</string>
-			<key>Flow</key>
-			<string>Resize</string>
-			<key>FontInfo</key>
-			<dict>
-				<key>Color</key>
+			<string>TableGroup</string>
+			<key>Graphics</key>
+			<array>
 				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
-				<key>Font</key>
-				<string>Georgia</string>
-				<key>NSKern</key>
-				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
-			</dict>
-			<key>ID</key>
-			<integer>129</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>stroke</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-			<key>Text</key>
-			<dict>
-				<key>Align</key>
-				<integer>0</integer>
-				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+					<key>Bounds</key>
+					<string>{{133.5, 201}, {539.69998495280743, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>151</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/xsl/util/explain.xsl#L345</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>0</integer>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;\red255\green0\blue0;\red255\green128\blue0;\red64\green128\blue0;
 }
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
@@ -644,62 +690,175 @@ actor
 action
 \b0 \cf0 \expnd0\expndtw0\kerning0
 , justification) **}</string>
-				<key>VerticalPad</key>
-				<integer>0</integer>
-			</dict>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{673.19998495280743, 201}, {461.51998968422413, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>152</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/java/edu/rpi/tw/visualization/log/VisualizationDecisions.java#L544</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>2</integer>
+						<key>Pad</key>
+						<integer>15</integer>
+						<key>RTFD</key>
+						<data>
+						BAtzdHJlYW10eXBlZIHoA4QBQISE
+						hBJOU0F0dHJpYnV0ZWRTdHJpbmcA
+						hIQITlNPYmplY3QAhZKEhIQITlNT
+						dHJpbmcBlIQBKyRwdWJsaWMgU3Ry
+						aW5nIGV4cGxhaW5UcmlwbGUo4oCm
+						OeKApimGhAJpSQEGkoSEhAxOU0Rp
+						Y3Rpb25hcnkAlIQBaQeShJaWB05T
+						Q29sb3KGkoSEhAdOU0NvbG9yAJSE
+						AWMChARmZmZmg6inJz+D6ejoPYO7
+						uro+AYaShJaWDU5TU3Ryb2tlV2lk
+						dGiGkoSEhAhOU051bWJlcgCEhAdO
+						U1ZhbHVlAJSEASqEhAFkoACGkoSW
+						lg1OU1N0cm9rZUNvbG9yhpKakoSW
+						lhBOU1BhcmFncmFwaFN0eWxlhpKE
+						hIQXTlNNdXRhYmxlUGFyYWdyYXBo
+						U3R5bGUAhIQQTlNQYXJhZ3JhcGhT
+						dHlsZQCUhARDQ0BTAQCEhIQOTlNN
+						dXRhYmxlQXJyYXkAhIQHTlNBcnJh
+						eQCUmQCGgSAKhARbM2Zdg2ZmhkEk
+						g83MTD2GkoSWlhFOU0JhY2tncm91
+						bmRDb2xvcoaShJubApwBAQEBhpKE
+						lpYGTlNGb250hpKEhIQGTlNGb250
+						HpSZHIQFWzI4Y10GAAAAEgAAAP/+
+						QwBvAG4AcwBvAGwAYQBzAAAAhAFm
+						EJsAmwGbAJsAhpKElpYGTlNLZXJu
+						hpKEnp+goACGhpcCCJKEmJkHkpmS
+						hJubApyDzcxMPoPNzEw+g83MTD4B
+						hpKckoSen6CgAIaSoZKxkqKShKSj
+						AQCEp5kAhoEgCqaDZmaGQSSDzcxM
+						PYaSqZKqkquSrJKukoSen6CgAIaG
+						lwMNkoSYmQeSmZKEm5sCnIPz8vI+
+						g7u6uj6DpKMjPwGGkpyShJ6foKAA
+						hpKhkreSopKEpKMBAISnmQCGgSAK
+						poNmZoZBJIPNzEw9hpKpkqqSq5Ks
+						kq6ShJ6foKAAhoaXAgWG
+						</data>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Consolas;}
+{\colortbl;\red255\green255\blue255;\red148\green6\blue75;\red255\green255\blue255;\red38\green38\blue38;
+\red101\green71\blue146;}
+\deftab720
+\pard\pardeftab720\sl336\qr
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 public\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4  String \cf5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec5 explainTriple\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 (\'859\'85)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+			</array>
+			<key>GridV</key>
+			<array>
+				<integer>151</integer>
+				<integer>152</integer>
+				<array/>
+			</array>
+			<key>ID</key>
+			<integer>150</integer>
 		</dict>
 		<dict>
-			<key>Bounds</key>
-			<string>{{133.5, 90}, {593, 19}}</string>
 			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>FitText</key>
-			<string>YES</string>
-			<key>Flow</key>
-			<string>Resize</string>
-			<key>FontInfo</key>
-			<dict>
-				<key>Color</key>
+			<string>TableGroup</string>
+			<key>Graphics</key>
+			<array>
 				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
-				<key>Font</key>
-				<string>Georgia</string>
-				<key>NSKern</key>
-				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
-			</dict>
-			<key>ID</key>
-			<integer>130</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>stroke</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-			<key>Text</key>
-			<dict>
-				<key>Align</key>
-				<integer>0</integer>
-				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+					<key>Bounds</key>
+					<string>{{133.5, 90}, {606.6599834561348, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>142</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/xsl/util/explain.xsl#L275</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>0</integer>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;\red255\green128\blue0;\red0\green0\blue255;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -715,64 +874,170 @@ actor
 , \cf3 \expnd0\expndtw0\kerning0
 property, value\cf0 \expnd0\expndtw0\kerning0
 , visual-form-uri, justification) **}</string>
-				<key>VerticalPad</key>
-				<integer>0</integer>
-			</dict>
-			<key>Wrap</key>
-			<string>NO</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{740.1599834561348, 90}, {406.79999090731144, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>143</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/java/edu/rpi/tw/visualization/log/VisualizationDecisions.java#L256</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>2</integer>
+						<key>Pad</key>
+						<integer>15</integer>
+						<key>RTFD</key>
+						<data>
+						BAtzdHJlYW10eXBlZIHoA4QBQISE
+						hBJOU0F0dHJpYnV0ZWRTdHJpbmcA
+						hIQITlNPYmplY3QAhZKEhIQITlNT
+						dHJpbmcBlIQBKyZwdWJsaWMgU3Ry
+						aW5nIGV4cGxhaW5SZXNvdXJjZSji
+						gKY34oCmKYaEAmlJAQaShISEDE5T
+						RGljdGlvbmFyeQCUhAFpB5KElpYH
+						TlNDb2xvcoaShISEB05TQ29sb3IA
+						lIQBYwKEBGZmZmaDqKcnP4Pp6Og9
+						g7u6uj4BhpKElpYNTlNTdHJva2VX
+						aWR0aIaShISECE5TTnVtYmVyAISE
+						B05TVmFsdWUAlIQBKoSEAWSgAIaS
+						hJaWDU5TU3Ryb2tlQ29sb3KGkpqS
+						hJaWEE5TUGFyYWdyYXBoU3R5bGWG
+						koSEhBdOU011dGFibGVQYXJhZ3Jh
+						cGhTdHlsZQCEhBBOU1BhcmFncmFw
+						aFN0eWxlAJSEBENDQFMBAISEhA5O
+						U011dGFibGVBcnJheQCEhAdOU0Fy
+						cmF5AJSZAIaBIAqEBFszZl2DZmaG
+						QSSDzcxMPYaShJaWEU5TQmFja2dy
+						b3VuZENvbG9yhpKEm5sCnAEBAQGG
+						koSWlgZOU0ZvbnSGkoSEhAZOU0Zv
+						bnQelJkchAVbMjhjXQYAAAASAAAA
+						//5DAG8AbgBzAG8AbABhAHMAAACE
+						AWYQmwCbAZsAmwCGkoSWlgZOU0tl
+						cm6GkoSen6CgAIaGlwIIkoSYmQeS
+						mZKEm5sCnIPNzEw+g83MTD6DzcxM
+						PgGGkpyShJ6foKAAhpKhkrGSopKE
+						pKMBAISnmQCGgSAKpoNmZoZBJIPN
+						zEw9hpKpkqqSq5Kskq6ShJ6foKAA
+						hoaXAw+ShJiZB5KZkoSbmwKcg/Py
+						8j6Du7q6PoOkoyM/AYaSnJKEnp+g
+						oACGkqGSt5KikoSkowEAhKeZAIaB
+						IAqmg2ZmhkEkg83MTD2GkqmSqpKr
+						kqySrpKEnp+goACGhpcCBYY=
+						</data>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Consolas;}
+{\colortbl;\red255\green255\blue255;\red148\green6\blue75;\red255\green255\blue255;\red38\green38\blue38;
+\red101\green71\blue146;}
+\deftab720
+\pard\pardeftab720\sl336\qr
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 public\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4  String \cf5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec5 explainResource\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 (\'857\'85)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+			</array>
+			<key>GridV</key>
+			<array>
+				<integer>142</integer>
+				<integer>143</integer>
+				<array/>
+			</array>
+			<key>ID</key>
+			<integer>141</integer>
 		</dict>
 		<dict>
-			<key>Bounds</key>
-			<string>{{133.5, 53}, {537.5, 19}}</string>
 			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>FitText</key>
-			<string>Vertical</string>
-			<key>Flow</key>
-			<string>Resize</string>
-			<key>FontInfo</key>
-			<dict>
-				<key>Color</key>
+			<string>TableGroup</string>
+			<key>Graphics</key>
+			<array>
 				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
-				<key>Font</key>
-				<string>Georgia</string>
-				<key>NSKern</key>
-				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
-			</dict>
-			<key>ID</key>
-			<integer>131</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>stroke</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-			<key>Text</key>
-			<dict>
-				<key>Align</key>
-				<integer>0</integer>
-				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+					<key>Bounds</key>
+					<string>{{133.5, 53}, {554.09998463094234, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>139</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/xsl/util/explain.xsl#L210</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>0</integer>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;\red255\green128\blue0;\red64\green128\blue0;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -790,62 +1055,175 @@ actor
 action
 \b0 \cf0 \expnd0\expndtw0\kerning0
 , visual-form-uri, justification) ** }</string>
-				<key>VerticalPad</key>
-				<integer>0</integer>
-			</dict>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{687.59998463094234, 53}, {459.35998973250389, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>140</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/java/edu/rpi/tw/visualization/log/VisualizationDecisions.java#L401</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>2</integer>
+						<key>Pad</key>
+						<integer>15</integer>
+						<key>RTFD</key>
+						<data>
+						BAtzdHJlYW10eXBlZIHoA4QBQISE
+						hBJOU0F0dHJpYnV0ZWRTdHJpbmcA
+						hIQITlNPYmplY3QAhZKEhIQITlNT
+						dHJpbmcBlIQBKyZwdWJsaWMgU3Ry
+						aW5nIGV4cGxhaW5SZXNvdXJjZSji
+						gKY24oCmKYaEAmlJAQaShISEDE5T
+						RGljdGlvbmFyeQCUhAFpB5KElpYH
+						TlNDb2xvcoaShISEB05TQ29sb3IA
+						lIQBYwKEBGZmZmaDqKcnP4Pp6Og9
+						g7u6uj4BhpKElpYNTlNTdHJva2VX
+						aWR0aIaShISECE5TTnVtYmVyAISE
+						B05TVmFsdWUAlIQBKoSEAWSgAIaS
+						hJaWDU5TU3Ryb2tlQ29sb3KGkpqS
+						hJaWEE5TUGFyYWdyYXBoU3R5bGWG
+						koSEhBdOU011dGFibGVQYXJhZ3Jh
+						cGhTdHlsZQCEhBBOU1BhcmFncmFw
+						aFN0eWxlAJSEBENDQFMBAISEhA5O
+						U011dGFibGVBcnJheQCEhAdOU0Fy
+						cmF5AJSZAIaBIAqEBFszZl2DZmaG
+						QSSDzcxMPYaShJaWEU5TQmFja2dy
+						b3VuZENvbG9yhpKEm5sCnAEBAQGG
+						koSWlgZOU0ZvbnSGkoSEhAZOU0Zv
+						bnQelJkchAVbMjhjXQYAAAASAAAA
+						//5DAG8AbgBzAG8AbABhAHMAAACE
+						AWYQmwCbAZsAmwCGkoSWlgZOU0tl
+						cm6GkoSen6CgAIaGlwIIkoSYmQeS
+						mZKEm5sCnIPNzEw+g83MTD6DzcxM
+						PgGGkpyShJ6foKAAhpKhkrGSopKE
+						pKMBAISnmQCGgSAKpoNmZoZBJIPN
+						zEw9hpKpkqqSq5Kskq6ShJ6foKAA
+						hoaXAw+ShJiZB5KZkoSbmwKcg/Py
+						8j6Du7q6PoOkoyM/AYaSnJKEnp+g
+						oACGkqGSt5KikoSkowEAhKeZAIaB
+						IAqmg2ZmhkEkg83MTD2GkqmSqpKr
+						kqySrpKEnp+goACGhpcCBYY=
+						</data>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Consolas;}
+{\colortbl;\red255\green255\blue255;\red148\green6\blue75;\red255\green255\blue255;\red38\green38\blue38;
+\red101\green71\blue146;}
+\deftab720
+\pard\pardeftab720\sl336\qr
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 public\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4  String \cf5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec5 explainResource\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 (\'856\'85)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+			</array>
+			<key>GridV</key>
+			<array>
+				<integer>139</integer>
+				<integer>140</integer>
+				<array/>
+			</array>
+			<key>ID</key>
+			<integer>138</integer>
 		</dict>
 		<dict>
-			<key>Bounds</key>
-			<string>{{91.500000000000057, 127}, {290.8918918918917, 19}}</string>
 			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>FitText</key>
-			<string>Vertical</string>
-			<key>Flow</key>
-			<string>Resize</string>
-			<key>FontInfo</key>
-			<dict>
-				<key>Color</key>
+			<string>TableGroup</string>
+			<key>Graphics</key>
+			<array>
 				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
-				<key>Font</key>
-				<string>Georgia</string>
-				<key>NSKern</key>
-				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
-			</dict>
-			<key>ID</key>
-			<integer>132</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>stroke</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-			<key>Text</key>
-			<dict>
-				<key>Align</key>
-				<integer>0</integer>
-				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+					<key>Bounds</key>
+					<string>{{91.5, 127}, {370.01998968422413, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>145</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/xsl/util/explain.xsl#L161</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>0</integer>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;\red255\green128\blue0;\red255\green0\blue0;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -859,63 +1237,176 @@ actor
 subject
 \b0 \cf3 \expnd0\expndtw0\kerning0
 , predicate\cf0 \expnd0\expndtw0\kerning0
-)}</string>
-				<key>VerticalPad</key>
-				<integer>0</integer>
-			</dict>
+, deferrer)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{461.51998968422413, 127}, {606.23998644948006, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>146</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/java/edu/rpi/tw/visualization/log/VisualizationDecisions.java#L203</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>2</integer>
+						<key>Pad</key>
+						<integer>15</integer>
+						<key>RTFD</key>
+						<data>
+						BAtzdHJlYW10eXBlZIHoA4QBQISE
+						hBJOU0F0dHJpYnV0ZWRTdHJpbmcA
+						hIQITlNPYmplY3QAhZKEhIQITlNT
+						dHJpbmcBlIQBKyNwdWJsaWMgU3Ry
+						aW5nIGFycml2ZVRyaXBsZSjigKY0
+						4oCmKYaEAmlJAQaShISEDE5TRGlj
+						dGlvbmFyeQCUhAFpB5KElpYHTlND
+						b2xvcoaShISEB05TQ29sb3IAlIQB
+						YwKEBGZmZmaDqKcnP4Pp6Og9g7u6
+						uj4BhpKElpYNTlNTdHJva2VXaWR0
+						aIaShISECE5TTnVtYmVyAISEB05T
+						VmFsdWUAlIQBKoSEAWSgAIaShJaW
+						DU5TU3Ryb2tlQ29sb3KGkpqShJaW
+						EE5TUGFyYWdyYXBoU3R5bGWGkoSE
+						hBdOU011dGFibGVQYXJhZ3JhcGhT
+						dHlsZQCEhBBOU1BhcmFncmFwaFN0
+						eWxlAJSEBENDQFMBAISEhA5OU011
+						dGFibGVBcnJheQCEhAdOU0FycmF5
+						AJSZAIaBIAqEBFszZl2DZmaGQSSD
+						zcxMPYaShJaWEU5TQmFja2dyb3Vu
+						ZENvbG9yhpKEm5sCnAEBAQGGkoSW
+						lgZOU0ZvbnSGkoSEhAZOU0ZvbnQe
+						lJkchAVbMjhjXQYAAAASAAAA//5D
+						AG8AbgBzAG8AbABhAHMAAACEAWYQ
+						mwCbAZsAmwCGkoSWlgZOU0tlcm6G
+						koSen6CgAIaGlwIIkoSYmQeSmZKE
+						m5sCnIPNzEw+g83MTD6DzcxMPgGG
+						kpyShJ6foKAAhpKhkrGSopKEpKMB
+						AISnmQCGgSAKpoNmZoZBJIPNzEw9
+						hpKpkqqSq5Kskq6ShJ6foKAAhoaX
+						AwyShJiZB5KZkoSbmwKcg/Py8j6D
+						u7q6PoOkoyM/AYaSnJKEnp+goACG
+						kqGSt5KikoSkowEAhKeZAIaBIAqm
+						g2ZmhkEkg83MTD2GkqmSqpKrkqyS
+						rpKEnp+goACGhpcCBYY=
+						</data>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Consolas;}
+{\colortbl;\red255\green255\blue255;\red148\green6\blue75;\red255\green255\blue255;\red38\green38\blue38;
+\red101\green71\blue146;}
+\deftab720
+\pard\pardeftab720\sl336\qr
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 public\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4  String \cf5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec5 arriveTriple\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 (\'854\'85)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+			</array>
+			<key>GridV</key>
+			<array>
+				<integer>145</integer>
+				<integer>146</integer>
+				<array/>
+			</array>
+			<key>ID</key>
+			<integer>144</integer>
 		</dict>
 		<dict>
-			<key>Bounds</key>
-			<string>{{91.5, 164}, {343.5, 19}}</string>
 			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>FitText</key>
-			<string>Vertical</string>
-			<key>Flow</key>
-			<string>Resize</string>
-			<key>FontInfo</key>
-			<dict>
-				<key>Color</key>
+			<string>TableGroup</string>
+			<key>Graphics</key>
+			<array>
 				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
-				<key>Font</key>
-				<string>Georgia</string>
-				<key>NSKern</key>
-				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
-			</dict>
-			<key>ID</key>
-			<integer>133</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>stroke</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-			<key>Text</key>
-			<dict>
-				<key>Align</key>
-				<integer>0</integer>
-				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+					<key>Bounds</key>
+					<string>{{91.5, 164}, {420.41998855769634, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>148</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/xsl/util/explain.xsl#L119</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>0</integer>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;\red255\green128\blue0;\red255\green0\blue0;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -929,63 +1420,176 @@ actor
 subject
 \b0 \cf3 \expnd0\expndtw0\kerning0
 , predicate\cf0 \expnd0\expndtw0\kerning0
-, object)}</string>
-				<key>VerticalPad</key>
-				<integer>0</integer>
-			</dict>
+, object, deferrer)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{511.91998855769634, 164}, {555.83998757600784, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>149</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/java/edu/rpi/tw/visualization/log/VisualizationDecisions.java#L216</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>2</integer>
+						<key>Pad</key>
+						<integer>15</integer>
+						<key>RTFD</key>
+						<data>
+						BAtzdHJlYW10eXBlZIHoA4QBQISE
+						hBJOU0F0dHJpYnV0ZWRTdHJpbmcA
+						hIQITlNPYmplY3QAhZKEhIQITlNT
+						dHJpbmcBlIQBKyNwdWJsaWMgU3Ry
+						aW5nIGFycml2ZVRyaXBsZSjigKY1
+						4oCmKYaEAmlJAQaShISEDE5TRGlj
+						dGlvbmFyeQCUhAFpB5KElpYHTlND
+						b2xvcoaShISEB05TQ29sb3IAlIQB
+						YwKEBGZmZmaDqKcnP4Pp6Og9g7u6
+						uj4BhpKElpYNTlNTdHJva2VXaWR0
+						aIaShISECE5TTnVtYmVyAISEB05T
+						VmFsdWUAlIQBKoSEAWSgAIaShJaW
+						DU5TU3Ryb2tlQ29sb3KGkpqShJaW
+						EE5TUGFyYWdyYXBoU3R5bGWGkoSE
+						hBdOU011dGFibGVQYXJhZ3JhcGhT
+						dHlsZQCEhBBOU1BhcmFncmFwaFN0
+						eWxlAJSEBENDQFMBAISEhA5OU011
+						dGFibGVBcnJheQCEhAdOU0FycmF5
+						AJSZAIaBIAqEBFszZl2DZmaGQSSD
+						zcxMPYaShJaWEU5TQmFja2dyb3Vu
+						ZENvbG9yhpKEm5sCnAEBAQGGkoSW
+						lgZOU0ZvbnSGkoSEhAZOU0ZvbnQe
+						lJkchAVbMjhjXQYAAAASAAAA//5D
+						AG8AbgBzAG8AbABhAHMAAACEAWYQ
+						mwCbAZsAmwCGkoSWlgZOU0tlcm6G
+						koSen6CgAIaGlwIIkoSYmQeSmZKE
+						m5sCnIPNzEw+g83MTD6DzcxMPgGG
+						kpyShJ6foKAAhpKhkrGSopKEpKMB
+						AISnmQCGgSAKpoNmZoZBJIPNzEw9
+						hpKpkqqSq5Kskq6ShJ6foKAAhoaX
+						AwyShJiZB5KZkoSbmwKcg/Py8j6D
+						u7q6PoOkoyM/AYaSnJKEnp+goACG
+						kqGSt5KikoSkowEAhKeZAIaBIAqm
+						g2ZmhkEkg83MTD2GkqmSqpKrkqyS
+						rpKEnp+goACGhpcCBYY=
+						</data>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Consolas;}
+{\colortbl;\red255\green255\blue255;\red148\green6\blue75;\red255\green255\blue255;\red38\green38\blue38;
+\red101\green71\blue146;}
+\deftab720
+\pard\pardeftab720\sl336\qr
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 public\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4  String \cf5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec5 arriveTriple\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 (\'855\'85)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+			</array>
+			<key>GridV</key>
+			<array>
+				<integer>148</integer>
+				<integer>149</integer>
+				<array/>
+			</array>
+			<key>ID</key>
+			<integer>147</integer>
 		</dict>
 		<dict>
-			<key>Bounds</key>
-			<string>{{91.5, 16}, {253, 19}}</string>
 			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>FitText</key>
-			<string>Vertical</string>
-			<key>Flow</key>
-			<string>Resize</string>
-			<key>FontInfo</key>
-			<dict>
-				<key>Color</key>
+			<string>TableGroup</string>
+			<key>Graphics</key>
+			<array>
 				<dict>
-					<key>w</key>
-					<string>0</string>
-				</dict>
-				<key>Font</key>
-				<string>Georgia</string>
-				<key>NSKern</key>
-				<real>0.0</real>
-				<key>Size</key>
-				<real>16</real>
-			</dict>
-			<key>ID</key>
-			<integer>134</integer>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>fill</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-				<key>stroke</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-			<key>Text</key>
-			<dict>
-				<key>Align</key>
-				<integer>0</integer>
-				<key>Text</key>
-				<string>{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf340
-\cocoascreenfonts1{\fonttbl\f0\fnil\fcharset0 Georgia;}
+					<key>Bounds</key>
+					<string>{{91.5, 16}, {325.37999068200588, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>136</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/xsl/util/explain.xsl#L50</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>0</integer>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Georgia;}
 {\colortbl;\red255\green255\blue255;\red255\green128\blue0;}
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
 
@@ -998,10 +1602,124 @@ actor
 \b \expnd0\expndtw0\kerning0
 resource
 \b0 \expnd0\expndtw0\kerning0
-)}</string>
-				<key>VerticalPad</key>
-				<integer>0</integer>
-			</dict>
+, deferrer)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+				</dict>
+				<dict>
+					<key>Bounds</key>
+					<string>{{416.87999068200588, 16}, {670.31998501718044, 20}}</string>
+					<key>Class</key>
+					<string>ShapedGraphic</string>
+					<key>FitText</key>
+					<string>Vertical</string>
+					<key>Flow</key>
+					<string>Resize</string>
+					<key>FontInfo</key>
+					<dict>
+						<key>Font</key>
+						<string>Georgia</string>
+						<key>NSKern</key>
+						<real>0.0</real>
+					</dict>
+					<key>ID</key>
+					<integer>137</integer>
+					<key>Link</key>
+					<dict>
+						<key>url</key>
+						<string>https://github.com/timrdf/vsr/blob/master/src/java/edu/rpi/tw/visualization/log/VisualizationDecisions.java#L192</string>
+					</dict>
+					<key>Style</key>
+					<dict>
+						<key>fill</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>shadow</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+						<key>stroke</key>
+						<dict>
+							<key>Draws</key>
+							<string>NO</string>
+						</dict>
+					</dict>
+					<key>Text</key>
+					<dict>
+						<key>Align</key>
+						<integer>2</integer>
+						<key>Pad</key>
+						<integer>15</integer>
+						<key>RTFD</key>
+						<data>
+						BAtzdHJlYW10eXBlZIHoA4QBQISE
+						hBJOU0F0dHJpYnV0ZWRTdHJpbmcA
+						hIQITlNPYmplY3QAhZKEhIQITlNT
+						dHJpbmcBlIQBKyVwdWJsaWMgU3Ry
+						aW5nIGFycml2ZVJlc291cmNlKOKA
+						pjPigKYphoQCaUkBBpKEhIQMTlNE
+						aWN0aW9uYXJ5AJSEAWkHkoSWlgdO
+						U0NvbG9yhpKEhIQHTlNDb2xvcgCU
+						hAFjAoQEZmZmZoOopyc/g+no6D2D
+						u7q6PgGGkoSWlg1OU1N0cm9rZVdp
+						ZHRohpKEhIQITlNOdW1iZXIAhIQH
+						TlNWYWx1ZQCUhAEqhIQBZKAAhpKE
+						lpYNTlNTdHJva2VDb2xvcoaSmpKE
+						lpYQTlNQYXJhZ3JhcGhTdHlsZYaS
+						hISEF05TTXV0YWJsZVBhcmFncmFw
+						aFN0eWxlAISEEE5TUGFyYWdyYXBo
+						U3R5bGUAlIQEQ0NAUwEAhISEDk5T
+						TXV0YWJsZUFycmF5AISEB05TQXJy
+						YXkAlJkAhoEgCoQEWzNmXYNmZoZB
+						JIPNzEw9hpKElpYRTlNCYWNrZ3Jv
+						dW5kQ29sb3KGkoSbmwKcAQEBAYaS
+						hJaWBk5TRm9udIaShISEBk5TRm9u
+						dB6UmRyEBVsyOGNdBgAAABIAAAD/
+						/kMAbwBuAHMAbwBsAGEAcwAAAIQB
+						ZhCbAJsBmwCbAIaShJaWBk5TS2Vy
+						boaShJ6foKAAhoaXAgiShJiZB5KZ
+						koSbmwKcg83MTD6DzcxMPoPNzEw+
+						AYaSnJKEnp+goACGkqGSsZKikoSk
+						owEAhKeZAIaBIAqmg2ZmhkEkg83M
+						TD2GkqmSqpKrkqySrpKEnp+goACG
+						hpcDDpKEmJkHkpmShJubApyD8/Ly
+						PoO7uro+g6SjIz8BhpKckoSen6Cg
+						AIaSoZK3kqKShKSjAQCEp5kAhoEg
+						CqaDZmaGQSSDzcxMPYaSqZKqkquS
+						rJKukoSen6CgAIaGlwIFhg==
+						</data>
+						<key>Text</key>
+						<string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+{\fonttbl\f0\fnil\fcharset0 Consolas;}
+{\colortbl;\red255\green255\blue255;\red148\green6\blue75;\red255\green255\blue255;\red38\green38\blue38;
+\red101\green71\blue146;}
+\deftab720
+\pard\pardeftab720\sl336\qr
+
+\f0\fs32 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 public\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4  String \cf5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec5 arriveResource\cf4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 (\'853\'85)}</string>
+						<key>VerticalPad</key>
+						<integer>0</integer>
+					</dict>
+					<key>TextPlacement</key>
+					<integer>2</integer>
+				</dict>
+			</array>
+			<key>GridV</key>
+			<array>
+				<integer>136</integer>
+				<integer>137</integer>
+				<array/>
+			</array>
+			<key>ID</key>
+			<integer>135</integer>
 		</dict>
 	</array>
 	<key>GridInfo</key>
@@ -1039,21 +1757,23 @@ resource
 		<real>0.0</real>
 		<key>layoutEngine</key>
 		<string>dot</string>
+		<key>neatoLineLength</key>
+		<real>0.20000000298023224</real>
 		<key>neatoSeparation</key>
 		<real>0.0</real>
 		<key>twopiSeparation</key>
 		<real>0.0</real>
 	</dict>
 	<key>LinksVisible</key>
-	<string>NO</string>
+	<string>YES</string>
 	<key>MagnetsVisible</key>
 	<string>NO</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-01-26 17:43:21 +0000</string>
+	<string>2015-05-07 18:49:41 +0000</string>
 	<key>Modifier</key>
-	<string>lebot</string>
+	<string>Tim Lebo</string>
 	<key>NotesVisible</key>
 	<string>NO</string>
 	<key>Orientation</key>
@@ -1086,8 +1806,8 @@ resource
 		</array>
 		<key>NSPrintReverseOrientation</key>
 		<array>
-			<string>int</string>
-			<string>0</string>
+			<string>coded</string>
+			<string>BAtzdHJlYW10eXBlZIHoA4QBQISEhAhOU051bWJlcgCEhAdOU1ZhbHVlAISECE5TT2JqZWN0AIWEASqEhAFxlwCG</string>
 		</array>
 		<key>NSRightMargin</key>
 		<array>
@@ -1124,27 +1844,20 @@ resource
 	<dict>
 		<key>CurrentSheet</key>
 		<integer>0</integer>
-		<key>ExpandedCanvases</key>
-		<array>
-			<dict>
-				<key>name</key>
-				<string>Canvas 1</string>
-			</dict>
-		</array>
+		<key>Expanded_Canvases</key>
+		<array/>
 		<key>Frame</key>
-		<string>{{947, 41}, {730, 385}}</string>
-		<key>ListView</key>
-		<true/>
-		<key>OutlineWidth</key>
-		<integer>142</integer>
-		<key>RightSidebar</key>
+		<string>{{-1759, -115}, {1342, 458}}</string>
+		<key>ShowInfo</key>
 		<false/>
 		<key>Sidebar</key>
 		<false/>
 		<key>SidebarWidth</key>
-		<integer>120</integer>
+		<integer>0</integer>
+		<key>TopSlabHeight</key>
+		<real>250</real>
 		<key>VisibleRegion</key>
-		<string>{{2, 1}, {730, 291}}</string>
+		<string>{{-94, 0}, {1341, 361}}</string>
 		<key>Zoom</key>
 		<real>1</real>
 		<key>ZoomValues</key>
