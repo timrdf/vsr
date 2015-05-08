@@ -190,7 +190,7 @@ public class VisualizationDecisions {
     * @return
     */
    public String arriveResource(String actor, String resource, String deferrer) {
-      delegation(actor,deferrer);
+      delegation(actor, deferrer);
       return "";
    }
 
@@ -203,7 +203,7 @@ public class VisualizationDecisions {
    public String arriveTriple(String actor,
                               String subject, String predicate,
                               String deferrer) {
-      delegation(actor,deferrer);
+      delegation(actor, deferrer);
       return ""; 
    }
 
@@ -216,7 +216,7 @@ public class VisualizationDecisions {
    public String arriveTriple(String actor,
                               String subject, String predicate, String object,
                               String deferrer) {
-      delegation(actor,deferrer);
+      delegation(actor, deferrer);
       return ""; 
    }
 
@@ -227,6 +227,7 @@ public class VisualizationDecisions {
     * @param delegator
     */
    private void delegation(String actor, String delegator) {
+      
       if( ResourceValueHandler.isURI(actor) ) {
          if( ResourceValueHandler.isURI(delegator) ) {
             String delegation = actor + " " + delegator;
@@ -244,18 +245,17 @@ public class VisualizationDecisions {
    
    /**
     * 
-    * @param subject       - of the triple.
-    * @param focusR        - of the triple.
-    * @param object        - of the triple.
-    * @param actor         - name of the actor that acted on the triple.
-    * @param action        - the action that the actor made on the triple.
+    * @param referent      - subject/object of an RDF triple.
+    * @param actor         - name of the actor that decided to visualize 'referent' with a graphic.
+    * @param vProperty     - of the graphic depicting 'subject'.
+    * @param vValue        - of the graphic depicting 'object'.
     * @param visualForm    - URI of visual form created.
     * @param justification - reason the actor performed action on the triple.
     * $subject,$actor,$action,$visual-form-uri,$justification,$description
     */
-   public String explainResource(String subject,
+   public String explainResource(String referent,
                                  String actor,
-                                 String property, String value, String visualForm, 
+                                 String vProperty, String vValue, String visualForm, 
                                  String justification, String description) {
 
       //	   System.err.println("s "+subject);
@@ -276,10 +276,11 @@ public class VisualizationDecisions {
 
       String decisionURI = getDecisionURI();     
 
-      if( !ResourceValueHandler.isURI(subject) ) {
+      if( !ResourceValueHandler.isURI(referent) ) {
          System.err.println("subject is not a URI; edu.rpi.tw.visualization.log.VisualizationDecisions bailing");
          return decisionURI;
       }
+      
       if( usePersistentConn ) {
          try {
 
@@ -287,35 +288,41 @@ public class VisualizationDecisions {
                
                URI visualFormR = vf.createURI(visualForm);
                
-               add(vf.createURI(visualForm), SIO.hasAttribute, vf.createURI(decisionURI), context);
+               if( referent.equals(visualForm) ) {
+                  visualFormR = vf.createURI(context.stringValue()+"/graphic/"+NameFactory.getUUIDName("visual-form"));
+                  add(visualFormR, RDFS.COMMENT, vf.createLiteral("This URI was created by VisualizationDecisions because the visualFormURI given by XSL was the same as the referent."), context);
+               }
+               
+               add(visualFormR, SIO.hasAttribute, vf.createURI(decisionURI), context);
 
-               if( VSR.fill.stringValue().equals(property) ||
-                     VSR.stroke.stringValue().equals(property) ) {
+               if( VSR.fill.stringValue().equals(vProperty) ||
+                   VSR.stroke.stringValue().equals(vProperty) ) {
 
-                  Resource colorR = vf.createURI(this.context.stringValue()+"/color/"+NameFactory.getMD5(value));
-                  add(vf.createURI(visualForm), vf.createURI(property), colorR, context);
+                  Resource colorR = vf.createURI(this.context.stringValue()+"/color/"+NameFactory.getMD5(vValue));
+                  add(visualFormR, vf.createURI(vProperty), colorR, context);
                   add(colorR, RDF.TYPE, VSR.Color,                              context);
-                  add(colorR, VSR.rgb,  vf.createLiteral(value),                context);
+                  add(colorR, VSR.rgb,  vf.createLiteral(vValue),                context);
 
-               }else if( VSR.tooltip.stringValue().equals(property) ) {
+               }else if( VSR.tooltip.stringValue().equals(vProperty) ) {
 
-                  Resource tooltipR = vf.createURI(this.context.stringValue()+"/tooltip/"+NameFactory.getMD5(value));
+                  Resource tooltipR = vf.createURI(this.context.stringValue()+"/tooltip/"+NameFactory.getMD5(vValue));
 
-                  add(visualFormR, vf.createURI(property), tooltipR, context);
-                  add(tooltipR,    PROVO.value, vf.createLiteral(value),    context);
-               }else if( ResourceValueHandler.isURI(property) ) {
-                  add(vf.createURI(visualForm), 
-                        vf.createURI(property), 
-                        ResourceValueHandler.isURI(value) ? vf.createURI(value) : vf.createLiteral(value),
+                  add(visualFormR, vf.createURI(vProperty), tooltipR, context);
+                  add(tooltipR,    PROVO.value, vf.createLiteral(vValue),    context);
+                  
+               }else if( ResourceValueHandler.isURI(vProperty) ) {
+                  add(visualFormR, 
+                        vf.createURI(vProperty), 
+                        ResourceValueHandler.isURI(vValue) ? vf.createURI(vValue) : vf.createLiteral(vValue),
                               context);
                }
 
-               add(vf.createURI(visualForm), 
+               add(visualFormR, 
                      RDF.TYPE, 
                      VSR.Graphic, context);
 
-               if( "a-root".equals(property) && "true".equals(value) ) {
-                  add(vf.createURI(visualForm), 
+               if( "a-root".equals(vProperty) && "true".equals(vValue) ) {
+                  add(visualFormR, 
                         RDF.TYPE, 
                         VSR.Root, context);
                }
@@ -337,7 +344,7 @@ public class VisualizationDecisions {
                      DCTerms.description, 
                      vf.createLiteral(description.replaceAll("^ *","")), context);
 
-               add(vf.createURI(visualForm), SIO.hasAttribute, vf.createURI(decisionURI), context);
+               add(visualFormR, SIO.hasAttribute, vf.createURI(decisionURI), context);
 
 
 
@@ -346,15 +353,16 @@ public class VisualizationDecisions {
                 *                 p:composedBy :visual_artifact_0;
                 *                 v:depicts    tbl:me .         
                 */
-               add(vf.createURI(visualForm), 
+               add(visualFormR, 
                      RDF.TYPE, 
                      VSR.Graphic, context);
-               add(vf.createURI(visualForm), 
+               add(visualFormR, 
                      DCTerms.isPartOf, 
                      context, context);
-               add(vf.createURI(visualForm), 
+               add(visualFormR, 
                      VSR.depicts, 
-                     vf.createURI(subject), context);
+                     vf.createURI(referent), context);
+               
                if( commitInterval > 0 && decisionCount % commitInterval == 0 ) {
                   pconn.commit();
                }
@@ -389,7 +397,7 @@ public class VisualizationDecisions {
    
    /**
     * 
-    * @param subject       - of the triple.
+    * @param referent       - of the triple.
     * @param focusR     - of the triple.
     * @param object        - of the triple.
     * @param actor         - name of the actor that acted on the triple.
@@ -398,9 +406,10 @@ public class VisualizationDecisions {
     * @param justification - reason the actor performed action on the triple.
     * $subject,$actor,$action,$visual-form-uri,$justification,$description
     */
-   public String explainResource(String subject,
-		   String actor,   String action,    String visualForm, 
-		   String justification, String description) {
+   public String explainResource(String referent,
+                        		   String actor, 
+                        		   String action, String visualForm, 
+                        		   String justification, String description) {
 
 //	   System.err.println("s "+subject);
 //	   System.err.println("actor "+actor);
@@ -419,13 +428,21 @@ public class VisualizationDecisions {
 
 	   String decisionURI = getDecisionURI();     
 
-	   if( !ResourceValueHandler.isURI(subject) ) {
+	   if( !ResourceValueHandler.isURI(referent) ) {
 		   return decisionURI;
 	   }
+	   
 	   if( usePersistentConn ) {
 		   try {
 
-			   add(vf.createURI(visualForm), SIO.hasAttribute, vf.createURI(decisionURI), context);
+            URI visualFormR = vf.createURI(visualForm);
+            
+            if( referent.equals(visualForm) ) {
+               visualFormR = vf.createURI(context.stringValue()+"/graphic/"+NameFactory.getUUIDName("visual-form"));
+               add(visualFormR, RDFS.COMMENT, vf.createLiteral("This URI was created by VisualizationDecisions because the visualFormURI given by XSL was the same as the referent."), context);
+            }
+            
+			   add(visualFormR, SIO.hasAttribute, vf.createURI(decisionURI), context);
 
 			   /*
 			    * :actor p:decided_to :decisionURI_1 .
@@ -445,9 +462,9 @@ public class VisualizationDecisions {
 			    *                 v:depicts    tbl:me .         
 			    */
 			   
-			   add(vf.createURI(visualForm), RDF.TYPE,         VSR.Graphic,           context);
-			   add(vf.createURI(visualForm), DCTerms.isPartOf, context,               context);
-			   add(vf.createURI(visualForm), VSR.depicts,      vf.createURI(subject), context);
+			   add(visualFormR, RDF.TYPE,         VSR.Graphic,           context);
+			   add(visualFormR, DCTerms.isPartOf, context,               context);
+			   add(visualFormR, VSR.depicts,      vf.createURI(referent), context);
 			   if( commitInterval > 0 && decisionCount % commitInterval == 0 ) {
 				   pconn.commit();
 			   }
@@ -571,7 +588,7 @@ public class VisualizationDecisions {
 				   if( VSR.fill.stringValue().equals(property) ) {
 
 					   Resource colorR = vf.createURI(this.context.stringValue()+"/color/"+NameFactory.getMD5(value));
-					   add(vf.createURI(visualForm), vf.createURI(property), colorR,  context);
+					   add(visualFormR, vf.createURI(property), colorR,  context);
 					   add(colorR, RDF.TYPE, VSR.Color,                               context);
 					   add(colorR, VSR.rgb,  vf.createLiteral(value),                 context);
 
@@ -580,7 +597,7 @@ public class VisualizationDecisions {
 					   Resource strokeR = vf.createURI(this.context.stringValue()+"/stroke/"+NameFactory.getMD5(visualForm));
 					   Resource colorR  = vf.createURI(this.context.stringValue()+"/color/"+NameFactory.getMD5(value));
 
-					   add(vf.createURI(visualForm), vf.createURI(property), strokeR, context);
+					   add(visualFormR, vf.createURI(property), strokeR, context);
 					   add(strokeR, RDF.TYPE, VSR.Stroke,                             context);
 					   add(strokeR, VSR.fill,  colorR,                                context);	  
 
@@ -589,7 +606,7 @@ public class VisualizationDecisions {
 
 				   }else {
 					   
-					   add(vf.createURI(visualForm), vf.createURI(property), 
+					   add(visualFormR, vf.createURI(property), 
 							   ResourceValueHandler.isURI(value) ? vf.createURI(value) : vf.createLiteral(value),
 									   context);
 				   

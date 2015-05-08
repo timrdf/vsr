@@ -257,6 +257,7 @@
    $tag:Tag,
    $sd:NamedGraph,
    $vsr:Graphic,
+   'http://provenanceweb.org/ns/pml#Answer',
    'http://purl.org/twc/vocab/vsr/svg#circle'
 )"/>
 
@@ -279,7 +280,8 @@
    $sd:endpoint,
    $void:uriSpace,
    $prov:atLocation,
-   $sd:name
+   $sd:name,
+   $prov:specializationOf
 )"/>
 
 <xsl:variable name="LINKSETS-blacklisted-predicate-namespaces" select="(
@@ -667,7 +669,7 @@
                <xsl:when test="string-length($void-triples)">
                   <xsl:variable name="value" select="math:max(xs:integer(math:log(xs:double($void-triples))),
                                                             1)"/>
-                  <xsl:message select="acv:explainResource($subject,$owl:sameAs,'stroke-width',string($value),'$visual-form-uri','government')"/>
+                  <xsl:message select="acv:explainResource($subject,$owl:sameAs,'stroke-width',string($value),'$visual-form-uri','void-triples width')"/>
                   <xsl:value-of select="$value"/> 
                </xsl:when>
                <xsl:otherwise>

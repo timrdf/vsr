@@ -43,6 +43,7 @@
 <xd:doc>named graph of visualization artifact</xd:doc>
 <xsl:param name="visual-artifact-uri"  select="concat('http://logd.tw.rpi.edu/source/lebot-rpi-edu/dataset/visualizations/version/',nmf:getMillisecondToMinuteName(''))"/>
 
+
 <xd:doc>conferred in rdf:RDF and acv:explain()</xd:doc>
 <xsl:param name="log-visual-decisions" select="false()"/>
 
@@ -51,6 +52,9 @@
 
 <xd:doc>repository at sesame server to log visualization artifact</xd:doc>
 <xsl:param name="log-repositoryID"     select="'visual'"/>
+
+<xd:doc></xd:doc>
+<xsl:param name="log-dumpFile" select="''"/>
 
 
 
@@ -111,7 +115,7 @@
    <xd:short>Logger</xd:short>
    <xd:detail>An instance of a Java object. Commits RDF triples to a Sesame repository.</xd:detail>
 </xd:doc>
-<xsl:variable name="log"                       select="if ($log-serverURL = '.')
+<xsl:variable name="log"                       select="if ($log-serverURL = '.' or string-length($log-dumpFile))
                                                        then log:new($visual-artifact-uri)
                                                        else log:new($log-serverURL, $log-repositoryID, $visual-artifact-uri)"/>
 
@@ -263,8 +267,8 @@
    </xsl:for-each-group>
 
    <xsl:if test="$log-visual-decisions">
-      <xsl:message select="'# Begin provenance dump.'"/>
-      <xsl:variable name="numTriples" select="log:export($log)"/>
+      <xsl:message select="concat('# Begin provenance dump ($log-dumpFile: ',$log-dumpFile,')')"/>
+      <xsl:variable name="numTriples" select="log:export($log,$log-dumpFile)"/>
       <xsl:message select="concat('#',$in,$numTriples,' in vislog')"/>
    </xsl:if>
 
@@ -447,10 +451,10 @@
 
    <xsl:variable name="id">
       <xsl:variable name="value" select="$resource"/>
-      <xsl:message select="acv:explainResource($resource,$owl:sameAs,
+      <!--xsl:message select="acv:explainResource($resource,$owl:sameAs,
                                                'vnode id',$resource,
                                                $value,
-                                               'otherwise',$defin)"/>
+                                               'otherwise',$defin)"/--> <!-- Can't ask for the id b/c we'll never visualize it -->
       <xsl:value-of select="$value"/>
    </xsl:variable>
 

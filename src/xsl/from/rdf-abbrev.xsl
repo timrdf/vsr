@@ -1654,18 +1654,20 @@ $rdf:type
          <xsl:choose>
             <xsl:when test="string-length($view-context) and string-length($resource)">
                <xsl:variable name="value" select="concat($view-context,' ',$resource)"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,
+               <!--xsl:message select="acv:explainResource($resource,$owl:sameAs,
                                                         'vnode id',string($value),
                                                         concat($visual-artifact-uri,'/graphic/',vsr:view-id($value)),
-                                                        'view-context given',$defin)"/> <!-- 5th arg visual-form-uri changed from $value to $visualFormURI May 2015 -->
+                                                        'view-context given',$defin)"/--> <!-- 5th arg visual-form-uri changed from $value to $visualFormURI May 2015 -->
+      <!-- Can't ask for the id or else it'll think it already drew it -->
                <xsl:value-of select="$value"/>
             </xsl:when>
             <xsl:otherwise>
                <xsl:variable name="value" select="$resource"/>
-               <xsl:message select="acv:explainResource($resource,$owl:sameAs,
+               <!--xsl:message select="acv:explainResource($resource,$owl:sameAs,
                                                         'vnode id',$resource,
                                                         concat($visual-artifact-uri,'/graphic/',vsr:view-id($value)),
-                                                        'id otherwise',$defin)"/> <!-- 5th arg visual-form-uri changed from $value to $visualFormURI May 2015 -->
+                                                        'id otherwise',$defin)"/--> <!-- 5th arg visual-form-uri changed from $value to $visualFormURI May 2015 -->
+      <!-- Can't ask for the id or else it'll think it already drew it -->
                <xsl:value-of select="$value"/>
             </xsl:otherwise>
          </xsl:choose>
