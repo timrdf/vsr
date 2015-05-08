@@ -123,8 +123,12 @@ else
          vis_strat_full="`pwd`/$1"        # Try it as relative path
       else
          for try_path in `echo $VSR_PATH | sed 's/:/ /g'`; do
+            VSR_EXT='.vsr.xsl'
             if [[ -e "$try_path/$1" && -z "$vis_strat_full" ]]; then
-               vis_strat_full="$try_path/$1"        # Try it as relative path
+               vis_strat_full="$try_path/$1"           # Try it as relative path
+               echo "[INFO]       Visual strategy found at $vis_strat_full" >&2
+            elif [[ -e "$try_path/${1}$VSR_EXT" && -z "$vis_strat_full" ]]; then
+               vis_strat_full="$try_path/${1}$VSR_EXT" # Try it as relative path, with extension
                echo "[INFO]       Visual strategy found at $vis_strat_full" >&2
             else
                echo "[INFO]       Visual strategy not found in $try_path ..." >&2
@@ -276,7 +280,7 @@ while [ $# -gt 0 ]; do
    fi
    if [[ -n "$params" ]]; then
       params="-v $params -in"
-      echo "[INFO] Saxon parameters: $params"
+      echo "[INFO] Saxon parameters: $params" >&2
    fi
 
    # Convert file at 'artifact' into file 'outfile', depending on how many files are being processed.
