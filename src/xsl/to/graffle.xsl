@@ -26,29 +26,29 @@
 </xd:doc>
 <xsl:function name="vsr:view-id">
    <xsl:param name="id"/>
-	<!-- xsl:value-of select="if (false()) then xfm:atoid($id) else $id"/-->
-	<xsl:variable name="value" select="1000 + xfm:atoid-smaller($id)"/>
+   <!-- xsl:value-of select="if (false()) then xfm:atoid($id) else $id"/-->
+   <xsl:variable name="value" select="1000 + xfm:atoid-smaller($id)"/>
    <xsl:message select="concat('               vsr:view-id ',$value,' from ',$id,' (@ graffle.xsl)')"/>
    <xsl:value-of select="$value"/>
 </xsl:function>
 
 <!--xsl:template name="node">
-	<xsl:param name="id"  required="yes"/>
+   <xsl:param name="id"  required="yes"/>
 
-	<xsl:param name="uri"/>
-	<xsl:param name="depicts"/>
+   <xsl:param name="uri"/>
+   <xsl:param name="depicts"/>
 
-	<xsl:param name="label"/>
-	<xsl:param name="url"/>
-	<xsl:param name="notes"/>
+   <xsl:param name="label"/>
+   <xsl:param name="url"/>
+   <xsl:param name="notes"/>
 
-	<xsl:param name="draw-stroke"/>
-	<xsl:param name="stroke-color"/>
+   <xsl:param name="draw-stroke"/>
+   <xsl:param name="stroke-color"/>
 
-	<xsl:param name="fill-color"/>
-	<xsl:param name="font-color"/>
+   <xsl:param name="fill-color"/>
+   <xsl:param name="font-color"/>
 
-	<xsl:param name="draw-shadow" select="'NO'"/>
+   <xsl:param name="draw-shadow" select="'NO'"/>
 
    <xsl:call-template name="graffle-node">
       <xsl:with-param name="id"          select="$id"/>
@@ -137,57 +137,57 @@
 </xd:doc>
 <xsl:template name="node"> <!-- was named graffle-node -->
 
-	<xsl:param name="visual-artifact-uri" required="yes"/>
+   <xsl:param name="visual-artifact-uri" required="yes"/>
 
-	<xsl:param name="depicts"/>
-	<xsl:param name="context"/>
+   <xsl:param name="depicts"/>
+   <xsl:param name="context"/>
 
-	<xsl:param name="id"                  required="yes"/>
+   <xsl:param name="id"                  required="yes"/>
 
-	<xsl:param name="uri"/>
+   <xsl:param name="uri"/>
 
-	<xsl:param name="isDefinedBy"/>
-	<xsl:param name="rdfTypes"/>
+   <xsl:param name="isDefinedBy"/>
+   <xsl:param name="rdfTypes"/>
 
    <!-- NOTE: these defaults do not work if they are passed in empty -->
 
-	<xsl:param name="shape" select="'Rectangle'"/>
-	<xsl:param name="x"     select="'50'"/>
-	<xsl:param name="y"     select="'50'"/>
-	<xsl:param name="rotation"/>
-	<xsl:param name="width"/>
-	<xsl:param name="height"/>
-	<xsl:param name="lock" select="false()"/>
+   <xsl:param name="shape" select="'Rectangle'"/>
+   <xsl:param name="x"     select="'50'"/>
+   <xsl:param name="y"     select="'50'"/>
+   <xsl:param name="rotation"/>
+   <xsl:param name="width"/>
+   <xsl:param name="height"/>
+   <xsl:param name="lock" select="false()"/>
 
-	<xsl:param name="magnets"/>
+   <xsl:param name="magnets"/>
 
-	<xsl:param name="draw-stroke"/>
-	<xsl:param name="stroke-color"/>
-	<xsl:param name="stroke-style"/>
-	<xsl:param name="stroke-width"/>
-	<xsl:param name="draw-shadow"/>
-	<xsl:param name="draw-fill"/>
-	<xsl:param name="fill-color"/>
-	<xsl:param name="font-color"/>
+   <xsl:param name="draw-stroke"/>
+   <xsl:param name="stroke-color"/>
+   <xsl:param name="stroke-style"/>
+   <xsl:param name="stroke-width"/>
+   <xsl:param name="draw-shadow"/>
+   <xsl:param name="draw-fill"/>
+   <xsl:param name="fill-color"/>
+   <xsl:param name="font-color"/>
 
-	<xsl:param name="label"/>
-	<xsl:param name="label-rtf"/>
-	<xsl:param name="fit-text"/>
-	<xsl:param name="wrap-text"/>
-	<xsl:param name="h-align-text"/>
-	<xsl:param name="v-align-text"/>
-	<xsl:param name="h-text-pad"/>
-	<xsl:param name="v-text-pad"/>
-	<xsl:param name="url"/>
-	<xsl:param name="notes"/>
-	<xsl:param name="tooltip"/>
-	<xsl:param name="a-root"/>
-	<xsl:param name="ignore"/>
+   <xsl:param name="label"/>
+   <xsl:param name="label-rtf"/>
+   <xsl:param name="fit-text"/>
+   <xsl:param name="wrap-text"/>
+   <xsl:param name="h-align-text"/>
+   <xsl:param name="v-align-text"/>
+   <xsl:param name="h-text-pad"/>
+   <xsl:param name="v-text-pad"/>
+   <xsl:param name="url"/>
+   <xsl:param name="notes"/>
+   <xsl:param name="tooltip"/>
+   <xsl:param name="a-root"/>
+   <xsl:param name="ignore"/>
 
    <xsl:message select="concat('                    2y:node vid ',$id)"/>
 
-	<xsl:variable name="new_width"  select="if ($width)  then $width  else xfm:graffle-width-of-text( $label,$shape)"/>
-	<xsl:variable name="new_height" select="if ($height) then $height else xfm:graffle-height-of-text($label,$shape)"/>
+   <xsl:variable name="new_width"  select="if ($width)  then $width  else xfm:graffle-width-of-text( $label,$shape)"/>
+   <xsl:variable name="new_height" select="if ($height) then $height else xfm:graffle-height-of-text($label,$shape)"/>
 
    <xsl:message select="concat('                    2y:node height=',$height, ' width=', $width,' -- new_height=',$new_height,' new_width=',$new_width)"/>
 
@@ -212,17 +212,17 @@
 
    <xsl:variable name="local-name" select="concat($local-path,$vid)"/>
 
-	<dict>
-		<key>ID</key>
-		<integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
+   <dict>
+      <key>ID</key>
+      <integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
 
       <xsl:if test="$lock">
          <key>IsLocked</key>
          <string>YES</string>
       </xsl:if>
 
-		<key>Class</key>
-		<string>ShapedGraphic</string>
+      <key>Class</key>
+      <string>ShapedGraphic</string>
 
       <!-- 
          2013 Jan
@@ -258,8 +258,8 @@
 
       <!--xsl:message select="concat($rotation,'  ',string-length($rotation))"/-->
       <xsl:if test="string-length($rotation)">
-		<key>Rotation</key>
-		<string> <xsl:value-of select="$rotation"/> </string>
+      <key>Rotation</key>
+      <string> <xsl:value-of select="$rotation"/> </string>
       </xsl:if>
 
       <xsl:variable name="map">
@@ -269,13 +269,13 @@
          <shape graffle="Circle"    vsr="Circle"/>
          <shape graffle="Cross"     vsr="Cross"/>
       </xsl:variable>
-		<key>Shape</key>
-		<xsl:message select="concat('               node shape=',$shape,' -- ',if ($map/shape[@vsr = $shape]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle')"/>
-		<string> <xsl:value-of select="if ($map[shape[@vsr = $shape]]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle'"/> </string>
+      <key>Shape</key>
+      <xsl:message select="concat('               node shape=',$shape,' -- ',if ($map/shape[@vsr = $shape]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle')"/>
+      <string> <xsl:value-of select="if ($map[shape[@vsr = $shape]]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle'"/> </string>
 
       <!--xsl:message select="concat($depicts,' height ',$height,' new_height ',$new_height)"/-->
-		<key>Bounds</key> <!-- {{upper-left's X, upper-left's Y}, {{width, height}} -->
-		<string> <xsl:value-of select="concat('{{',     if (string-length(string($x)))          then $x          else '50',
+      <key>Bounds</key> <!-- {{upper-left's X, upper-left's Y}, {{width, height}} -->
+      <string> <xsl:value-of select="concat('{{',     if (string-length(string($x)))          then $x          else '50',
                                                ', ',  if (string-length(string($y)))          then $y          else '50',
                                                '}, {',if (string-length(string($new_width)))  then $new_width  else '3',
                                                 ', ', if (string-length(string($new_height))) then $new_height else '3',
@@ -345,7 +345,7 @@
          </dict>
       </dict>
 
-		<xsl:if test="$label or $label-rtf">
+      <xsl:if test="$label or $label-rtf">
          <xsl:if test="$font-color and not(string-length($label-rtf))">
             <key>FontInfo</key>
             <dict>
@@ -361,43 +361,43 @@
             </dict>
          </xsl:if>
 
-			<key>Text</key>
-			<dict>
+         <key>Text</key>
+         <dict>
             <xsl:if test="number($h-align-text) = (0,2,3)">
                <key>Align</key>
                <integer><xsl:value-of select="$h-align-text"/></integer>
             </xsl:if>
             <key>Pad</key>
             <integer><xsl:value-of select="if ($h-text-pad and number($h-text-pad)) then $h-text-pad else 2"/></integer>
-				<key>Text</key>
-				<string><xsl:value-of select="if (string-length($label-rtf)) then $label-rtf else xfm:rtf($label,$font-color)"/></string>
+            <key>Text</key>
+            <string><xsl:value-of select="if (string-length($label-rtf)) then $label-rtf else xfm:rtf($label,$font-color)"/></string>
             <key>VerticalPad</key>
             <integer><xsl:value-of select="if ($v-text-pad and number($v-text-pad)) then $v-text-pad else 2"/></integer>
-			</dict>
-		</xsl:if>
+         </dict>
+      </xsl:if>
 
-		<xsl:if test="$notes">
-			<key>Notes</key>
-			<string>
-			  <xsl:value-of select="xfm:rtf($notes)"/>
-			</string>
-		</xsl:if>
+      <xsl:if test="$notes">
+         <key>Notes</key>
+         <string>
+           <xsl:value-of select="xfm:rtf($notes)"/>
+         </string>
+      </xsl:if>
 
       <xsl:if test="$url">
-			<key>Link</key>
-			<dict>
-				<key>url</key>
-				<string> <xsl:value-of select="$url"/> </string>
-			</dict>
-		</xsl:if>
+         <key>Link</key>
+         <dict>
+            <key>url</key>
+            <string> <xsl:value-of select="$url"/> </string>
+         </dict>
+      </xsl:if>
 
       <xsl:if test="$magnets = 'sides'">
-			<key>Magnets</key>
-			<array>
-				<string>{1, 0}</string>
-				<string>{-1, 0}</string>
-			</array>
-		</xsl:if>
+         <key>Magnets</key>
+         <array>
+            <string>{1, 0}</string>
+            <string>{-1, 0}</string>
+         </array>
+      </xsl:if>
 
       <xsl:if test="number($v-align-text) = (0,2)">
          <key>TextPlacement</key>
@@ -462,21 +462,21 @@
          </dict>
       </xsl:if>
 
-	</dict>
+   </dict>
 </xsl:template>
 
 <!--xsl:template name="edge">
-	<xsl:param name="id"   required="yes"/>
-	<xsl:param name="from" required="yes"/>
-	<xsl:param name="to"   required="yes"/>
+   <xsl:param name="id"   required="yes"/>
+   <xsl:param name="from" required="yes"/>
+   <xsl:param name="to"   required="yes"/>
    
-	<xsl:param name="uri"/>
+   <xsl:param name="uri"/>
 
-	<xsl:param name="label"/>
-	<xsl:param name="url"/>
-	<xsl:param name="notes"/>
+   <xsl:param name="label"/>
+   <xsl:param name="url"/>
+   <xsl:param name="notes"/>
 
-	<xsl:param name="line-style"/>
+   <xsl:param name="line-style"/>
 
    <!-xsl:message select='concat("  edge template called: ",$from," - ",$to,"(",$id,")")'/ ->
 
@@ -516,34 +516,34 @@
    <xd:param name="stroke-color">The color of this visual edge. Single value to duplicate for RGB (TODO: handle one or 3)</xd:param>
 </xd:doc>
 <xsl:template name="edge"> <!-- this was named graffle-edge. Making a generic "edge" that maps to graffle-edge would help interoperability. -->
-	<xsl:param name="id"   required="yes"/>
-	<xsl:param name="from" required="yes"/>
-	<xsl:param name="to"   required="yes"/>
+   <xsl:param name="id"   required="yes"/>
+   <xsl:param name="from" required="yes"/>
+   <xsl:param name="to"   required="yes"/>
 
-	<xsl:param name="uri"/>
-	<xsl:param name="depicts"/>
+   <xsl:param name="uri"/>
+   <xsl:param name="depicts"/>
 
-	<xsl:param name="label"/>
-	<xsl:param name="font-color"/>
+   <xsl:param name="label"/>
+   <xsl:param name="font-color"/>
 
-	<xsl:param name="notes"/>
-	<xsl:param name="url"/>
+   <xsl:param name="notes"/>
+   <xsl:param name="url"/>
 
-	<xsl:param name="draw-shadow" select="'NO'"/>
-	<xsl:param name="head-style"  select="'FilledArrow'"/>
-	<xsl:param name="tail-style"  select="'0'"/>
-	<xsl:param name="line-width"/>
-	<xsl:param name="line-style"/>
-	<xsl:param name="stroke-color">0.701961</xsl:param>
+   <xsl:param name="draw-shadow" select="'NO'"/>
+   <xsl:param name="head-style"  select="'FilledArrow'"/>
+   <xsl:param name="tail-style"  select="'0'"/>
+   <xsl:param name="line-width"/>
+   <xsl:param name="line-style"/>
+   <xsl:param name="stroke-color">0.701961</xsl:param>
 
    <xsl:message select="concat('               2y:edge given id       ',$id)"/>
    <xsl:message select="concat('               2y:edge given depicts  ',$depicts)"/>
    <xsl:message select="concat('               2y:edge given from vid ',$from)"/>
    <xsl:message select="concat('               2y:edge given to   vid ',$to)"/>
 
-	<dict>
-		<key>ID</key>
-		<integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
+   <dict>
+      <key>ID</key>
+      <integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
 
       <xsl:if test="$graffle-version ge 5"> <!--xsl:message select="'graffle version',$graffle-version"/-->
       <key>UserInfo</key>
@@ -562,37 +562,37 @@
       <key>AllowLabelDrop</key>
       <false/>
 
-		<key>Class</key>
-		<string>LineGraphic</string>
+      <key>Class</key>
+      <string>LineGraphic</string>
 
-		<key>Tail</key>
-		<dict>
-			<key>ID</key>
-			<integer> <xsl:value-of select="vsr:view-id($from)"/> </integer>
-		</dict>
+      <key>Tail</key>
+      <dict>
+         <key>ID</key>
+         <integer> <xsl:value-of select="vsr:view-id($from)"/> </integer>
+      </dict>
 
-		<key>Head</key>
-		<dict>
-			<key>ID</key>
-			<integer> <xsl:value-of select="vsr:view-id($to)"/> </integer>
-		</dict>
+      <key>Head</key>
+      <dict>
+         <key>ID</key>
+         <integer> <xsl:value-of select="vsr:view-id($to)"/> </integer>
+      </dict>
 
-		<xsl:if test="$notes">
-			<key>Notes</key>
-			<string>
-			  <xsl:value-of select="xfm:rtf($notes)"/>
-			</string>
-		</xsl:if>
-
-		<xsl:if test="$url">
-			<key>Link</key>
-			<dict>
-				<key>url</key>
-				<string> <xsl:value-of select="$url"/> </string>
-			</dict>
+      <xsl:if test="$notes">
+         <key>Notes</key>
+         <string>
+           <xsl:value-of select="xfm:rtf($notes)"/>
+         </string>
       </xsl:if>
 
-		<key>Style</key>
+      <xsl:if test="$url">
+         <key>Link</key>
+         <dict>
+            <key>url</key>
+            <string> <xsl:value-of select="$url"/> </string>
+         </dict>
+      </xsl:if>
+
+      <key>Style</key>
       <dict>
          <xsl:if test="$draw-shadow = 'YES-NO-IT-IS-TOO-SLOW'">
             <key>shadow</key>
@@ -641,7 +641,7 @@
             <string> <xsl:value-of select="$tail-style"/> </string>
          </dict>
       </dict>
-	</dict>
+   </dict>
 
    <xsl:if test="$label">
       <!-- add an entire new dict entry for the label object that points to the linegraphic made above -->
@@ -758,64 +758,64 @@
    <xd:param name="id">The client-side identifier for this visual node.</xd:param>
 </xd:doc>
 <xsl:template name="graffle-polygon">
-	<xsl:param name="id" required="yes"/>
+   <xsl:param name="id" required="yes"/>
 
-	<dict>
-		<key>Bounds</key>
-		<string>{{115, 98}, {200, 184}}</string>
-		<key>Class</key>
-		<string>ShapedGraphic</string>
-		<key>ID</key>
-		<integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
-		<key>Shape</key>
-		<string>Bezier</string>
-		<key>ShapeData</key>
-		<dict>
-			<key>UnitPoints</key>
-			<array>
-				<string>{-0.185, -0.5}</string>
-				<string>{-0.185, -0.5}</string>
-				<string>{0.5, -0.402174}</string>
-				<string>{0.5, -0.402174}</string>
-				<string>{0.5, -0.402174}</string>
-				<string>{0.41, 0.353261}</string>
-				<string>{0.41, 0.353261}</string>
-				<string>{0.41, 0.353261}</string>
-				<string>{-0.5, 0.5}</string>
-				<string>{-0.5, 0.5}</string>
-				<string>{-0.5, 0.5}</string>
-				<string>{-0.255, 0.141304}</string>
-				<string>{-0.255, 0.141304}</string>
-				<string>{-0.255, 0.141304}</string>
-				<string>{-0.44, -0.00543475}</string>
-				<string>{-0.44, -0.00543475}</string>
-				<string>{-0.44, -0.00543475}</string>
-				<string>{-0.185, -0.5}</string>
-			</array>
-		</dict>
-		<key>Style</key>
-		<dict>
-			<key>fill</key>
-			<dict>
-				<key>Color</key>
-				<dict>
-					<key>a</key>
-					<string>0.5</string>
-					<key>b</key>
-					<string>0</string>
-					<key>g</key>
-					<string>0</string>
-					<key>r</key>
-					<string>1</string>
-				</dict>
-				<key>GradientColor</key>
-				<dict>
-					<key>w</key>
-					<string>0.666667</string>
-				</dict>
-			</dict>
-		</dict>
-	</dict>
+   <dict>
+      <key>Bounds</key>
+      <string>{{115, 98}, {200, 184}}</string>
+      <key>Class</key>
+      <string>ShapedGraphic</string>
+      <key>ID</key>
+      <integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
+      <key>Shape</key>
+      <string>Bezier</string>
+      <key>ShapeData</key>
+      <dict>
+         <key>UnitPoints</key>
+         <array>
+            <string>{-0.185, -0.5}</string>
+            <string>{-0.185, -0.5}</string>
+            <string>{0.5, -0.402174}</string>
+            <string>{0.5, -0.402174}</string>
+            <string>{0.5, -0.402174}</string>
+            <string>{0.41, 0.353261}</string>
+            <string>{0.41, 0.353261}</string>
+            <string>{0.41, 0.353261}</string>
+            <string>{-0.5, 0.5}</string>
+            <string>{-0.5, 0.5}</string>
+            <string>{-0.5, 0.5}</string>
+            <string>{-0.255, 0.141304}</string>
+            <string>{-0.255, 0.141304}</string>
+            <string>{-0.255, 0.141304}</string>
+            <string>{-0.44, -0.00543475}</string>
+            <string>{-0.44, -0.00543475}</string>
+            <string>{-0.44, -0.00543475}</string>
+            <string>{-0.185, -0.5}</string>
+         </array>
+      </dict>
+      <key>Style</key>
+      <dict>
+         <key>fill</key>
+         <dict>
+            <key>Color</key>
+            <dict>
+               <key>a</key>
+               <string>0.5</string>
+               <key>b</key>
+               <string>0</string>
+               <key>g</key>
+               <string>0</string>
+               <key>r</key>
+               <string>1</string>
+            </dict>
+            <key>GradientColor</key>
+            <dict>
+               <key>w</key>
+               <string>0.666667</string>
+            </dict>
+         </dict>
+      </dict>
+   </dict>
 </xsl:template>
 
 <xd:doc>
@@ -839,17 +839,17 @@
 <xsl:function name="xfm:graffle-width-of-text">
   <xsl:param name="text"/>
   <xsl:param name="shape"/>
-	<xsl:choose>
-	  <xsl:when test="$shape = 'Rectangle'">
-			<!--xsl:message select="concat(string-length($text),' ',7 * string-length($text) + 10,' ',$text)"/-->
-			<xsl:value-of select="7 * string-length($text) + 30"/>
-		</xsl:when>
-	  <xsl:when test="$shape = 'Circle'">
-			<xsl:value-of select="9 * string-length($text) + 25"/>
-		</xsl:when>
-	  <xsl:otherwise>
-		</xsl:otherwise>
-	</xsl:choose>
+   <xsl:choose>
+     <xsl:when test="$shape = 'Rectangle'">
+         <!--xsl:message select="concat(string-length($text),' ',7 * string-length($text) + 10,' ',$text)"/-->
+         <xsl:value-of select="7 * string-length($text) + 30"/>
+      </xsl:when>
+     <xsl:when test="$shape = 'Circle'">
+         <xsl:value-of select="9 * string-length($text) + 25"/>
+      </xsl:when>
+     <xsl:otherwise>
+      </xsl:otherwise>
+   </xsl:choose>
 </xsl:function>
 
 <xd:doc>
@@ -862,16 +862,16 @@
 <xsl:function name="xfm:graffle-height-of-text">
   <xsl:param name="text"/>
   <xsl:param name="shape"/>
-	<xsl:choose>
-	  <xsl:when test="$shape = 'Rectangle'">
-			<xsl:value-of select="36"/>
-		</xsl:when>
-	  <xsl:when test="$shape = 'Circle'">
-			<xsl:value-of select="30"/>
-		</xsl:when>
-	  <xsl:otherwise>
-		</xsl:otherwise>
-	</xsl:choose>
+   <xsl:choose>
+     <xsl:when test="$shape = 'Rectangle'">
+         <xsl:value-of select="36"/>
+      </xsl:when>
+     <xsl:when test="$shape = 'Circle'">
+         <xsl:value-of select="30"/>
+      </xsl:when>
+     <xsl:otherwise>
+      </xsl:otherwise>
+   </xsl:choose>
 </xsl:function>
 
 <xd:doc>
