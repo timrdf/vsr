@@ -264,7 +264,7 @@
    <dict>
       <key>kMDItemAuthors</key>
       <array>
-         <string>2graffle5.xsl</string>
+         <string>https://github.com/timrdf/vsr/blob/master/src/xsl/to/2graffle5.xsl</string>
       </array>
    </dict>
    <key>VPages</key>
