@@ -4,10 +4,15 @@
 <xsl:transform version="2.0" 
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
    xmlns:xd="http://www.pnp-software.com/XSLTdoc"
+   xmlns:g="https://raw.github.com/timrdf/vsr/master/src/xsl/grddl/graffle.xsl#"
+   xmlns:msg20090200215="http://www.oxygenxml.com/archives/xsl-list/200902/msg00215.html"
    xmlns:xs="http://www.w3.org/2001/XMLSchema"
    xmlns:xfm="transform namespace"
    xmlns:vsr="http://purl.org/twc/vocab/vsr#"
-   exclude-result-prefixes="xs xfm xd">
+   exclude-result-prefixes="vsr xfm xs xd xsl g msg20090200215">
+
+<!--xsl:output method="text"/-->
+<xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
 
 <xd:doc type="stylesheet">
    <xd:short>VSR</xd:short>
@@ -35,6 +40,21 @@
    <xsl:message select="concat('               vsr:view-id ',$value,' from ',$id,' (@ graffle.xsl)')"/>
    <xsl:value-of select="$value"/>
 </xsl:function>
+
+<xsl:variable name="prefixes">
+<xsl:text><![CDATA[@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix pext:    <http://www.ontotext.com/proton/protonext#> .
+
+]]></xsl:text>
+</xsl:variable>
+
+<xsl:template match="/">
+   <xsl:value-of select="$prefixes"/>
+   <xsl:apply-templates select="*"/>
+</xsl:template>
 
 <xd:doc>
    <xd:short>Create a new V(node).</xd:short>
@@ -102,7 +122,7 @@
    <xd:param name="a-root"></xd:param>
    <xd:param name="ignore">This value is ignored; it is here just to let caller evaluate an expression</xd:param>
 </xd:doc>
-<xsl:template name="node"> <!-- was named graffle-node -->
+<xsl:template name="node">
 
    <xsl:param name="visual-artifact-uri" required="yes"/>
 
@@ -179,17 +199,77 @@
 
    <xsl:variable name="local-name" select="concat($local-path,$vid)"/>
 
-   <dict>
-      <key>ID</key>
-      <integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
+   <xsl:variable name="map">
+      <shape graffle="Rectangle" vsr="http://purl.org/twc/vocab/vsr#Rectangle"/>
+      <shape graffle="Rectangle" vsr="Rectangle"/>
+      <shape graffle="Circle"    vsr="http://purl.org/twc/vocab/vsr#Circle"/>
+      <shape graffle="Circle"    vsr="Circle"/>
+      <shape graffle="Cross"     vsr="Cross"/>
+   </xsl:variable>
 
-      <xsl:if test="$lock">
+   <xsl:variable name="node-uri" select="if ($uri) then $uri else concat($visual-artifact-uri,$local-name)"/>
+   <xsl:value-of select="concat($NL,$LT,$node-uri,$GT,$NL,
+                                '   a vsr:Graphic, vsr:',if ($map[shape[@vsr = $shape]]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle',';',$NL,
+                                '   vsr:vid_given        ',$DQ,$id,$DQ,';',$NL,
+                                if( string-length($context) = 0 ) then concat('   ',
+                                   'vsr:visualContext ',$LT,$visual-artifact-uri,$GT,';',$NL) else '',
+                                if( string-length($context) ) then concat('   ',
+                                   'vsr:visualContext ',$LT,$context,$GT,';',$NL) else '',
+                                '   vsr:vid              ',$DQ,$vid,$DQ,';',$NL,
+                                '   vsr:vid_local_name   ',$DQ,$local-name,$DQ,';',$NL,
+                                if( string-length($label) ) then concat('   ',
+                                   'rdfs:label         ',$DQ,$DQ,$DQ,$label,$DQ,$DQ,$DQ,';',$NL) else '',
+                                if( contains($depicts,':') ) then concat('   ',
+                                   'vsr:depicts       ',$LT,$depicts,$GT,';',$NL) else '',
+                                if( starts-with($url,'http') or starts-with($url,'file') or starts-with($url,'mailto:') ) then concat('   ',
+                                   'rdfs:seeAlso      ',$LT,$url,$GT,';',$NL) else '',
+                                if( $lock ) then concat('   ',
+                                   'a vsr:Locked;',$NL) else '',
+                                if( string-length(string($x)) ) then concat('   ',
+                                   'vsr:x             ',$x,';',$NL) else '',
+                                if( string-length(string($y)) ) then concat('   ',
+                                   'vsr:y             ',$y,';',$NL) else '',
+                                if( string-length(string($new_height)) ) then concat('   ',
+                                   'vsr:height        ',$new_height,';',$NL) else '',
+                                if( string-length(string($new_width)) ) then concat('   ',
+                                   'vsr:width         ',$new_width,';',$NL) else '',
+                                if( string-length($notes) ) then concat('   ',
+                                   'dcterms:description    ',$DQ,$DQ,$DQ,$notes,$DQ,$DQ,$DQ,';',$NL) else '',
+                                if( count(tokenize($fill-color,'\s')) = (3,4) or $draw-fill = ('YES', 'NO') ) then concat('   ',
+                                   'vsr:fill    ',$LT,'http://purl.org/colors/rgb/',
+                                                      if( count(tokenize($fill-color,'\s')) = (3,4) ) 
+                                                      then 
+                                                          concat( g:percentRGB2hex(tokenize($fill-color,'\s')[1]),
+                                                                  g:percentRGB2hex(tokenize($fill-color,'\s')[2]),
+                                                                  g:percentRGB2hex(tokenize($fill-color,'\s')[3]),
+                                                                  if (count(tokenize($fill-color,'\s')) = 4) then 
+                                                                     g:percentRGB2hex(tokenize($fill-color,'\s')[4]) 
+                                                                  else '' )
+                                                      else 
+                                                         '000000'
+                                                 ,$GT,';',$NL) else '',
+                                if( count(tokenize($stroke-color,'\s')) = 3 or $stroke-style or $stroke-width or $draw-stroke='YES' ) then concat('  ',
+                                   'vsr:stroke ',$LT,$node-uri,'/stroke',$GT,';',$NL) else '',
+                                if( string-length($visual-artifact-uri) ) then concat('   ',
+                                   'vsr:originatingVisualArtifact ',$LT,$visual-artifact-uri,$GT,';',$NL) else '',
+                                '.',$NL
+                                 )"/> 
+   <!-- TODO: merge id and uri -->
+     <!--(: vsr:originatingVisualForm is not necessary when done as a concrete graphical target :)
+     (: TODO: curieTypeList:)
+-->
+
+   <!--dict-->
+      <!-- CONVERTED key>ID</key>
+      <integer> <xsl:value-of select="vsr:view-id($id)"/> </integer-->
+
+      <!-- CONVERTED xsl:if test="$lock">
          <key>IsLocked</key>
          <string>YES</string>
-      </xsl:if>
+      </xsl:if-->
 
-      <key>Class</key>
-      <string>ShapedGraphic</string>
+      <!-- CONVERTED key>Class</key>
+      <string>ShapedGraphic</string-->
 
       <!-- 
          2013 Jan
@@ -197,7 +277,7 @@
          GUI('Clip')          exhibits    FitText='Clip'     Flow='Clip'   attributes
          GUI('Resize to fit') exhibits    FitText='Vertical' Flow='Resize' attributes
       -->
-      <xsl:choose>
+      <!-- TODO NOT CONVERTED xsl:choose>
          <xsl:when test="$fit-text = 'Overflow'">
          </xsl:when>
          <xsl:when test="$fit-text = ('Clip', 'Vertical')">
@@ -212,45 +292,38 @@
             <key>Flow</key>
             <string>Resize</string>
          </xsl:otherwise>
-      </xsl:choose>
+      </xsl:choose-->
 
       <!-- 
          GUI('Wrap to shape') checkbox   checked exhibits no Wrap      attribute 
          GUI('Wrap to shape') checkbox UNchecked exhibits    Wrap='NO' attribute 
       -->
-      <xsl:if test="$wrap-text != 'true'">
+      <!-- TODO NOT CONVERTED xsl:if test="$wrap-text != 'true'">
          <key>Wrap</key>
          <string>NO</string>
-      </xsl:if>
+      </xsl:if-->
 
       <!--xsl:message select="concat($rotation,'  ',string-length($rotation))"/-->
-      <xsl:if test="string-length($rotation)">
+      <!-- TODO: NOT CONVERTED xsl:if test="string-length($rotation)">
       <key>Rotation</key>
       <string> <xsl:value-of select="$rotation"/> </string>
-      </xsl:if>
+      </xsl:if-->
 
-      <xsl:variable name="map">
-         <shape graffle="Rectangle" vsr="http://purl.org/twc/vocab/vsr#Rectangle"/>
-         <shape graffle="Rectangle" vsr="Rectangle"/>
-         <shape graffle="Circle"    vsr="http://purl.org/twc/vocab/vsr#Circle"/>
-         <shape graffle="Circle"    vsr="Circle"/>
-         <shape graffle="Cross"     vsr="Cross"/>
-      </xsl:variable>
-      <key>Shape</key>
-      <xsl:message select="concat('               node shape=',$shape,' -- ',if ($map/shape[@vsr = $shape]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle')"/>
-      <string> <xsl:value-of select="if ($map[shape[@vsr = $shape]]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle'"/> </string>
+      <!-- CONVERTED key>Shape</key>
+      <xsl:message select="concat('               node shape=',$shape,' - ',if ($map/shape[@vsr = $shape]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle')"/>
+      <string> <xsl:value-of select="if ($map[shape[@vsr = $shape]]) then $map/shape[@vsr = $shape]/@graffle else 'Rectangle'"/> </string-->
 
       <!--xsl:message select="concat($depicts,' height ',$height,' new_height ',$new_height)"/-->
-      <key>Bounds</key> <!-- {{upper-left's X, upper-left's Y}, {{width, height}} -->
+      <!-- CONVERTED key>Bounds</key> <!- {{upper-left's X, upper-left's Y}, {{width, height}} ->
       <string> <xsl:value-of select="concat('{{',     if (string-length(string($x)))          then $x          else '50',
                                                ', ',  if (string-length(string($y)))          then $y          else '50',
                                                '}, {',if (string-length(string($new_width)))  then $new_width  else '3',
                                                 ', ', if (string-length(string($new_height))) then $new_height else '3',
-                                            '}}')"/> </string>
+                                            '}}')"/> </string-->
 
-      <key>Style</key>
-      <dict>
-         <xsl:if test="count(tokenize($fill-color,'\s'))= (3,4) or $draw-fill = ('YES', 'NO')">
+      <!--key>Style</key>
+      <dict-->
+         <!-- CONVERTED xsl:if test="count(tokenize($fill-color,'\s'))= (3,4) or $draw-fill = ('YES', 'NO')">
          <key>fill</key>
          <dict>
             <xsl:if test="count(tokenize($fill-color,'\s'))= (3,4)">
@@ -273,47 +346,70 @@
                <string> <xsl:value-of select="$draw-fill"/> </string>
             </xsl:if>
          </dict>
-         </xsl:if>
+         </xsl:if-->
 
-         <key>shadow</key>
+         <!-- NO NEED TO CONVERT key>shadow</key>
          <dict>
             <key>Draws</key>
             <string>NO</string>
-            <!--string> <xsl:value-of select="$draw-shadow"/> </string it's too much drain on omnigraffle... -->
-         </dict>
+            <!-string> <xsl:value-of select="$draw-shadow"/> </string it's too much drain on omnigraffle... ->
+         </dict-->
 
-        <key>stroke</key>
-        <dict>
-           <xsl:if test="count(tokenize($stroke-color,'\s')) = 3">
-              <key>Color</key>
-              <dict>
-                 <key>r</key>
-                 <string> <xsl:value-of select="tokenize($stroke-color,'\s')[1]"/> </string>
-                 <key>g</key>
-                 <string> <xsl:value-of select="tokenize($stroke-color,'\s')[2]"/> </string>
-                 <key>b</key>
-                 <string> <xsl:value-of select="tokenize($stroke-color,'\s')[3]"/> </string>
-               </dict>
-            </xsl:if>
+         <xsl:if test="count(tokenize($stroke-color,'\s')) = 3 or $stroke-style or $stroke-width or $draw-stroke='YES'">
+            <xsl:value-of select="concat($NL,$LT,$node-uri,'/stroke',$GT,$NL,
+                                         '   a vsr:Graphic;',$NL,
+                                         '   a vsr:',if ($draw-stroke='YES' or string-length($stroke-color) gt 0 or string-length($label) = 0) then 'V' else 'Inv','isible;',$NL,
+                                         if( count(tokenize($stroke-color,'\s')) = (3,4) or $draw-fill = ('YES', 'NO') ) then concat(
+                                         '   vsr:fill    ',$LT,'http://purl.org/colors/rgb/',
+                                                               if( count(tokenize($stroke-color,'\s')) = (3,4) ) 
+                                                               then 
+                                                                   concat( g:percentRGB2hex(tokenize($stroke-color,'\s')[1]),
+                                                                           g:percentRGB2hex(tokenize($stroke-color,'\s')[2]),
+                                                                           g:percentRGB2hex(tokenize($stroke-color,'\s')[3]),
+                                                                           if (count(tokenize($stroke-color,'\s')) = 4) then 
+                                                                              g:percentRGB2hex(tokenize($stroke-color,'\s')[4]) 
+                                                                           else '' )
+                                                               else 
+                                                                  '000000'
+                                                          ,$GT,';',$NL) else '',
+                                         if( $stroke-style ) then concat(
+                                         '   vsr:stipple   vsr:stipple_todo_',$stroke-style,';',$NL) else '',
+                                         if( $stroke-width ) then concat(
+                                         '   vsr:width   ',$stroke-width,';',$NL) else '',
+                                         '.',$NL)"/>
+           <!-- CONVERTED key>stroke</key>
+           <dict>
+              <!- CONVERTED xsl:if test="count(tokenize($stroke-color,'\s')) = 3">
+                 <key>Color</key>
+                 <dict>
+                    <key>r</key>
+                    <string> <xsl:value-of select="tokenize($stroke-color,'\s')[1]"/> </string>
+                    <key>g</key>
+                    <string> <xsl:value-of select="tokenize($stroke-color,'\s')[2]"/> </string>
+                    <key>b</key>
+                    <string> <xsl:value-of select="tokenize($stroke-color,'\s')[3]"/> </string>
+                  </dict>
+               </xsl:if->
 
-            <xsl:if test="$stroke-style and number($stroke-style) = 1 to 24">
-              <key>Pattern</key>
-              <integer> <xsl:value-of select="$stroke-style"/> </integer>
-            </xsl:if>
+               <xsl:if test="$stroke-style and number($stroke-style) = 1 to 24">
+                 <key>Pattern</key>
+                 <integer> <xsl:value-of select="$stroke-style"/> </integer>
+               </xsl:if>
 
-            <xsl:if test="$stroke-width and number($stroke-width) = 1 to 5">
-              <key>Width</key>
-              <real> <xsl:value-of select="$stroke-width"/> </real>
-            </xsl:if>
+               <xsl:if test="$stroke-width and number($stroke-width) = 1 to 5">
+                 <key>Width</key>
+                 <real> <xsl:value-of select="$stroke-width"/> </real>
+               </xsl:if>
 
-            <key>Draws</key>
-            <string> <xsl:value-of select="if ($draw-stroke='YES' or string-length($stroke-color) gt 0 
-                                               or string-length($label) = 0) then 'YES' else 'NO'"/> </string>
-         </dict>
-      </dict>
+               <key>Draws</key>
+               <string> <xsl:value-of select="if ($draw-stroke='YES' or string-length($stroke-color) gt 0 
+                                                  or string-length($label) = 0) then 'YES' else 'NO'"/> </string>
+            </dict-->
+         </xsl:if>
+      <!--/dict-->
 
       <xsl:if test="$label or $label-rtf">
-         <xsl:if test="$font-color and not(string-length($label-rtf))">
+         <!-- TODO: NOT CONVERTED xsl:if test="$font-color and not(string-length($label-rtf))">
             <key>FontInfo</key>
             <dict>
                <key>Color</key>
@@ -326,9 +422,9 @@
                   <string> <xsl:value-of select="tokenize($font-color,'\s')[3]"/> </string>
                </dict>
             </dict>
-         </xsl:if>
+         </xsl:if-->
 
-         <key>Text</key>
+         <!-- CONVERTED, but TODO: un-pack RTF into pure label and assert. key>Text</key>
          <dict>
             <xsl:if test="number($h-align-text) = (0,2,3)">
                <key>Align</key>
@@ -340,145 +436,115 @@
             <string><xsl:value-of select="if (string-length($label-rtf)) then $label-rtf else xfm:rtf($label,$font-color)"/></string>
             <key>VerticalPad</key>
             <integer><xsl:value-of select="if ($v-text-pad and number($v-text-pad)) then $v-text-pad else 2"/></integer>
-         </dict>
+         </dict-->
       </xsl:if>
 
-      <xsl:if test="$notes">
+      <!-- CONVERTED xsl:if test="$notes">
          <key>Notes</key>
          <string>
            <xsl:value-of select="xfm:rtf($notes)"/>
          </string>
-      </xsl:if>
+      </xsl:if-->
 
-      <xsl:if test="$url">
+      <!-- CONVERTED xsl:if test="$url">
          <key>Link</key>
          <dict>
             <key>url</key>
             <string> <xsl:value-of select="$url"/> </string>
          </dict>
-      </xsl:if>
+      </xsl:if-->
 
-      <xsl:if test="$magnets = 'sides'">
+      <!-- TODO: NOT CONVERTED xsl:if test="$magnets = 'sides'">
          <key>Magnets</key>
          <array>
             <string>{1, 0}</string>
             <string>{-1, 0}</string>
          </array>
-      </xsl:if>
+      </xsl:if-->
 
-      <xsl:if test="number($v-align-text) = (0,2)">
+      <!-- TODO: NOT CONVERTED xsl:if test="number($v-align-text) = (0,2)">
          <key>TextPlacement</key>
          <integer> <xsl:value-of select="$v-align-text"/> </integer>
-      </xsl:if>
+      </xsl:if-->
 
-         <key>UserInfo</key>
-         <dict>
-            <xsl:if test="string-length($visual-artifact-uri)">
-               <key>http://open.vocab.org/terms/originatingVisualArtifact</key>
-               <string> <xsl:value-of select="$visual-artifact-uri"/> </string>
-               <xsl:if test="string-length($context) = 0">
-                  <key>http://open.vocab.org/terms/visualContext</key>
-                  <string> <xsl:value-of select="$visual-artifact-uri"/> </string>
-               </xsl:if>
-            </xsl:if>
-
-            <key>http://open.vocab.org/terms/vid_local_name</key>
-            <string> <xsl:value-of select="$local-name"/> </string>
-
-            <key>http://open.vocab.org/terms/originatingVisualForm</key>
-            <string> <xsl:value-of select="if ($uri) then $uri else concat($visual-artifact-uri,$local-name)"/> </string>   <!-- TODO: merge id and uri -->
-
-            <xsl:if test="string-length($depicts)"><!-- and not($depicts = ('[]','bnode','blank node'))"-->
-               <xsl:choose>
-                  <xsl:when test="contains($depicts,':')">                          <!-- URI -->
-                     <key>http://purl.org/twc/vocab/vsr#depicts</key>            
-                     <string> <xsl:value-of select="$depicts"/> </string>
-                  </xsl:when>
-                  <xsl:otherwise>
-                     <key>http://open.vocab.org/terms/depictsBlank</key> <!-- i.e. dc:identifier -->
-                     <string> <xsl:value-of select="$depicts"/> </string>
-                  </xsl:otherwise>
-               </xsl:choose>
-            </xsl:if>
-
-            <xsl:if test="string-length($context)">
-               <!-- NOTE: if empty, defaults to $visual-artifact-uri above.
-                    NONE should be asserted if both are empty. -->
+      <!-- CONVERTED key>UserInfo</key>
+      <dict>
+         <xsl:if test="string-length($visual-artifact-uri)">
+            <key>http://open.vocab.org/terms/originatingVisualArtifact</key>
+            <string> <xsl:value-of select="$visual-artifact-uri"/> </string>
+            <xsl:if test="string-length($context) = 0">
                <key>http://open.vocab.org/terms/visualContext</key>
-               <string> <xsl:value-of select="$context"/> </string>
+               <string> <xsl:value-of select="$visual-artifact-uri"/> </string>
             </xsl:if>
+         </xsl:if>
 
-            <xsl:if test="string-length($rdfTypes)">
-               <key>http://open.vocab.org/terms/curieTypeList</key>
-               <string> <xsl:value-of select="$rdfTypes"/> </string>
-            </xsl:if>
+         <key>http://open.vocab.org/terms/vid_local_name</key>
+         <string> <xsl:value-of select="$local-name"/> </string>
 
-            <xsl:if test="string-length($id)">
-               <key>http://open.vocab.org/terms/vid_given</key>
-               <string> <xsl:value-of select="$id"/> </string>
-            </xsl:if>
+         <key>http://open.vocab.org/terms/originatingVisualForm</key>
+         <string> <xsl:value-of select="if ($uri) then $uri else concat($visual-artifact-uri,$local-name)"/> </string>   <!- TODO: merge id and uri ->
 
-            <key>http://open.vocab.org/terms/vid</key>
-            <string> <xsl:value-of select="$vid"/> </string>
+         <xsl:if test="string-length($depicts)"><!- and not($depicts = ('[]','bnode','blank node'))"->
+            <xsl:choose>
+               <xsl:when test="contains($depicts,':')">                          <!- URI ->
+                  <key>http://purl.org/twc/vocab/vsr#depicts</key>            
+                  <string> <xsl:value-of select="$depicts"/> </string>
+               </xsl:when>
+               <xsl:otherwise>
+                  <key>http://open.vocab.org/terms/depictsBlank</key> <!- i.e. dc:identifier ->
+                  <string> <xsl:value-of select="$depicts"/> </string>
+               </xsl:otherwise>
+            </xsl:choose>
+         </xsl:if>
 
-            <!--xsl:if test="string-length($isDefinedBy)">
-               <key>http://www.w3.org/2000/01/rdf-schema#isDefinedBy</key>
-               <string> <xsl:value-of select="$isDefinedBy"/> </string>
-            </xsl:if-->
-         </dict>
+         <xsl:if test="string-length($context)">
+            <!- NOTE: if empty, defaults to $visual-artifact-uri above.
+                 NONE should be asserted if both are empty. ->
+            <key>http://open.vocab.org/terms/visualContext</key>
+            <string> <xsl:value-of select="$context"/> </string>
+         </xsl:if>
 
-   </dict>
+         <xsl:if test="string-length($rdfTypes)">
+            <key>http://open.vocab.org/terms/curieTypeList</key>
+            <string> <xsl:value-of select="$rdfTypes"/> </string>
+         </xsl:if>
+
+         <xsl:if test="string-length($id)">
+            <key>http://open.vocab.org/terms/vid_given</key>
+            <string> <xsl:value-of select="$id"/> </string>
+         </xsl:if>
+
+         <key>http://open.vocab.org/terms/vid</key>
+         <string> <xsl:value-of select="$vid"/> </string>
+
+         <!-xsl:if test="string-length($isDefinedBy)">
+            <key>http://www.w3.org/2000/01/rdf-schema#isDefinedBy</key>
+            <string> <xsl:value-of select="$isDefinedBy"/> </string>
+         </xsl:if->
+      </dict-->
+
+   <!--/dict-->
 </xsl:template>
 
-<!--xsl:template name="edge">
-   <xsl:param name="id"   required="yes"/>
-   <xsl:param name="from" required="yes"/>
-   <xsl:param name="to"   required="yes"/>
-   
-   <xsl:param name="uri"/>
-
-   <xsl:param name="label"/>
-   <xsl:param name="url"/>
-   <xsl:param name="notes"/>
-
-   <xsl:param name="line-style"/>
-
-   <!-xsl:message select='concat("  edge template called: ",$from," - ",$to,"(",$id,")")'/ ->
-
-   <xsl:call-template name="graffle-edge">
-      <xsl:with-param name="id"         select="$id"/>
-      <xsl:with-param name="from"       select="$from"/>
-      <xsl:with-param name="to"         select="$to"/>
-
-      <xsl:with-param name="uri"        select="$uri"/>
-
-      <xsl:with-param name="label"      select="$label"/>
-      <xsl:with-param name="notes"      select="$notes"/>
-      <xsl:with-param name="url"        select="$url"/>
-
-      <xsl:with-param name="line-style" select="$line-style"/>
-   </xsl:call-template>
-</xsl:template-->
-
 <xd:doc>
-   <xd:short>Render a visual edge from visual node <tt>from</tt> to visual node <tt>to</tt>.</xd:short>
-   <xd:detail>
-   </xd:detail>
-   <xd:param name="id">A client-side string that uniquely identifies this visual edge. Value will be transformed into identifier appropriate for OmniGraffle.</xd:param>
-   <xd:param name="from">The visual node <b>from</b> which to draw this visual edge.</xd:param>
-   <xd:param name="to">The visual node <b>to</b> which to draw this visual edge.</xd:param>
-   <xd:param name="uri">The Uniform Resource Identifier (URI) of this visual edge.</xd:param>
-   <xd:param name="depicts">The rdf:Predicate whose relation is being depicted by this visual edge.</xd:param>
-   <xd:param name="label">The graphical label to place on this visual edge.</xd:param>
-   <xd:param name="font-color">The color of the font to use for <tt>label</tt>.</xd:param>
-   <xd:param name="notes">Text to associate with this visual edge.</xd:param>
-   <xd:param name="url"></xd:param>
-   <xd:param name="draw-shadow">Draw this visual edge with a shadow? ('YES' or 'NO'; default 'NO')</xd:param>
-   <xd:param name="head-style">The arrow style of this visual edge's head. "FilledArrow" is default, "NonNavigable" is an X on end.</xd:param>
-   <xd:param name="tail-style">The arrow style of this visual edge's tail. "FilledArrow" is default, "NonNavigable" is an X on end.</xd:param>
-   <xd:param name="line-width">The width of this visual edge. "2" for slightly larger than default.</xd:param>
-   <xd:param name="line-style">The stipple pattern of the visual edge (1 to 24, 1 solid, 2 dashed, 3 dotted).</xd:param>
-   <xd:param name="stroke-color">The color of this visual edge. Single value to duplicate for RGB (TODO: handle one or 3)</xd:param>
+<xd:short>Render a visual edge from visual node <tt>from</tt> to visual node <tt>to</tt>.</xd:short>
+<xd:detail>
+</xd:detail>
+<xd:param name="id">A client-side string that uniquely identifies this visual edge. Value will be transformed into identifier appropriate for OmniGraffle.</xd:param>
+<xd:param name="from">The visual node <b>from</b> which to draw this visual edge.</xd:param>
+<xd:param name="to">The visual node <b>to</b> which to draw this visual edge.</xd:param>
+<xd:param name="uri">The Uniform Resource Identifier (URI) of this visual edge.</xd:param>
+<xd:param name="depicts">The rdf:Predicate whose relation is being depicted by this visual edge.</xd:param>
+<xd:param name="label">The graphical label to place on this visual edge.</xd:param>
+<xd:param name="font-color">The color of the font to use for <tt>label</tt>.</xd:param>
+<xd:param name="notes">Text to associate with this visual edge.</xd:param>
+<xd:param name="url"></xd:param>
+<xd:param name="draw-shadow">Draw this visual edge with a shadow? ('YES' or 'NO'; default 'NO')</xd:param>
+<xd:param name="head-style">The arrow style of this visual edge's head. "FilledArrow" is default, "NonNavigable" is an X on end.</xd:param>
+<xd:param name="tail-style">The arrow style of this visual edge's tail. "FilledArrow" is default, "NonNavigable" is an X on end.</xd:param>
+<xd:param name="line-width">The width of this visual edge. "2" for slightly larger than default.</xd:param>
+<xd:param name="line-style">The stipple pattern of the visual edge (1 to 24, 1 solid, 2 dashed, 3 dotted).</xd:param>
+<xd:param name="stroke-color">The color of this visual edge. Single value to duplicate for RGB (TODO: handle one or 3)</xd:param>
 </xd:doc>
 <xsl:template name="edge"> <!-- this was named graffle-edge. Making a generic "edge" that maps to graffle-edge would help interoperability. -->
    <xsl:param name="id"   required="yes"/>
@@ -506,24 +572,45 @@
    <xsl:message select="concat('               2y:edge given from vid ',$from)"/>
    <xsl:message select="concat('               2y:edge given to   vid ',$to)"/>
 
+   <xsl:value-of select="concat($NL,$LT,$uri,$GT,$NL,
+                                '   a vsr:Graphic, vsr:Connection;',$NL,
+                                '   vsr:vid              ',$DQ,vsr:view-id($id),$DQ,';',$NL,
+                                if( string-length($label) ) then concat('   ',
+                                   'rdfs:label         ',$DQ,$DQ,$DQ,$label,$DQ,$DQ,$DQ,';',$NL) else '',
+                                if( contains($depicts,':') ) then concat('   ',
+                                   'vsr:depicts       ',$LT,$depicts,$GT,';',$NL) else '',
+                                if( starts-with($url,'http') or starts-with($url,'file') or starts-with($url,'mailto:') ) then concat('   ',
+                                   'rdfs:seeAlso      ',$LT,$url,$GT,';',$NL) else '',
+                                if( string-length(string($line-width)) ) then concat('   ',
+                                   'vsr:width         ',$line-width,';',$NL) else '',
+                                if( string-length($notes) ) then concat('   ',
+                                   'dcterms:description    ',$DQ,$DQ,$DQ,$notes,$DQ,$DQ,$DQ,';',$NL) else '',
+                                if( $stroke-color ) then concat('   ',
+                                   'vsr:fill    ',$LT,'http://purl.org/colors/rgb/',
+                                                          g:percentRGB2hex($stroke-color),
+                                                          g:percentRGB2hex($stroke-color),
+                                                          g:percentRGB2hex($stroke-color)
+                                                 ,$GT,';',$NL) else '',
+                                '.',$NL
+                                 )"/> 
+<dict>
+   <key>ID</key>
+   <integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
+
+   <key>UserInfo</key>
    <dict>
-      <key>ID</key>
-      <integer> <xsl:value-of select="vsr:view-id($id)"/> </integer>
+         <xsl:if test="string-length($uri)">
+            <key>http://www.w3.org/2002/07/owl#sameAs</key>
+            <string> <xsl:value-of select="$uri"/> </string>
+         </xsl:if>
+         <xsl:if test="string-length($depicts)">
+            <key>http://purl.org/twc/vocab/vsr#depicts</key>
+            <string> <xsl:value-of select="$depicts"/> </string>
+         </xsl:if>
+   </dict>
 
-      <key>UserInfo</key>
-      <dict>
-            <xsl:if test="string-length($uri)">
-               <key>http://www.w3.org/2002/07/owl#sameAs</key>
-               <string> <xsl:value-of select="$uri"/> </string>
-            </xsl:if>
-            <xsl:if test="string-length($depicts)">
-               <key>http://purl.org/twc/vocab/vsr#depicts</key>
-               <string> <xsl:value-of select="$depicts"/> </string>
-            </xsl:if>
-      </dict>
-
-      <key>AllowLabelDrop</key>
-      <false/>
+   <key>AllowLabelDrop</key>
+   <false/>
 
       <key>Class</key>
       <string>LineGraphic</string>
@@ -849,5 +936,34 @@
    </xd:detail>
 </xd:doc>
 <xsl:variable name="xfm:graffle-height-of-circle-text"    select='30'/>
+
+<xsl:function name="g:percentRGB2hex" as="xs:string">
+   <xsl:param name="percentage"/> <!-- as="xs:double"/-->
+   <xsl:variable name="hex" select="msg20090200215:int-to-hex(xs:integer(floor(xs:decimal($percentage) * 255)))"/>
+   <xsl:value-of select="if( string-length($hex) lt 2 ) then concat('0',$hex) else $hex"/>
+</xsl:function>
+
+<xsl:function name="g:percent2_0_255" as="xs:string">
+   <xsl:param name="percentage"/> <!-- as="xs:double"/-->
+   <xsl:variable name="dec" select="xs:integer(floor($percentage * 255))"/>
+   <xsl:value-of select="$dec"/>
+</xsl:function>
+
+<!--
+#3> <> prov:wasDerivedFrom <https://github.com/timrdf/vsr/blob/master/src/xsl/grddl/graffle.xsl>,
+#3>      [ prov:wasQuotedFrom <http://www.oxygenxml.com/archives/xsl-list/200902/msg00215.html> ] .
+-->
+<xsl:function name="msg20090200215:int-to-hex" as="xs:string">
+  <xsl:param name="in" as="xs:integer"/>
+  <xsl:sequence
+    select="if ($in eq 0)
+            then '0'
+            else
+              concat(if ($in gt 16)
+                     then msg20090200215:int-to-hex($in idiv 16)
+                     else '',
+                     substring('0123456789ABCDEF',
+                               ($in mod 16) + 1, 1))"/>
+</xsl:function>
 
 </xsl:transform>

@@ -5,7 +5,7 @@
    xmlns:xutil="https://github.com/timrdf/vsr/tree/master/src/xsl/util"
    exclude-result-prefixes="">
 
-<xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
+<!--xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/-->
 
 <xd:doc type="stylesheet">
    <xd:short>Ordering namespaces.</xd:short>

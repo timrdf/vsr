@@ -321,6 +321,8 @@ while [ $# -gt 0 ]; do
                perl -pe "s|^# Begin provenance dump.*$|#3> <> a prov:Bundle; foaf:primaryTopic <$graphicURI> . <$graphicURI> a vsr:Graphic .|" >> $provenancefile
             #                                          GRAPHIC_TIC
             echo "<$base.$output_extension> a vsr:Graphic, nfo:FileDataObject ."                                                               >> $provenancefile
+            echo "<`cr-dataset-uri.sh --uri`> dcterms:subject <$graphicURI> ."                                                                 >> $provenancefile
+            echo "<$graphicURI> prv:serializedBy <$base.$output_extension> ."                                                                  >> $provenancefile
 
             #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
             #   tmp="_"`basename $0``date +%s`_$$.tmp

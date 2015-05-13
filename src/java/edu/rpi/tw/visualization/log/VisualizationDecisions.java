@@ -171,14 +171,14 @@ public class VisualizationDecisions {
     * @return
     */
    private String getDecisionURI() {
-	   decisionCount++;
-	   String decision = this.context.stringValue()+"/graphic/attribute/"+decisionCount;
-	   try {
-		   add(vf.createURI(decision), RDF.TYPE, SIO.Attribute, context);
-	   } catch (RepositoryException e) {
-		   e.printStackTrace();
-	   }
-	   return decision;
+      decisionCount++;
+      String decision = this.context.stringValue()+"/graphic/attribute/"+decisionCount;
+      try {
+         add(vf.createURI(decision), RDF.TYPE, SIO.Attribute, context);
+      } catch (RepositoryException e) {
+         e.printStackTrace();
+      }
+      return decision;
    }
 
    /**
@@ -258,20 +258,20 @@ public class VisualizationDecisions {
                                  String vProperty, String vValue, String visualForm, 
                                  String justification, String description) {
 
-      //	   System.err.println("s "+subject);
-      //	   System.err.println("actor "+actor);
-      //	   System.err.println("property ."+property+".");
-      //	   System.err.println("value "+value);
-      //	   System.err.println("visualForm "+visualForm);
-      //	   System.err.println("justification "+justification);
-      //	   System.err.println("desc "+description);
+      //      System.err.println("s "+subject);
+      //      System.err.println("actor "+actor);
+      //      System.err.println("property ."+property+".");
+      //      System.err.println("value "+value);
+      //      System.err.println("visualForm "+visualForm);
+      //      System.err.println("justification "+justification);
+      //      System.err.println("desc "+description);
 
-      //	s http://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
-      //	actor http://purl.org/twc/vocab/vsr#RDF_resource_visual_form_factory_390
-      //	action vnode id = http://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
-      //	visualForm http://todo.org/visualformURIhttp://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
-      //	justification otherwise
-      //	desc
+      //   s http://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
+      //   actor http://purl.org/twc/vocab/vsr#RDF_resource_visual_form_factory_390
+      //   action vnode id = http://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
+      //   visualForm http://todo.org/visualformURIhttp://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
+      //   justification otherwise
+      //   desc
 
 
       String decisionURI = getDecisionURI();     
@@ -407,33 +407,33 @@ public class VisualizationDecisions {
     * $subject,$actor,$action,$visual-form-uri,$justification,$description
     */
    public String explainResource(String referent,
-                        		   String actor, 
-                        		   String action, String visualForm, 
-                        		   String justification, String description) {
+                                 String actor, 
+                                 String action, String visualForm, 
+                                 String justification, String description) {
 
-//	   System.err.println("s "+subject);
-//	   System.err.println("actor "+actor);
-//	   System.err.println("action "+action);
-//	   System.err.println("visualForm "+visualForm);
-//	   System.err.println("justification "+justification);
-//	   System.err.println("desc "+description);
+//      System.err.println("s "+subject);
+//      System.err.println("actor "+actor);
+//      System.err.println("action "+action);
+//      System.err.println("visualForm "+visualForm);
+//      System.err.println("justification "+justification);
+//      System.err.println("desc "+description);
 
-	   //	s http://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
-	   //	actor http://purl.org/twc/vocab/vsr#RDF_resource_visual_form_factory_390
-	   //	action vnode id = http://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
-	   //	visualForm http://todo.org/visualformURIhttp://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
-	   //	justification otherwise
-	   //	desc
+      //   s http://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
+      //   actor http://purl.org/twc/vocab/vsr#RDF_resource_visual_form_factory_390
+      //   action vnode id = http://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
+      //   visualForm http://todo.org/visualformURIhttp://baseuri.com/version/2013-Feb-05/entity/96ec2e4b-13ad-42bf-b78c-0f4a43b0cfa0
+      //   justification otherwise
+      //   desc
 
 
-	   String decisionURI = getDecisionURI();     
+      String decisionURI = getDecisionURI();     
 
-	   if( !ResourceValueHandler.isURI(referent) ) {
-		   return decisionURI;
-	   }
-	   
-	   if( usePersistentConn ) {
-		   try {
+      if( !ResourceValueHandler.isURI(referent) ) {
+         return decisionURI;
+      }
+      
+      if( usePersistentConn ) {
+         try {
 
             URI visualFormR = vf.createURI(visualForm);
             
@@ -442,56 +442,56 @@ public class VisualizationDecisions {
                add(visualFormR, RDFS.COMMENT, vf.createLiteral("This URI was created by VisualizationDecisions because the visualFormURI given by XSL was the same as the referent."), context);
             }
             
-			   add(visualFormR, SIO.hasAttribute, vf.createURI(decisionURI), context);
+            add(visualFormR, SIO.hasAttribute, vf.createURI(decisionURI), context);
 
-			   /*
-			    * :actor p:decided_to :decisionURI_1 .
-			    */
-			   add(vf.createURI(decisionURI), PROVO.wasAttributedTo, vf.createURI(actor), context);
+            /*
+             * :actor p:decided_to :decisionURI_1 .
+             */
+            add(vf.createURI(decisionURI), PROVO.wasAttributedTo, vf.createURI(actor), context);
 
-			   /*
-			    *  :decisionURI_1 p:produced     :visualForm_2;
-			    *                 dc:description "some desc";
-			    *                 dc:date        "5 feb" .         
-			    */
-			   add(vf.createURI(decisionURI), DCTerms.description, vf.createLiteral(description.replaceAll("^ *","")), context);
+            /*
+             *  :decisionURI_1 p:produced     :visualForm_2;
+             *                 dc:description "some desc";
+             *                 dc:date        "5 feb" .         
+             */
+            add(vf.createURI(decisionURI), DCTerms.description, vf.createLiteral(description.replaceAll("^ *","")), context);
 
-			   /*
-			    *  :visualForm_2 a             tw:Visual_form;
-			    *                 p:composedBy :visual_artifact_0;
-			    *                 v:depicts    tbl:me .         
-			    */
-			   
-			   add(visualFormR, RDF.TYPE,         VSR.Graphic,           context);
-			   add(visualFormR, DCTerms.isPartOf, context,               context);
-			   add(visualFormR, VSR.depicts,      vf.createURI(referent), context);
-			   if( commitInterval > 0 && decisionCount % commitInterval == 0 ) {
-				   pconn.commit();
-			   }
-		   } catch (RepositoryException e) {
-			   e.printStackTrace();
-		   }
-	   }else {
-		   RepositoryConnection conn = null;
-		   try {
-			   conn = rep.getConnection();
+            /*
+             *  :visualForm_2 a             tw:Visual_form;
+             *                 p:composedBy :visual_artifact_0;
+             *                 v:depicts    tbl:me .         
+             */
+            
+            add(visualFormR, RDF.TYPE,         VSR.Graphic,           context);
+            add(visualFormR, DCTerms.isPartOf, context,               context);
+            add(visualFormR, VSR.depicts,      vf.createURI(referent), context);
+            if( commitInterval > 0 && decisionCount % commitInterval == 0 ) {
+               pconn.commit();
+            }
+         } catch (RepositoryException e) {
+            e.printStackTrace();
+         }
+      }else {
+         RepositoryConnection conn = null;
+         try {
+            conn = rep.getConnection();
 
-			  // TODO: get rid of this, or duplciate.
-			   
-			   conn.commit();
-		   } catch (RepositoryException e) {
-			   e.printStackTrace();
-		   } finally {
-			   if( conn != null ) {
-				   try {
-					   conn.close();
-				   } catch (RepositoryException e) {
-					   e.printStackTrace();
-				   }
-			   }
-		   }
-	   }
-	   return decisionURI;
+           // TODO: get rid of this, or duplciate.
+            
+            conn.commit();
+         } catch (RepositoryException e) {
+            e.printStackTrace();
+         } finally {
+            if( conn != null ) {
+               try {
+                  conn.close();
+               } catch (RepositoryException e) {
+                  e.printStackTrace();
+               }
+            }
+         }
+      }
+      return decisionURI;
    }
    
    /**
@@ -512,7 +512,7 @@ public class VisualizationDecisions {
       
       if( usePersistentConn ) {
          try {
-        	 
+            
              //TODO add(vf.createURI(visualForm), SIO.hasAttribute, vf.createURI(decisionURI), context);
              
             add(vf.createURI(decisionURI), DCTerms.description,   vf.createLiteral(description.replaceAll("^ *","")), context);
@@ -559,73 +559,73 @@ public class VisualizationDecisions {
     * @param justification - reason the actor performed action on the triple.
     */
    public String explainTriple(String subject, String predicate, String object,
-                        		 String actor,
-                        		 String visualForm, String property, String value,
+                               String actor,
+                               String visualForm, String property, String value,
                                String justification, String description) {
 
-	   String decisionURI = getDecisionURI();     
+      String decisionURI = getDecisionURI();     
 
-	   // TODO: add vsr:relatesTo from the subject depiction to the object depiction.
+      // TODO: add vsr:relatesTo from the subject depiction to the object depiction.
 
-	   try {
+      try {
 
-		   if( ResourceValueHandler.isURI(visualForm)) {
-			   
-			   Resource visualFormR = vf.createURI(visualForm);
-			   
-			   add(visualFormR, SIO.hasAttribute, vf.createURI(decisionURI), context);
+         if( ResourceValueHandler.isURI(visualForm)) {
+            
+            Resource visualFormR = vf.createURI(visualForm);
+            
+            add(visualFormR, SIO.hasAttribute, vf.createURI(decisionURI), context);
 
-			   if( ResourceValueHandler.isURI(actor)) {
-				   URI actorR = vf.createURI(actor);
-				   add(actorR, RDF.TYPE, PROVO.Agent, context);
-				   add(actorR, PROVO.hadPlan, vf.createURI(actor+visUUID), context);
-				   add(vf.createURI(actor+visUUID), RDF.TYPE, PROVO.Plan, context);
-				   add(vf.createURI(decisionURI), PROVO.wasAttributedTo, actorR, context);
-			   }
+            if( ResourceValueHandler.isURI(actor)) {
+               URI actorR = vf.createURI(actor);
+               add(actorR, RDF.TYPE, PROVO.Agent, context);
+               add(actorR, PROVO.hadPlan, vf.createURI(actor+visUUID), context);
+               add(vf.createURI(actor+visUUID), RDF.TYPE, PROVO.Plan, context);
+               add(vf.createURI(decisionURI), PROVO.wasAttributedTo, actorR, context);
+            }
 
-			   if( ResourceValueHandler.isURI(property) ) {
-				   
-				   if( VSR.fill.stringValue().equals(property) ) {
+            if( ResourceValueHandler.isURI(property) ) {
+               
+               if( VSR.fill.stringValue().equals(property) ) {
 
-					   Resource colorR = vf.createURI(this.context.stringValue()+"/color/"+NameFactory.getMD5(value));
-					   add(visualFormR, vf.createURI(property), colorR,  context);
-					   add(colorR, RDF.TYPE, VSR.Color,                               context);
-					   add(colorR, VSR.rgb,  vf.createLiteral(value),                 context);
+                  Resource colorR = vf.createURI(this.context.stringValue()+"/color/"+NameFactory.getMD5(value));
+                  add(visualFormR, vf.createURI(property), colorR,  context);
+                  add(colorR, RDF.TYPE, VSR.Color,                               context);
+                  add(colorR, VSR.rgb,  vf.createLiteral(value),                 context);
 
-				   }else if (VSR.stroke.stringValue().equals(property)) {
+               }else if (VSR.stroke.stringValue().equals(property)) {
 
-					   Resource strokeR = vf.createURI(this.context.stringValue()+"/stroke/"+NameFactory.getMD5(visualForm));
-					   Resource colorR  = vf.createURI(this.context.stringValue()+"/color/"+NameFactory.getMD5(value));
+                  Resource strokeR = vf.createURI(this.context.stringValue()+"/stroke/"+NameFactory.getMD5(visualForm));
+                  Resource colorR  = vf.createURI(this.context.stringValue()+"/color/"+NameFactory.getMD5(value));
 
-					   add(visualFormR, vf.createURI(property), strokeR, context);
-					   add(strokeR, RDF.TYPE, VSR.Stroke,                             context);
-					   add(strokeR, VSR.fill,  colorR,                                context);	  
+                  add(visualFormR, vf.createURI(property), strokeR, context);
+                  add(strokeR, RDF.TYPE, VSR.Stroke,                             context);
+                  add(strokeR, VSR.fill,  colorR,                                context);     
 
-					   add(colorR, RDF.TYPE,  VSR.Color,                              context);	 
-					   add(colorR, VSR.rgb,   vf.createLiteral(value),                context);	 
+                  add(colorR, RDF.TYPE,  VSR.Color,                              context);    
+                  add(colorR, VSR.rgb,   vf.createLiteral(value),                context);    
 
-				   }else {
-					   
-					   add(visualFormR, vf.createURI(property), 
-							   ResourceValueHandler.isURI(value) ? vf.createURI(value) : vf.createLiteral(value),
-									   context);
-				   
-				   }
-			   }
-		   }
+               }else {
+                  
+                  add(visualFormR, vf.createURI(property), 
+                        ResourceValueHandler.isURI(value) ? vf.createURI(value) : vf.createLiteral(value),
+                              context);
+               
+               }
+            }
+         }
 
 
 
-		   add(vf.createURI(decisionURI), DCTerms.description, vf.createLiteral(description.replaceAll("^ *","")), context);
+         add(vf.createURI(decisionURI), DCTerms.description, vf.createLiteral(description.replaceAll("^ *","")), context);
 
-		   if( commitInterval > 0 && decisionCount % commitInterval == 0 ) {
-			   pconn.commit();
-		   }
-	   } catch (RepositoryException e) {
-		   e.printStackTrace();
-	   }
+         if( commitInterval > 0 && decisionCount % commitInterval == 0 ) {
+            pconn.commit();
+         }
+      } catch (RepositoryException e) {
+         e.printStackTrace();
+      }
 
-	   return decisionURI;
+      return decisionURI;
    }
    
    /**
@@ -678,7 +678,7 @@ public class VisualizationDecisions {
             add(visualFormR, VSR.to,             toR,           context); 
 
             Resource fromR = vf.createURI(this.context.stringValue()+"/graphic/"+from);
-            add(fromR,       SIO.hasAttribute,   visualFormR,   context);	
+            add(fromR,       SIO.hasAttribute,   visualFormR,   context);   
             add(fromR,       VSR.relatesTo,      toR,           context);  
             add(visualFormR, RDF.TYPE,           SIO.Attribute, context);
             add(visualFormR, SIO.refersTo,       toR,           context);
@@ -737,7 +737,8 @@ public class VisualizationDecisions {
          out = new FileOutputStream(dumpFile);
          return export(out);
       }catch (FileNotFoundException e) {
-         e.printStackTrace();
+         System.err.println("# WARNING(export(String dumpFile)): dumpFile not found, flushing to stderr instead. " + dumpFile);
+         //e.printStackTrace();
       }
       return export(System.err);
    }
