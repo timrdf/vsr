@@ -324,7 +324,7 @@ while [ $# -gt 0 ]; do
             echo "$nfoFocus a vsr:Graphic ."                                                                                                   >> $provenancefile
             echo "<`cr-dataset-uri.sh --uri`> dcterms:subject <$graphicURI> ."                                                                 >> $provenancefile
             echo "<$graphicURI> prov:alternateOf <$base.$output_extension> ."                                                                  >> $provenancefile
-            $CSV2RDF4LOD_HOME/bin/util/nfo-filehash.sh mode=describe $outfile                                                                  >> $provenancefile
+            $CSV2RDF4LOD_HOME/bin/util/nfo-filehash.sh $outfile                                                                                >> $provenancefile
 
             #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
             #   tmp="_"`basename $0``date +%s`_$$.tmp
