@@ -320,10 +320,10 @@ while [ $# -gt 0 ]; do
             $CSV2RDF4LOD_HOME/bin/util/grep-tail.sh -p "# Begin provenance dump." $errorfile | \
                perl -pe "s|^# Begin provenance dump.*$|#3> <> a prov:Bundle; foaf:primaryTopic <$graphicURI> . <$graphicURI> a vsr:Graphic .|" >> $provenancefile
             #                                          GRAPHIC_TIC
-            nfoFocus=`$CSV2RDF4LOD_HOME/bin/util/nfo-filehash.sh $base.$output_extension`
-            echo "<$nfoFocus> a vsr:Graphic ."                                                                                                 >> $provenancefile
+            nfoFocus=`$CSV2RDF4LOD_HOME/bin/util/nfo-filehash.sh --foci $outfile`
+            echo "$nfoFocus a vsr:Graphic ."                                                                                                   >> $provenancefile
             echo "<`cr-dataset-uri.sh --uri`> dcterms:subject <$graphicURI> ."                                                                 >> $provenancefile
-            echo "<$graphicURI> prv:serializedBy <$base.$output_extension> ."                                                                  >> $provenancefile
+            echo "<$graphicURI> prov:alternateOf <$base.$output_extension> ."                                                                  >> $provenancefile
             $CSV2RDF4LOD_HOME/bin/util/nfo-filehash.sh $base.$output_extension                                                                 >> $provenancefile
 
             #if [[ `$CSV2RDF4LOD_HOME/bin/util/valid-rdf.sh $provenancefile` == "yes" && `which rapper` ]]; then
