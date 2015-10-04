@@ -1,5 +1,6 @@
 <!--
 #3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/src/xsl/grddl/tic.xsl>;
+#3>    rdfs:seeAlso <https://github.com/timrdf/vsr/wiki/GRDDL>;
 #3>    rdfs:seeAlso <https://github.com/timrdf/csv2rdf4lod-automation/wiki/tic-turtle-in-comments>;
 #3> .
 -->
