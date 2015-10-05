@@ -22,13 +22,37 @@
 <!--xsl:include href="../util/rtf-function.xsl"/-->
 <xd:doc>
    <xd:short>Strip RTF to get the textual message.</xd:short>
-   <xd:detail>
+   <xd:detail> e.g. 'Firstly: Do some thing. Secondly: Do another thing.' from:
+
+                  {\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+                  {\fonttbl\f0\fnil\fcharset0 Georgia;}
+                  {\colortbl;\red255\green255\blue255;}
+                  \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+                  \f0\b\fs32 \cf0 \expnd0\expndtw0\kerning0
+                  Firstly:
+                  \b0 \expnd0\expndtw0\kerning0
+                  Do some thing.
+                  \b \expnd0\expndtw0\kerning0
+                  Secondly:
+                  \b0 \expnd0\expndtw0\kerning0
+                   Do another thing.}
+
    </xd:detail>
-   <xd:param name="rtf">An Rich Text Formatted string from which to extract the string message.</xd:param>
+   <xd:param name="rtf">A Rich Text Formatted string from which to extract the string message.</xd:param>
 </xd:doc>
 <xsl:function name="xfm:rtf2txt">
    <xsl:param name="rtf"/>
-   <xsl:value-of select="replace(replace(replace($rtf,'^.* ','','s'),'.$',''),$NL,'')"/>
+   <!-- This assumed that there were no spaces in the content string encoded within the RTF. -->
+   <!--xsl:value-of select="replace(replace(replace($rtf,'^.* ','','s'),'.$',''),$NL,'')"/--> <!-- dot-all mode, see http://www.w3.org/TR/xpath-functions/#flags -->
+   <!--xsl:value-of select="replace(replace($rtf,'^.*\\[a-z0-9]+ ?','','s'),'\}$','')"/-->
+   <!-- http://stackoverflow.com/questions/188545/regular-expression-for-extracting-text-from-an-rtf-string -->
+   <xsl:value-of select="replace(replace(replace(replace(replace($rtf,
+                                                                 '^\{',      ''),
+                                                         '\s?\\[A-Za-z0-9]+','','s'),
+                                                 '\{.*\}',''),
+                                         $NL,                        ''),
+                                 '\}\s*$',                           '')"/>
 </xsl:function>
 
 <xsl:key name="vnode" match="dict" use="dict[key[.='ID']]/following-sibling::integer[1]"/>
@@ -157,6 +181,8 @@
          <integer>1765</integer>
    -->
    <xsl:variable name="graphic" select="g:value-of('ID',.)"/>
+   <!--xsl:message select="concat('The RTF value:', $NL,g:value-of('Text',g:value-of('Text',.)),$NL,' became: ',$NL, xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.))) )"/-->
+
    <xsl:value-of select="concat($NL,
       '&lt;',$graphic,'&gt;',$NL,
       '   a vsr:Graphic, graffle:',g:value-of('Class',.),';',$NL,
