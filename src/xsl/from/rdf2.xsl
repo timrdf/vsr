@@ -140,7 +140,7 @@
 </xd:doc>
 <xsl:template match="rdf:RDF">
 
-   <xsl:message select="concat('# log ',$log-visual-decisions,' url ',$log-serverURL)"/>
+   <xsl:message select="concat('# log ',$log-visual-decisions,' url ',$log-serverURL,' dump file: ',$log-dumpFile)"/>
    <xsl:variable name="owl:sameAs" select="concat($rdf2-plan,'#RDF_2y_entry_137')"/>
 
    <!-- Summary of input -->
