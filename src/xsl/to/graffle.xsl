@@ -719,6 +719,114 @@
 </xsl:template>
 
 <xd:doc>
+   <xd:short>Assert spatial bounds of a visual node <tt>from</tt> with respect to visual node <tt>to</tt>.</xd:short>
+   <xd:detail>This function was derived by copying the original function 'edge'.
+   </xd:detail>
+   <xd:param name="id">A client-side string that uniquely identifies this visual edge. Value will be transformed into identifier appropriate for OmniGraffle.</xd:param>
+   <xd:param name="from">The visual node <b>from</b> which to draw this visual edge.</xd:param>
+   <xd:param name="to">The visual node <b>to</b> which to draw this visual edge.</xd:param>
+   <xd:param name="uri">The Uniform Resource Identifier (URI) of this visual edge.</xd:param>
+   <xd:param name="depicts">The rdf:Predicate whose relation is being depicted by this visual edge.</xd:param>
+   <xd:param name="label">The graphical label to place on this visual edge.</xd:param>
+   <xd:param name="font-color">The color of the font to use for <tt>label</tt>.</xd:param>
+   <xd:param name="notes">Text to associate with this visual edge.</xd:param>
+   <xd:param name="url"></xd:param>
+   <xd:param name="draw-shadow">Draw this visual edge with a shadow? ('YES' or 'NO'; default 'NO')</xd:param>
+   <xd:param name="head-style">The arrow style of this visual edge's head. "FilledArrow" is default, "NonNavigable" is an X on end.</xd:param>
+   <xd:param name="tail-style">The arrow style of this visual edge's tail. "FilledArrow" is default, "NonNavigable" is an X on end.</xd:param>
+   <xd:param name="line-width">The width of this visual edge. "2" for slightly larger than default.</xd:param>
+   <xd:param name="line-style">The stipple pattern of the visual edge (1 to 24, 1 solid, 2 dashed, 3 dotted).</xd:param>
+   <xd:param name="stroke-color">The color of this visual edge. Single value to duplicate for RGB (TODO: handle one or 3)</xd:param>
+</xd:doc>
+<xsl:template name="vsr:containedBy"> <!-- this was named graffle-edge. Making a generic "edge" that maps to graffle-edge would help interoperability. -->
+   <xsl:param name="id"   required="yes"/>
+   <xsl:param name="from" required="yes"/>
+   <xsl:param name="to"   required="yes"/>
+
+   <xsl:param name="uri"/>
+   <xsl:param name="depicts"/>
+
+   <xsl:param name="label"/>
+   <xsl:param name="font-color"/>
+
+   <xsl:param name="notes"/>
+   <xsl:param name="url"/>
+
+   <xsl:param name="draw-shadow" select="'NO'"/>
+   <xsl:param name="head-style"  select="'FilledArrow'"/>
+   <xsl:param name="tail-style"  select="'0'"/>
+   <xsl:param name="line-width"/>
+   <xsl:param name="line-style"/>
+   <xsl:param name="stroke-color">0.701961</xsl:param>
+   <!--
+         <dict>
+            <key>Class</key>
+            <string>Group</string>
+            <key>CollapsedSize</key>
+            <string>{100, 50}</string>
+            <key>Graphics</key>
+            <array>
+               <dict>
+                  <key>Bounds</key>
+                  <string>{{724.5, 218.73482263753431}, {31, 31}}</string>
+                  <key>Class</key>
+                  <string>ShapedGraphic</string>
+                  <key>FitText</key>
+                  <string>Clip</string>
+                  <key>Flow</key>
+                  <string>Clip</string>
+                  <key>ID</key>
+                  <integer>5601</integer>
+               ...
+               ... the last graphic dict in this array is about the supergraph.
+               ... if the 'Bounds' is omitted, OmniGraffle nicely handles it and fills it in after user interaction.
+               ...
+                                       <dict>
+                                          <key>Bounds</key>
+                                          <string>{{715.5, 70.234822637534307}, {49, 274}}</string>
+                                          <key>Class</key>
+                                          <string>ShapedGraphic</string>
+                                          <key>ID</key>
+                                          <integer>5604</integer>
+                                          <key>Style</key>
+                                          <dict>
+                                             <key>stroke</key>
+                                             <dict>
+                                                <key>CornerRadius</key>
+                                                <real>5</real>
+                                             </dict>
+                                          </dict>
+                                          <key>Text</key>
+                                          <dict>
+                                             <key>Text</key>
+                                             <string>{\rtf1\ansi\ansicpg1252\cocoartf1347\cocoasubrtf570
+                                                      {\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+                                                      {\colortbl;\red255\green255\blue255;}
+                                                      \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
+
+                                                      \f0\fs24 \cf0 Subgraph}</string>
+                                          </dict>
+                                          <key>TextPlacement</key>
+                                          <integer>0</integer>
+                                       </dict>
+            </array>
+            <key>ID</key>
+            <integer>5600</integer>
+            <key>Margins</key>
+            <array>
+               <real>9</real>
+               <real>25</real>
+               <real>9</real>
+               <real>9</real>
+            </array>
+            <key>isSubgraph</key>
+            <true/>
+         </dict>
+   -->
+
+</xsl:template>
+
+<xd:doc>
    <xd:short>Colloquial terms for OmniGraffle's line stipple pattern codes.</xd:short>
    <xd:detail>
    </xd:detail>
