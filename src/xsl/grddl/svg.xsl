@@ -2,7 +2,8 @@
 #3> <> prov:specializationOf <https://github.com/timrdf/vsr/blob/master/src/xsl/grddl/svg.xsl>;
 #3>    prov:has_provenance   <https://raw.github.com/timrdf/vsr/master/src/xsl/grddl/svg.xsl.prov.ttl>;
 #3>    prov:wasAttributedTo  <http://purl.org/twc/id/person/TimLebo>;
-#3>    rdfs:seeAlso          <https://github.com/timrdf/csv2rdf4lod-automation/wiki/Scraping-HTML>;
+#3>    rdfs:seeAlso          <https://github.com/timrdf/csv2rdf4lod-automation/wiki/Scraping-HTML>,
+#3>                          <https://github.com/timrdf/vsr/wiki/GRDDL>;
 #3> .
 -->
 <xsl:transform version="2.0" 
