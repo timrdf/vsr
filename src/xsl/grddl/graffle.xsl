@@ -57,6 +57,10 @@
                   \b0 \expnd0\expndtw0\kerning0
                    Do another thing.}
 
+
+
+         <string>{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf430{\fonttbl\f0\fnil\fcharset0 LucidaGrande;}{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\pardirnatural\f0\fs22 \cf2  WebView}</string>
+
    </xd:detail>
    <xd:param name="rtf">A Rich Text Formatted string from which to extract the string message.</xd:param>
 </xd:doc>
@@ -66,12 +70,22 @@
    <!--xsl:value-of select="replace(replace(replace($rtf,'^.* ','','s'),'.$',''),$NL,'')"/--> <!-- dot-all mode, see http://www.w3.org/TR/xpath-functions/#flags -->
    <!--xsl:value-of select="replace(replace($rtf,'^.*\\[a-z0-9]+ ?','','s'),'\}$','')"/-->
    <!-- http://stackoverflow.com/questions/188545/regular-expression-for-extracting-text-from-an-rtf-string -->
-   <xsl:value-of select="replace(replace(replace(replace(replace($rtf,
+   <xsl:variable name="most" select="replace(replace(replace(replace(replace($rtf,
                                                                  '^\{',      ''),
                                                          '\s?\\[A-Za-z0-9]+','','s'),
                                                  '\{.*\}',''),
                                          $NL,                        ''),
                                  '\}\s*$',                           '')"/>
+   <!--xsl:message select="concat('extracted ',$most,' from:',$rtf)"/-->
+   <xsl:choose>
+      <xsl:when test="string-length($most) gt 2">
+         <xsl:value-of select="replace($most,'^ ','')"/>
+      </xsl:when>
+      <xsl:otherwise>
+         <!-- hack to chew the output from https://github.com/timrdf/vsr/blob/master/src/xsl/to/graffle.xsl#L373 -->
+         <xsl:value-of select="replace(replace($rtf,'^.*\\cf2  ',''),'\}$','')"/>
+      </xsl:otherwise>
+   </xsl:choose>
 </xsl:function>
 
 <!--
@@ -215,7 +229,7 @@
          then concat('   a graffle:',g:value-of('Shape',.),';',$NL) 
          else '',
       if (g:value-of('Name',.))
-         then concat('   foaf:name ',$DQ,replace(xfm:rtf2txt(g:value-of('Name',g:value-of('Name',.))),'\\','\\\\'),$DQ,';',$NL) 
+         then concat('   foaf:name ',$DQ,replace(g:value-of('Name',.),'\\','\\\\'),$DQ,';',$NL) 
          else '',
       if (g:value-of('Text',.))
          then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.))),'\\','\\\\'),$DQ,';',$NL) 
