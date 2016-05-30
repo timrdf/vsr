@@ -172,12 +172,12 @@ public class Centrifuge {
       
       String fileName = args[arg];
       
-      try {
-         // TODO: argument for output file.
-         FileOutputStream fos = new FileOutputStream(new File(fileName+".cent.ttl"), false);
-      } catch (FileNotFoundException e) {
-         e.printStackTrace();
-      }
+//      try {
+//         // TODO: argument for output file.
+//         FileOutputStream fos = new FileOutputStream(new File(fileName+".cent.ttl"), false);
+//      } catch (FileNotFoundException e) {
+//         e.printStackTrace();
+//      }
 
       Centrifuge cent = new Centrifuge(baseURI, fileName);
       cent.layout(System.out);

@@ -60,6 +60,10 @@ public class Component implements Comparable<Component> {
       return this.path;
    }
    
+   public int getRemovalDepth() {
+      return this.removalDepth;
+   }
+   
    public Vertex getDelegate() {
       return this.delegate;
    }

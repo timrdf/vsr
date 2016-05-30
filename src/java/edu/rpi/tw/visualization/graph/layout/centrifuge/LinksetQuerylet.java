@@ -1,5 +1,7 @@
 package edu.rpi.tw.visualization.graph.layout.centrifuge;
 
+import java.util.Collection;
+
 import org.openrdf.model.Resource;
 import org.openrdf.query.BindingSet;
 
@@ -8,14 +10,14 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 
-import edu.rpi.tw.data.rdf.sesame.query.impl.DefaultQuerylet;
+import edu.rpi.tw.data.rdf.sesame.query.impl.PluralContextsQuerylet;
 import edu.rpi.tw.data.rdf.sesame.vocabulary.VoID;
 
 /**
  * 
  * @param <T>
  */
-public class LinksetQuerylet extends DefaultQuerylet<Graph> {
+public class LinksetQuerylet extends PluralContextsQuerylet<Graph> {
 
    private Graph graph = new TinkerGraph();
    
@@ -28,7 +30,7 @@ public class LinksetQuerylet extends DefaultQuerylet<Graph> {
    }
    
    @Override
-   public String getQueryString(Resource context) {
+   public String getQueryString(Collection<Resource> context) {
       
       graph = new TinkerGraph();
       

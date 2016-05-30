@@ -15,7 +15,6 @@ import org.openrdf.repository.http.HTTPRepository;
 import edu.rpi.tw.data.rdf.sesame.query.QueryletProcessor;
 import edu.rpi.tw.data.rdf.sesame.query.impl.DefaultQuerylet;
 import edu.rpi.tw.data.rdf.sesame.query.impl.DefaultSPOIterableQuerylet;
-import edu.rpi.tw.data.rdf.sesame.query.returning.QueryletReturning;
 import edu.rpi.tw.data.rdf.sesame.querylets.pipes.stops.Predicates;
 import edu.rpi.tw.data.rdf.utils.pipes.Constants;
 import edu.rpi.tw.string.pmm.DefaultPrefixMappings;
@@ -24,8 +23,7 @@ import edu.rpi.tw.string.pmm.PrefixMappings;
 /**
  * 
  */
-public abstract class Distribution extends    DefaultSPOIterableQuerylet
-								           implements QueryletReturning<HashMap<Resource,Integer>> {
+public abstract class Distribution extends    DefaultSPOIterableQuerylet<HashMap<Resource,Integer>> {
 
    private   Iterator<Resource>        focusIter;      // The foci that still need a frequency count.
    protected Resource                  focusR;         // The next focusR to query

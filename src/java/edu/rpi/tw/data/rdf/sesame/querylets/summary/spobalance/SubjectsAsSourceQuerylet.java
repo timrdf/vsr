@@ -1,5 +1,6 @@
 package edu.rpi.tw.data.rdf.sesame.querylets.summary.spobalance;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,6 @@ import edu.rpi.tw.data.rdf.sesame.query.impl.DefaultQuerylet;
  * 
  */
 public class SubjectsAsSourceQuerylet extends DefaultQuerylet<Set<Resource>> {
-							//		  implements QueryletReturning<Set<Resource>> {
 	
 	private HashSet<Resource> sourceSubjects;
 	
@@ -21,7 +21,7 @@ public class SubjectsAsSourceQuerylet extends DefaultQuerylet<Set<Resource>> {
 	}
 
 	@Override
-	public String getQueryString(Resource context) {
+	public String getQueryString(Collection<Resource> context) {
 		
 		sourceSubjects = new HashSet<Resource>();
 		

@@ -1,5 +1,7 @@
 package edu.rpi.tw.data.rdf.sesame.querylets.summary.spobalance;
 
+import java.util.Collection;
+
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
@@ -14,7 +16,7 @@ public class PredicatesAmongBridges extends PredicatesFromSourcesToBridges {
    }
    
    @Override
-   public String getQueryString(Resource context) {
+   public String getQueryString(Collection<Resource> context) {
       
       super.getQueryString(context);
 

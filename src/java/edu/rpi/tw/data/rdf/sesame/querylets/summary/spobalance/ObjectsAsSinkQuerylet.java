@@ -1,5 +1,6 @@
 package edu.rpi.tw.data.rdf.sesame.querylets.summary.spobalance;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,13 +8,11 @@ import org.openrdf.model.Resource;
 import org.openrdf.query.BindingSet;
 
 import edu.rpi.tw.data.rdf.sesame.query.impl.DefaultQuerylet;
-import edu.rpi.tw.data.rdf.sesame.query.returning.QueryletReturning;
 
 /**
  * 
  */
-public class ObjectsAsSinkQuerylet extends    DefaultQuerylet
-								           implements QueryletReturning<Set<Resource>> {
+public class ObjectsAsSinkQuerylet extends    DefaultQuerylet<Set<Resource>> {
 
 	private HashSet<Resource> objectSinks;
 	
@@ -22,7 +21,7 @@ public class ObjectsAsSinkQuerylet extends    DefaultQuerylet
 	}
 
 	@Override
-	public String getQueryString(Resource context) {
+	public String getQueryString(Collection<Resource> context) {
 		
 		objectSinks = new HashSet<Resource>();
 		

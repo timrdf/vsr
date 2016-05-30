@@ -1,5 +1,6 @@
 package edu.rpi.tw.data.rdf.sesame.querylets.summary.spobalance;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,14 +12,13 @@ import org.openrdf.query.BindingSet;
 
 import edu.rpi.tw.data.rdf.sesame.query.IterableQuerylet;
 import edu.rpi.tw.data.rdf.sesame.query.impl.DefaultQuerylet;
-import edu.rpi.tw.data.rdf.sesame.query.returning.QueryletReturning;
+import edu.rpi.tw.data.rdf.sesame.query.impl.PluralContextsQuerylet;
 
 /**
  * 
  */
-public class ObjectLiteralsDistributionQuerylet extends    DefaultQuerylet
-                				    	               implements IterableQuerylet, 
-                				    	          QueryletReturning<HashMap<URI,HashMap<String,Integer>>> {
+public class ObjectLiteralsDistributionQuerylet extends    PluralContextsQuerylet<HashMap<URI,HashMap<String,Integer>>>
+                				    	               implements IterableQuerylet<HashMap<URI,HashMap<String,Integer>>> {
 
 	private Iterator<Resource> predicates = null;
 	private Resource           predicate  = null;
@@ -55,14 +55,14 @@ public class ObjectLiteralsDistributionQuerylet extends    DefaultQuerylet
 
 
 	@Override
-	public String getQueryString(Resource context) {
+	public String getQueryString(Collection<Resource> contexts) {
 		String p = "<"+predicate.stringValue()+">";
 		
         String select       = "?o";
         String graphPattern = "[] "+p+" ?o . filter (isLiteral(?o))";
         String orderBy = "";
         
-        return composeQuery(select, context, graphPattern, orderBy);
+        return composeQuery(select, contexts, graphPattern, orderBy);
 	}
 
 	@Override

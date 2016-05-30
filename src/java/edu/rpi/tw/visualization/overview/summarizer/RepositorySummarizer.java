@@ -33,7 +33,7 @@ import org.openrdf.sail.nativerdf.NativeStore;
 import edu.rpi.tw.data.csv.valuehandlers.DateTimeValueHandler;
 import edu.rpi.tw.data.csv.valuehandlers.ResourceValueHandler;
 import edu.rpi.tw.data.rdf.sesame.query.QueryletProcessor;
-import edu.rpi.tw.data.rdf.sesame.query.composable.LimitOffsetQuerylet;
+import edu.rpi.tw.data.rdf.sesame.query.composable.DefaultLimitOffsetQuerylet;
 import edu.rpi.tw.data.rdf.sesame.query.impl.DefaultQuerylet;
 import edu.rpi.tw.data.rdf.sesame.querylets.pipes.stops.Classes;
 import edu.rpi.tw.data.rdf.sesame.querylets.pipes.stops.Names;
@@ -199,6 +199,7 @@ public class RepositorySummarizer {
    				    ngR       = vf.createURI(NameFactory.getSPARQLEndpointGraphNameTiny(this.baseURI, endpoint, specimenContextL));
    				URI ngRLong   = vf.createURI(NameFactory.getSPARQLEndpointGraphName(endpoint, specimenContextL));
    				   
+   				// As per https://github.com/timrdf/csv2rdf4lod-automation/wiki/Naming-sparql-service-description's-sd:NamedGraph
    				System.err.println("Canonical URI for named graph: "+ngR.stringValue());
    				
    				// <http://healthdata.tw.rpi.edu/sparql?query=PREFIX+sd%3A...>
@@ -253,7 +254,7 @@ public class RepositorySummarizer {
 				// ---------------------------------------------------------------------------------------------------------
 				System.err.println("  SPO balance: "); // ------------------------------------------------------------------
 				SPOBalance spoBal = new SPOBalance(specimenContextR);
-				QueryletProcessor.processQueries(specimenRepository, new LimitOffsetQuerylet(spoBal,LIMIT));
+				QueryletProcessor.processQueries(specimenRepository, new DefaultLimitOffsetQuerylet(spoBal,LIMIT));
 
 				Hashtable<BalanceType,Integer> balance = spoBal.get();
 				
@@ -387,7 +388,7 @@ public class RepositorySummarizer {
 				// ---------------------------------------------------------------------------------------------------------
 				System.err.println("  Predicates distribution: "); // ------------------------------------------------------
 				PredicateDistribution pDist = new PredicateDistribution(specimenContextR, pList.get());
-				double numTriples2 = QueryletProcessor.processQueries(specimenRepository, new LimitOffsetQuerylet(pDist,LIMIT));
+				double numTriples2 = QueryletProcessor.processQueries(specimenRepository, new DefaultLimitOffsetQuerylet(pDist,LIMIT));
 				if( numTriples != numTriples2 ) {
 					System.err.println("TRIPLE COUNT INCONSISTENT: "+numTriples2+" vs. "+numTriples);
 				}

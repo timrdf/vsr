@@ -45,13 +45,13 @@ public class PredicateDistribution extends Distribution {
    }
    
    @Override
-   public String getQueryString(Resource context) {
+   public String getQueryString(Collection<Resource> contexts) {
       
       String select       = "distinct ?s ?o";
       String graphPattern = "?s <"+focusR.stringValue()+"> ?o .";
       String orderBy      = "";
       
-      return composeQuery(select, context, graphPattern, orderBy);
+      return composeQuery(select, contexts, graphPattern, orderBy);
    }
    
    /**
@@ -150,6 +150,12 @@ public class PredicateDistribution extends Distribution {
       PrefixMappings pmap = new DefaultPrefixMappings();
       ValueFactory vf = ValueFactoryImpl.getInstance();
       
+      try {
+         conn.begin();
+      }catch (RepositoryException e) {
+         e.printStackTrace();
+      }
+      
       int bin = 0;
       try {
          URI   binR  = vf.createURI(base.stringValue()+"/bin/"+bin);
@@ -193,10 +199,15 @@ public class PredicateDistribution extends Distribution {
             }*/
             
             conn.add(base, VoID.subset, binR, reportR);
-            conn.commit();
          }catch (RepositoryException e) {
             e.printStackTrace();
          }
+      }
+      
+      try {
+         conn.commit();
+      }catch (RepositoryException e) {
+         e.printStackTrace();
       }
    }
    

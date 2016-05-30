@@ -1,5 +1,6 @@
 package edu.rpi.tw.data.rdf.sesame.querylets.summary.linksets;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,16 +9,14 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.query.BindingSet;
 
-import edu.rpi.tw.data.rdf.sesame.query.impl.DefaultQuerylet;
-import edu.rpi.tw.data.rdf.sesame.query.returning.QueryletReturning;
+import edu.rpi.tw.data.rdf.sesame.query.impl.PluralContextsQuerylet;
 import edu.rpi.tw.string.pmm.PrefixMappings;
 
 /**
  * 
  */
 @SuppressWarnings("rawtypes")
-public class ResourcesInSPOBalanceNamedGraphs extends    DefaultQuerylet 
-                                              implements QueryletReturning<HashMap<URI,Set<URI>>> {
+public class ResourcesInSPOBalanceNamedGraphs extends    PluralContextsQuerylet<HashMap<URI,Set<URI>>> {
 
    private HashMap<URI,Set<URI>> ring;
    
@@ -26,11 +25,11 @@ public class ResourcesInSPOBalanceNamedGraphs extends    DefaultQuerylet
    }
    
    @Override
-   public String getQueryString(Resource context) {
+   public String getQueryString(Collection<Resource> context) {
       
       this.ring = new HashMap<URI, Set<URI>>();
       
-      this.addNamespace("dcat", "vsr", "sd", "prov", "void", "sio");
+      addNamespace("dcat", "vsr", "sd", "prov", "void", "sio");
 
       String select       = "distinct ?dataset ?resource";
 
@@ -48,7 +47,7 @@ public class ResourcesInSPOBalanceNamedGraphs extends    DefaultQuerylet
 
       String orderBy      = "";
 
-      return this.composeQuery(select, context, graphPattern, orderBy);
+      return composeQuery(select, context, graphPattern, orderBy);
    }
    
    @Override
