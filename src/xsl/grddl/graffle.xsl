@@ -4,6 +4,24 @@
 #3>    prov:wasAttributedTo  <http://purl.org/twc/id/person/TimLebo>;
 #3>    rdfs:seeAlso          <https://github.com/timrdf/vsr/wiki/GRDDL>;
 #3> .
+
+   xsl:templates in this script:
+
+      match="/"
+      match="dict" mode="turtle"
+      match="dict" mode="layer"
+      match="@*|node()"
+
+   xsl:functions in this script:
+
+      xfm:rtf2txt
+      g:value-of
+      xfm:isURI
+      sof:checksum
+      sof:fletcher16
+      g:percentRGB2hex
+      g:percent2_0_255
+      msg20090200215:int-to-hex
 -->
 <xsl:transform version="2.0" 
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -56,6 +74,10 @@
                                  '\}\s*$',                           '')"/>
 </xsl:function>
 
+<!--
+   Index the <dict> "graphic" by its <key>ID</key> == its following <integer> so that the other
+   attributes (e.g. <key>Bounds</key>) can be easily accessed.
+-->
 <xsl:key name="vnode" match="dict" use="dict[key[.='ID']]/following-sibling::integer[1]"/>
 
 <!--
@@ -87,6 +109,9 @@
             '@prefix colour:  &lt;http://data.colourphon.co.uk/def/colour-ontology#&gt; .',$NL
          )"/>
 
+   <!-- 
+      List all of the colors mentioned within the entire document.
+   -->
    <!--xsl:value-of select="concat('COUNT ',count(//key[.='Color']/following-sibling::dict),$NL)"/-->
    <xsl:for-each-group select="//key[.='Color']/following-sibling::dict" group-by="g:value-of('r',.)">
       <!--xsl:value-of select="concat('   R COUNT ',current-grouping-key(),' : ',count(current-group()),$NL)"/-->
@@ -164,7 +189,6 @@
 </xsl:template>
 
 <xsl:template match="dict" mode="turtle">
-
    <!--
          <dict>
          <key>Bounds</key>
@@ -190,6 +214,9 @@
       if (string-length(g:value-of('Shape',.))) 
          then concat('   a graffle:',g:value-of('Shape',.),';',$NL) 
          else '',
+      if (g:value-of('Name',.))
+         then concat('   foaf:name ',$DQ,replace(xfm:rtf2txt(g:value-of('Name',g:value-of('Name',.))),'\\','\\\\'),$DQ,';',$NL) 
+         else '',
       if (g:value-of('Text',.))
          then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.))),'\\','\\\\'),$DQ,';',$NL) 
          else '',
@@ -197,7 +224,6 @@
          then concat('   rdfs:seeAlso &lt;',g:value-of('url',g:value-of('Link',.)),'&gt;;',$NL) 
          else ''
    )"/>
-
 
    <xsl:variable name="rgb" select="
       if(                                        g:value-of('Style',.)  and 
