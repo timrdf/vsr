@@ -18,6 +18,7 @@
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:html="http://www.w3.org/1999/xhtml"
+   xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
 
    xmlns:pmm="edu.rpi.tw.string.pmm"
    xmlns:xfm="transform namespace"
@@ -50,14 +51,16 @@
             '@prefix vsr:     &lt;http://purl.org/twc/vocab/vsr#&gt; .',$NL,
             '@prefix svg:     &lt;http://purl.org/twc/vocab/vsr/svg#&gt; .',$NL
          )"/>
-
       
    <!-- https://github.com/timrdf/vsr/wiki/2grph.xsl#2svg
         places svg:metadata on each svg:g that it creates -->
    <xsl:apply-templates select="//svg:*[svg:metadata[*]]" mode="turtle"/>
 
-   <!-- used in https://github.com/timrdf/lodcloud/tree/master/data/source/us/the-living-lod-cloud
+   <!-- The following apply-templates is used in 
+        https://github.com/timrdf/lodcloud/tree/master/data/source/us/the-living-lod-cloud
+
       e.g. http://lod-cloud.net/versions/2011-09-19/lod-cloud_colored.svg
+
       xmlns:svg="http://www.w3.org/2000/svg" 
       <svg:a id="dataset-gnoss" class="dataset usergeneratedcontent"
              xlink:href="http://thedatahub.org/dataset/gnoss"
@@ -68,8 +71,8 @@
       </svg:a>
    -->
 
-   <!--
-         source/ieeevis-tw-rpi-edu/IEEE-VAST-Challenge-2008-mc1-reverts-social-tally/version/2015-Apr-27/manual/downloaded-from-ieeevis-vm/against-and-supports.ttl.graffle.svg 
+   <!-- The following apply-templates is used in
+        source/ieeevis-tw-rpi-edu/IEEE-VAST-Challenge-2008-mc1-reverts-social-tally/version/2015-Apr-27/manual/downloaded-from-ieeevis-vm/against-and-supports.ttl.graffle.svg 
 
          <svg/g[title]/g[title]/rect[@x="2984.3554" @y="394.15198" @width="43" @height="18" @fill="white"]
          <svg/g[title]/g[title]/text[transform="translate(2986.3554 396.65198)" @fill="#b3b3b3"]/tspan[@font-family="Lucida Grande" @font-size="11" @font-weight="500" @fill="#b3b3b3"
@@ -94,9 +97,47 @@
             </text>
          </a>
    -->
-   <xsl:apply-templates select="//svg:a[svg:text]" mode="turtle"/>
-   <xsl:apply-templates select="//svg:text[html:text(.,' ') and not(parent::svg:a)]" mode="turtle"/>
-   <xsl:apply-templates select="//svg:a[svg:line]" mode="turtle"/>
+   <xsl:apply-templates select="//svg:a[svg:text]"                                   mode="turtle"/>
+   <xsl:apply-templates select="//svg:text[html:text(.,' ') and not(parent::svg:a) and not(parent::svg:g/@sketch:type) and not(../parent::svg:g/@sketch:type)]" mode="turtle"/>
+   <!--                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                                                                              Added Jul 24 2016 b/c
+      http://lod-cloud.net/versions/2014-08-30/lod-cloud_colored.svg triggers the rule above with:
+
+       <g id="Group" transform="translate(4.000000, 27.000000)" font-size="30" font-family="sans-serif" fill="#000000" sketch:type="MSTextLayer" font-weight="normal">
+           <text id="Linked-Datasets-as-of-August-2014">
+               <tspan x="0.3712" y="29.4977">Linked Datasets as of August 2014</tspan>
+           </text>
+       </g>
+   -->
+   <xsl:apply-templates select="//svg:a[svg:line]"                                   mode="turtle"/>
+
+   <!-- Used in https://github.com/timrdf/lodcloud/tree/master/data/source/lod-cloud-net/diagram/version/2014-08-30
+
+      e.g. http://lod-cloud.net/versions/2014-08-30/lod-cloud_colored.svg
+      line 17633
+
+      <g id="y.node.225" style="filter:url(#filter199605)" transform="translate(2516.000000, 2255.000000)">
+        <a target="_blank" xlink:type="simple" xlink:href="http://datahub.io/dataset/linkedfood" xlink:show="new">
+          <g id="Group">
+              <g id="Oval" fill="#EAF7F6" sketch:type="MSShapeGroup">
+                  <circle cx="42.2871" cy="42.2871" r="42.2871"></circle>
+              </g>
+              <g transform="translate(13.000000, 21.000000)" font-size="18" font-family="sans-serif" fill="#000000" sketch:type="MSTextLayer" font-weight="normal">
+                  <text id="Linked">
+                      <tspan x="0.095" y="17.569">Linked</tspan>
+                  </text>
+                  <text id="Food">
+                      <tspan x="7.4734" y="38.7682">Food</tspan>
+                  </text>
+              </g>
+              <g id="Oval" stroke="#40584E" sketch:type="MSShapeGroup">
+                  <circle cx="42.2871" cy="42.2871" r="42.2871"></circle>
+              </g>
+          </g>
+       </a>
+      </g>
+   -->
+   <xsl:apply-templates select="//svg:g[svg:a[@xlink:href and svg:g]]" mode="turtle"/>
 </xsl:template>
 
 <xsl:template match="svg:svg[svg:metadata[*]]" mode="turtle"/>
@@ -300,6 +341,61 @@
    )"/>
 </xsl:template>
 
+<xsl:template match="svg:g[svg:a[@xlink:href and svg:g]]" mode="turtle">
+   <!-- Used in https://github.com/timrdf/lodcloud/tree/master/data/source/lod-cloud-net/diagram/version/2014-08-30
+
+      e.g. http://lod-cloud.net/versions/2014-08-30/lod-cloud_colored.svg
+      line 17633
+
+      <g id="y.node.225" style="filter:url(#filter199605)" transform="translate(2516.000000, 2255.000000)">
+        <a target="_blank" xlink:type="simple" xlink:href="http://datahub.io/dataset/linkedfood" xlink:show="new">
+          <g id="Group">
+              <g id="Oval" fill="#EAF7F6" sketch:type="MSShapeGroup">
+                  <circle cx="42.2871" cy="42.2871" r="42.2871"></circle>
+              </g>
+              <g transform="translate(13.000000, 21.000000)" font-size="18" font-family="sans-serif" fill="#000000" sketch:type="MSTextLayer" font-weight="normal">
+                  <text id="Linked">
+                      <tspan x="0.095" y="17.569">Linked</tspan>
+                  </text>
+                  <text id="Food">
+                      <tspan x="7.4734" y="38.7682">Food</tspan>
+                  </text>
+              </g>
+              <g id="Oval" stroke="#40584E" sketch:type="MSShapeGroup">
+                  <circle cx="42.2871" cy="42.2871" r="42.2871"></circle>
+              </g>
+          </g>
+       </a>
+      </g>
+   -->
+   <xsl:variable name="rs" select=".//svg:circle[@r]/@r"/>
+   <xsl:value-of select="concat($NL,
+      '&lt;graphic/',replace(@id,'^y.node.',''),'&gt;',$NL,
+      '   a vsr:Graphic;',$NL,
+      if (html:text(.,' ')) 
+         then concat('   vsr:depicts ',$LT,svg:a/@xlink:href,$GT,';',$NL)
+         else '',
+      if (html:text(.,' ')) 
+         then concat('   rdfs:label ',$DQ,html:text(.,' '),$DQ,';',$NL) 
+         else '',
+      if (string-length(xfm:transform_xy(@transform)[1])) 
+         then concat('   vsr:x ',xfm:transform_xy(@transform)[1],';',$NL) 
+         else '',
+      if (string-length(xfm:transform_xy(@transform)[2])) 
+         then concat('   vsr:x ',xfm:transform_xy(@transform)[2],';',$NL) 
+         else '',
+      if ($rs) 
+         then concat('   vsr:height ',$rs[1],';',$NL,
+                     '   vsr:width  ',$rs[1],';',$NL) 
+         else '',
+      if (matches(@fill,'#[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$')) 
+         then concat('   vsr:fill &lt;http://purl.org/colors/rgb/',upper-case(replace(@fill,'^#','')),'&gt;;',$NL) 
+         else '',
+      '.',$NL
+   )"/>
+</xsl:template>
+
+
 <xsl:variable name="NL" select="'&#xa;'"/>
 <xsl:variable name="DQ">"</xsl:variable>
 <xsl:variable name="LT">&lt;</xsl:variable>
@@ -353,5 +449,6 @@
    </xsl:variable>
    <xsl:value-of select="normalize-space($together)"/>
 </xsl:function>
+
 
 </xsl:transform>
