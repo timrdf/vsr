@@ -368,7 +368,9 @@
        </a>
       </g>
    -->
-   <xsl:variable name="rs" select=".//svg:circle[@r]/@r"/>
+   <xsl:variable name="rs"      select=".//svg:circle[@r]/@r"/>
+   <xsl:variable name="fills"   select=".//svg:g[matches(@fill,  '#[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$')]/@fill"/>
+   <xsl:variable name="strokes" select=".//svg:g[matches(@stroke,$HEX)]/@stroke"/>
    <xsl:value-of select="concat($NL,
       '&lt;graphic/',replace(@id,'^y.node.',''),'&gt;',$NL,
       '   a vsr:Graphic;',$NL,
@@ -382,14 +384,17 @@
          then concat('   vsr:x ',xfm:transform_xy(@transform)[1],';',$NL) 
          else '',
       if (string-length(xfm:transform_xy(@transform)[2])) 
-         then concat('   vsr:x ',xfm:transform_xy(@transform)[2],';',$NL) 
+         then concat('   vsr:y ',xfm:transform_xy(@transform)[2],';',$NL) 
          else '',
       if ($rs) 
          then concat('   vsr:height ',$rs[1],';',$NL,
                      '   vsr:width  ',$rs[1],';',$NL) 
          else '',
-      if (matches(@fill,'#[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$')) 
-         then concat('   vsr:fill &lt;http://purl.org/colors/rgb/',upper-case(replace(@fill,'^#','')),'&gt;;',$NL) 
+      if ($fills) 
+         then concat('   vsr:fill   &lt;http://purl.org/colors/rgb/',upper-case(replace($fills[1],'^#','')),'&gt;;',$NL) 
+         else '',
+      if ($strokes) 
+         then concat('   vsr:stroke &lt;http://purl.org/colors/rgb/',upper-case(replace($strokes[1],'^#','')),'&gt;;',$NL) 
          else '',
       '.',$NL
    )"/>
@@ -400,6 +405,7 @@
 <xsl:variable name="DQ">"</xsl:variable>
 <xsl:variable name="LT">&lt;</xsl:variable>
 <xsl:variable name="GT">&gt;</xsl:variable>
+<xsl:variable name="HEX" select="'#[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]$'"/>
 
 <xsl:function name="sof:checksum" as="xs:integer">
    <xsl:param name="str" as="xs:string"/>
