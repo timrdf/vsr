@@ -387,8 +387,8 @@
          then concat('   vsr:y ',xfm:transform_xy(@transform)[2],';',$NL) 
          else '',
       if ($rs) 
-         then concat('   vsr:height ',$rs[1],';',$NL,
-                     '   vsr:width  ',$rs[1],';',$NL) 
+         then concat('   vsr:height ',2 * $rs[1],';',$NL,
+                     '   vsr:width  ',2 * $rs[1],';',$NL) 
          else '',
       if ($fills) 
          then concat('   vsr:fill   &lt;http://purl.org/colors/rgb/',upper-case(replace($fills[1],'^#','')),'&gt;;',$NL) 
