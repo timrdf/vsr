@@ -426,6 +426,11 @@
 
    <xsl:variable name="height">
       <xsl:choose>
+      <!--xsl:when test="$previous-graphic/vsr:height"> <!- Added Jul 2016 to follow suit with LOD Cloud Diagram ->
+         <xsl:variable name="value" select="$previous-graphic/vsr:height"/>
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,$vsr:height,string($value),'$visual-form-uri','previous graphic')"/>
+         <xsl:value-of select="$value"/> 
+      </xsl:when-->
       <xsl:when test="$a-dataset and string-length($void-triples)">    
          <xsl:variable name="value" select="50 * 2 * math:sqrt(math:log(xs:double($void-triples)) div 3.14159)"/>
          <xsl:value-of select="$value"/> 
@@ -440,14 +445,19 @@
 
    <xsl:variable name="width">
       <xsl:choose>
+      <!--xsl:when test="$previous-graphic/vsr:width"> <!- Added Jul 2016 to follow suit with LOD Cloud Diagram ->
+         <xsl:variable name="value" select="$previous-graphic/vsr:width"/>
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,$vsr:width,string($value),'$visual-form-uri','previous graphic')"/>
+         <xsl:value-of select="$value"/> 
+      </xsl:when-->
       <xsl:when test="$a-dataset and string-length($void-triples)">    
          <xsl:variable name="value" select="50 * 2 * math:sqrt(math:log(xs:double($void-triples)) div 3.14159)"/>
-         <xsl:message select="acv:explainResource($subject,$owl:sameAs,'height',string($value),'$visual-form-uri','a dcat:Dataset')"/>
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,'width',string($value),'$visual-form-uri','a dcat:Dataset')"/>
          <xsl:value-of select="$value"/> 
       </xsl:when>
       <xsl:otherwise>
          <xsl:value-of select="''"/> 
-         <xsl:message select="acv:explainResource($subject,$owl:sameAs,'height','','$visual-form-uri','xsl:otherwise')"/>
+         <xsl:message select="acv:explainResource($subject,$owl:sameAs,'width','','$visual-form-uri','xsl:otherwise')"/>
       </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>
