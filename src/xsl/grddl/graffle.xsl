@@ -587,7 +587,7 @@
 <xsl:function name="xfm:isURI" as="xs:boolean">
    <xsl:param name="str" as="xs:string"/>
    <xsl:variable name="codepoints" select="string-to-codepoints($str)"/>
-   <xsl:sequence select="starts-with($str,'http:') and not(matches($str,'^http.*http:'))"/>
+   <xsl:sequence select="(starts-with($str,'http:') or starts-with($str,'https:')) and not(matches($str,'^http.*http:'))"/>
 </xsl:function>
 
 <xsl:function name="sof:checksum" as="xs:integer">
