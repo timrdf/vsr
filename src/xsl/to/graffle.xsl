@@ -108,10 +108,10 @@
    <xd:param name="shape">The shape of the visual node to create. 'Rectangle', 'Circle', 'Cross'.</xd:param>
    <xd:param name="x">The position of the visual node, from upper left 0,0.</xd:param>
    <xd:param name="y">The position of the visual node, from upper left 0,0.</xd:param>
-   <xd:param name="lock">Lock the position and sizing of the shape.</xd:param>
    <xd:param name="rotation">Angle to rotate the visual node. Degrees; -90 = 270.</xd:param>
    <xd:param name="width">If undefined, fits to text label</xd:param>
    <xd:param name="height"></xd:param>
+   <xd:param name="lock">Lock the position and sizing of the shape.</xd:param>
    <xd:param name="magnets">Add magnets (i.e. 'visual edge ports') to the visual node. 'sides' or '' for no magnets.</xd:param>
    <xd:param name="draw-stroke">YES, NO</xd:param>
    <xd:param name="stroke-color">space-delimited rgb [0,1] e.g. ".98 1 .98"</xd:param>
