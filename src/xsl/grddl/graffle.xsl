@@ -232,7 +232,7 @@
          then concat('   foaf:name ',$DQ,replace(g:value-of('Name',.),'\\','\\\\'),$DQ,';',$NL) 
          else '',
       if (g:value-of('Text',.))
-         then concat('   rdfs:label ',$DQ,replace(xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.))),'\\','\\\\'),$DQ,';',$NL) 
+         then concat('   rdfs:label ',$DQ,$DQ,$DQ,replace(xfm:rtf2txt(g:value-of('Text',g:value-of('Text',.))),'\\','\\\\'),$DQ,$DQ,$DQ,';',$NL) 
          else '',
       if (g:value-of('Link',.))
          then concat('   rdfs:seeAlso &lt;',g:value-of('url',g:value-of('Link',.)),'&gt;;',$NL) 
