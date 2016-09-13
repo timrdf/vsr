@@ -144,6 +144,8 @@
 
 <xsl:template match="svg:*[svg:metadata[*]]" mode="turtle">
 
+   <xsl:message select="'case 1: svg:*[svg:metadata[*]]'"/>
+
    <xsl:variable name="number">
       <xsl:number select="." count="svg:*" level="any"/>
    </xsl:variable>
@@ -181,6 +183,7 @@
 
 
 <xsl:template match="svg:a[svg:line]" mode="turtle">
+   <xsl:message select="'case 2: svg:a[svg:line]'"/>
    <!--
          <a xl:href="http://ieeevis.tw.rpi.edu/source/ieeevis-tw-rpi-edu/dataset/IEEE-VAST-Challenge-2008-mc1-reverts-social-tally/vocab/qualifiedSupports"
             xlink:type="simple"
@@ -223,6 +226,7 @@
 
 <xsl:template match="svg:a[svg:text]" mode="turtle">
 
+   <xsl:message select="concat('case 3: svg:a[svg:text]',@xlink:href)"/>
    <xsl:variable name="number">
       <xsl:number select="." count="svg:*" level="any"/>
    </xsl:variable>
@@ -245,8 +249,8 @@
    <!-- x and y -->
    <xsl:choose>
       <xsl:when test="svg:rect[@x and @y]"> <!-- Graffle's export -->
-         <xsl:value-of select="concat('   vsr:x ',svg:rect/@x,';',$NL)"/>
-         <xsl:value-of select="concat('   vsr:y ',svg:rect/@y,';',$NL)"/>
+         <xsl:value-of select="concat('   vsr:x ',svg:rect[1]/@x,';',$NL)"/>
+         <xsl:value-of select="concat('   vsr:y ',svg:rect[1]/@y,';',$NL)"/>
       </xsl:when>
       <xsl:when test="@transform[contains(.,'translate')]"> <!-- LOD cloud diagram -->
          <!-- transform="translate(1047.3316495 529.0504495)" -->
@@ -264,8 +268,8 @@
    <!-- height and width -->
    <xsl:choose>
       <xsl:when test="svg:rect[@height and @width]"> <!-- Graffle's export -->
-         <xsl:value-of select="concat('   vsr:height ',svg:rect/@height,';',$NL)"/>
-         <xsl:value-of select="concat('   vsr:width  ',svg:rect/@width,';',$NL)"/>
+         <xsl:value-of select="concat('   vsr:height ',svg:rect[1]/@height,';',$NL)"/>
+         <xsl:value-of select="concat('   vsr:width  ',svg:rect[1]/@width,';',$NL)"/>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
@@ -309,6 +313,7 @@
 </xsl:template>
 
 <xsl:template match="svg:text[@transform and svg:tspan]" mode="turtle">
+   <xsl:message select="'case 4: svg:text[@transform and svg:tspan]'"/>
    <!-- Graffle export -->
    <!--
          <text transform="translate(2276.0193 581.46974)" fill="#b3b3b3">
@@ -342,6 +347,7 @@
 </xsl:template>
 
 <xsl:template match="svg:g[svg:a[@xlink:href and svg:g]]" mode="turtle">
+   <xsl:message select="'case 5: svg:g[svg:a[@xlink:href and svg:g]]'"/>
    <!-- Used in https://github.com/timrdf/lodcloud/tree/master/data/source/lod-cloud-net/diagram/version/2014-08-30
 
       e.g. http://lod-cloud.net/versions/2014-08-30/lod-cloud_colored.svg
